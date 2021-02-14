@@ -1,4 +1,4 @@
-# orshuulga
+# Оршуулагшын нюр
 
 ## Build Setup
 

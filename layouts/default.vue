@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <Nuxt />
+  <div class="h-full nuxt-wrapper  dark:bg-gray-800">
+    <Nuxt/>
   </div>
 </template>
 
 <style>
 html {
   font-family:
+    Ubuntu,
     'Source Sans Pro',
     -apple-system,
     BlinkMacSystemFont,
@@ -22,6 +23,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+html, body, .nuxt-wrapper {
+  height: 100vh;
 }
 
 *,
