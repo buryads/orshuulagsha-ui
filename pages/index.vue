@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="block mt-10 text-gray-500">
-      <div v-if="translates.result.length" class="mb-5">
+      <div v-if="translates.result.length" class="mb-5 text-gray-800">
         <h2 class="text-2xl">Переводы</h2>
         <hr>
         <p v-for="result in translates.result">
@@ -53,7 +53,7 @@
           </span>
         </p>
       </div>
-      <div v-if="translates.include.length" class="mb-5">
+      <div v-if="translates.include.length" class="mb-5 text-gray-800">
         <h2 class="text-2xl">Вхождения</h2>
         <hr>
         <p v-for="result in translates.include">
@@ -63,7 +63,7 @@
           </span>
         </p>
       </div>
-      <div v-if="translates.match.length" class="mb-5">
+      <div v-if="translates.match.length" class="mb-5 text-gray-800">
         <h2 class="text-2xl">Совпадения</h2>
         <hr>
         <p v-for="result in translates.match">
@@ -73,7 +73,7 @@
           </span>
         </p>
       </div>
-      <div v-if="translates.fuzzy.length" class="mb-5">
+      <div v-if="translates.fuzzy.length" class="mb-5 text-gray-800">
         <h2 class="text-2xl">Возможные переводы</h2>
         <hr>
         <p v-for="result in translates.fuzzy">
@@ -88,6 +88,11 @@
       <p>
         * Пока переводчик может только дословно переводить текста.
         Это попытка сделать какое то решение для перевода текста с русского на бурятский.
+      </p>
+    </div>
+    <div class="block mt-5  pb-10 text-gray-500">
+      <p>
+        * Также можно использовать другие онлайн словари: <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">Burlang.Toli</a>, <a href="https://uulen.gazeta-n1.ru/" class="text-blue-500" target="_blank">Үүлэн</a>
       </p>
     </div>
   </div>
