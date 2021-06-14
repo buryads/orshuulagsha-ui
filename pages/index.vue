@@ -53,6 +53,16 @@
           </span>
         </p>
       </div>
+      <div v-if="translates.include.length" class="mb-5">
+        <h2 class="text-2xl">Вхождения</h2>
+        <hr>
+        <p v-for="result in translates.include">
+          <span>
+            <b>{{ result.name }}</b><br>
+            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+          </span>
+        </p>
+      </div>
       <div v-if="translates.match.length" class="mb-5">
         <h2 class="text-2xl">Совпадения</h2>
         <hr>
@@ -97,6 +107,7 @@ export default Vue.extend({
       translateTimeout: null,
       translates: {
         result: [],
+        include: [],
         match: [],
         fuzzy: [],
       }
