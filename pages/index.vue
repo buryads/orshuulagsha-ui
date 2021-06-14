@@ -73,6 +73,7 @@ import Vue from 'vue';
 export default Vue.extend({
   data () {
     return {
+      title: 'Бурятско-Русский переводчик',
       from: '',
       to: '',
       translateTimeout: null,
@@ -81,6 +82,18 @@ export default Vue.extend({
         match: [],
         fuzzy: [],
       }
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Бурятско-Русский переводчик'
+        }
+      ]
     }
   },
   methods: {
