@@ -1,14 +1,15 @@
 <template>
   <div class="container mx-auto px-10">
     <h1 class="text-2xl sm:text-4xl lg:text-6xl py-10">
-      Русско-Бурятский переводчик
+      Бурятско-Русский переводчик
     </h1>
     <div class="block md:flex">
       <div class="flex-auto">
         <textarea
-          placeholder="Введите текст" name="" id="first" rows="10"
+          placeholder="Мэдуулэл бэшэшгты" name="" id="second" rows="10"
           class="p-5 w-full border-b-2 border-fuchsia-600"
-          v-model="from"
+          v-model="to"
+          @keypress="changeTo"
         ></textarea>
       </div>
       <div class="my-5 m-auto text-center">
@@ -18,10 +19,43 @@
       </div>
       <div class="flex-auto">
         <textarea
-          placeholder="Мэдуулэл бэшэшгты" name="" id="second" rows="10"
+          placeholder="Введите текст" name="" id="first" rows="10"
           class="p-5 w-full border-b-2 border-fuchsia-600"
-          v-model="to"
+          v-model="from"
+          @keypress="changeFrom"
         ></textarea>
+      </div>
+    </div>
+    <div class="block mt-10 text-gray-500">
+      <div v-if="translates.result.length" class="mb-5">
+        <h2 class="text-2xl">Переводы</h2>
+        <hr>
+        <p v-for="result in translates.result">
+          <span>
+            <b>{{ result.name }}</b><br>
+            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+          </span>
+        </p>
+      </div>
+      <div v-if="translates.match.length" class="mb-5">
+        <h2 class="text-2xl">Совпадения</h2>
+        <hr>
+        <p v-for="result in translates.match">
+          <span>
+            <b>{{ result.name }}</b><br>
+            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+          </span>
+        </p>
+      </div>
+      <div v-if="translates.fuzzy.length" class="mb-5">
+        <h2 class="text-2xl">Возможные переводы</h2>
+        <hr>
+        <p v-for="result in translates.fuzzy">
+          <span>
+            <b>{{ result.name }}</b><br>
+            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+          </span>
+        </p>
       </div>
     </div>
     <div class="block mt-40 text-gray-500">
@@ -34,18 +68,65 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 
 export default Vue.extend({
-  watch: {
-    from(newVal) {
-      console.log(newVal)
-    }
-  },
   data () {
     return {
       from: '',
       to: '',
+      translateTimeout: null,
+      translates: {
+        result: [],
+        match: [],
+        fuzzy: [],
+      }
+    }
+  },
+  methods: {
+    changeFrom(e: any) {
+      clearTimeout(this.translateTimeout);
+
+      this.translateTimeout = setTimeout(() => {
+        const value = e.target.value;
+        this.$axios.get('/api/translate/ru2bur?' + this.jsonObjectToQueryString({
+          word: value
+        })).then(({data: {data}}) => {
+          this.to = data?.result?.[0]?.translations?.[0]?.name;
+          console.log(this.to);
+          this.translates = data;
+        });
+      }, 500);
+    },
+    changeTo(e: any) {
+      clearTimeout(this.translateTimeout);
+
+      this.translateTimeout = setTimeout(() => {
+        const value = e.target.value;
+        this.$axios.get('/api/translate/bur2ru?' + this.jsonObjectToQueryString({
+          word: value
+        })).then(({data: {data}}) => {
+          this.from = data?.result?.[0]?.translations?.[0]?.name;
+          this.translates = data;
+        });
+      }, 500);
+    },
+    jsonObjectToQueryString (obj: any, prefix: any = null): string {
+      const euc = encodeURIComponent
+      const serialize = this.jsonObjectToQueryString
+      const isNotNullObject = (v: any) => v !== null && typeof v === "object"
+      const queryStringItems = []
+
+      for (let p in obj) {
+        if (!obj.hasOwnProperty(p)) {
+          continue
+        }
+
+        const k = prefix ? prefix + "[" + p + "]" : p
+        const v = obj[p]
+        queryStringItems.push(isNotNullObject(v) ? serialize(v, k) : euc(k) + "=" + euc(v));
+      }
+      return queryStringItems.join("&");
     }
   }
 })
