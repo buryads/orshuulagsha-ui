@@ -51,6 +51,10 @@
             <b>{{ result.name }}</b><br>
             <span v-for="translation in result.translations">{{ translation.name }}<br></span>
           </span>
+          <span v-if="result.description">
+            <b>Wiki <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>:</b><br>
+            {{ result.description.short_description }} <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>
+          </span>
         </p>
       </div>
       <div v-if="translates.include.length" class="mb-5 text-gray-800">
