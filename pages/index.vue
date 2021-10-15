@@ -96,8 +96,26 @@
     </div>
     <div class="block mt-5  pb-10 text-gray-500">
       <p>
-        * Также можно использовать другие онлайн словари: <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">Burlang.Toli</a>, <a href="https://uulen.gazeta-n1.ru/" class="text-blue-500" target="_blank">Үүлэн</a>
+        Также можно использовать другие онлайн словари: <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">Burlang.Toli</a>, <a href="https://uulen.gazeta-n1.ru/" class="text-blue-500" target="_blank">Үүлэн</a>
       </p>
+    </div>
+    <div class="block mt-5  pb-2 text-gray-500">
+      <p>
+        У нас также есть мобильные приложения и расширение для браузера Google Chrome:
+      </p>
+    </div>
+    <div class="justify-center flex">
+      <div class="block mt-5 md:flex justify-center pb-10 text-gray-500">
+        <a href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile" target="_blank" class="mr-5">
+          <img src="/playstore.png" width="150px" alt="Play Store"/>
+        </a>
+        <a href="https://apps.apple.com/ru/app/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/id1584232985" target="_blank" class="mr-5">
+          <img src="/appstore.png" width="150px" alt="App Store"/>
+        </a>
+        <a href="https://chrome.google.com/webstore/detail/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/gmljjdkoihndbbddpmechgpmacpglcei?hl=ru" target="_blank">
+          <img src="/chromewebstore.png" width="150px" alt="App Store"/>
+        </a>
+      </div>
     </div>
   </div>
 </template>
