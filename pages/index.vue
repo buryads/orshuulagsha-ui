@@ -113,7 +113,7 @@ export default Vue.extend({
       to: '',
       fromLoading: false,
       toLoading: false,
-      translateTimeout: null,
+      translateTimeout: 0,
       translates: {
         result: [],
         include: [],
@@ -122,7 +122,7 @@ export default Vue.extend({
       }
     }
   },
-  head() {
+  head(): any {
     return {
       title: this.title,
       meta: [
@@ -138,12 +138,12 @@ export default Vue.extend({
     changeFrom(e: any) {
       clearTimeout(this.translateTimeout);
 
-      this.translateTimeout = setTimeout(() => {
+      this.translateTimeout = window.setTimeout(() => {
         this.fromLoading = true;
         const value = e.value;
         this.$axios.get('/api/translate/ru2bur?' + this.jsonObjectToQueryString({
           word: value
-        })).then(({data: {data}}) => {
+        })).then(({data: {data}}: any) => {
           this.to = data?.result?.[0]?.translations?.[0]?.name;
           console.log(this.to);
           this.translates = data;
@@ -155,12 +155,13 @@ export default Vue.extend({
     changeTo(e: any) {
       clearTimeout(this.translateTimeout);
 
-      this.translateTimeout = setTimeout(() => {
+      this.translateTimeout = window.setTimeout(() => {
         this.toLoading = true;
         const value = e.value;
-        this.$axios.get('/api/translate/bur2ru?' + this.jsonObjectToQueryString({
+        const params: string = this.jsonObjectToQueryString({
           word: value
-        })).then(({data: {data}}) => {
+        }, null);
+        this.$axios.get('/api/translate/bur2ru?' + params).then(({data: {data}}: any) => {
           this.from = data?.result?.[0]?.translations?.[0]?.name;
           this.translates = data;
         }).finally(() => {
@@ -170,7 +171,6 @@ export default Vue.extend({
     },
     jsonObjectToQueryString (obj: any, prefix: any = null): string {
       const euc = encodeURIComponent
-      const serialize = this.jsonObjectToQueryString
       const isNotNullObject = (v: any) => v !== null && typeof v === "object"
       const queryStringItems = []
 
@@ -181,7 +181,7 @@ export default Vue.extend({
 
         const k = prefix ? prefix + "[" + p + "]" : p
         const v = obj[p]
-        queryStringItems.push(isNotNullObject(v) ? serialize(v, k) : euc(k) + "=" + euc(v));
+        queryStringItems.push(isNotNullObject(v) ? (this as any).jsonObjectToQueryString(v, k) : euc(k) + "=" + euc(v));
       }
       return queryStringItems.join("&");
     }
