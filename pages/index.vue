@@ -6,7 +6,10 @@
     <div class="block md:flex">
       <div class="flex-auto">
         <textarea
-          placeholder="Угэ бэшэгты" name="" id="second" rows="10"
+          placeholder="Үгэ бэшэгты"
+          name=""
+          id="second"
+          rows="10"
           class="p-5 w-full border-b-2 border-fuchsia-600"
           v-model="to"
           @keypress="changeTo($event.target)"
