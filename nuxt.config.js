@@ -49,5 +49,14 @@ export default {
   },
   server: {
     host: '0.0.0.0' // default: localhost
+  },
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'TranslationsLogs',
+        path: '/logs',
+        component: resolve(__dirname, 'pages/translationsLogs.vue')
+      })
+    }
   }
 }
