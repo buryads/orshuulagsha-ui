@@ -56,7 +56,12 @@ export default {
         name: 'TranslationsLogs',
         path: '/logs',
         component: resolve(__dirname, 'pages/translationsLogs.vue')
-      })
+      });
+      routes.push({
+        name: 'WordsMatcher',
+        path: '/words-matcher/:sourceLanguage',
+        component: resolve(__dirname, 'pages/wordsMatcher.vue')
+      });
     }
   }
 }
