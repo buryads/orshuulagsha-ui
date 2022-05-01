@@ -73,8 +73,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Keyboard from "../keyboard/BuryadKeyboard";
-import {Context} from "@nuxt/types";
 import moment from "moment";
 
 let input;
