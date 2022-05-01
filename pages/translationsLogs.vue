@@ -13,6 +13,8 @@
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">All translations: {{ translations.count }}</p>
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Ru to Bur translations: {{ translations.ruToBurCount }}</p>
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Bur to Ru translations: {{ translations.burToRuCount }}</p>
+            <hr class="mt-3">
+            <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Today's translations: {{ translations.countToday }}</p>
           </header>
           <div class="mt-10 relative">
             <h2 class="group flex whitespace-pre-wrap relative scroll-mt-[var(--scroll-mt)] -ml-4 pl-4" id="class-reference">
@@ -86,17 +88,22 @@ export default Vue.extend({
         count: 0,
         ruToBurCount: 0,
         burToRuCount: 0,
+        countToday: 0,
       }
     }
   },
   async fetch() {
+    const startAt = moment().format('YYYY-MM-DD');
+    const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
     this.translations.logs = await this.$axios.$get('/api/translations-logs');
     const {count} = await this.$axios.$get('/api/translations-logs/count');
     const {count: ruToBurCount} = await this.$axios.$get('/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
     const {count: burToRuCount} = await this.$axios.$get('/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
+    const {count: countToday} = await this.$axios.$get(`/api/translations-logs/count?startAt=${startAt}&endAt=${endAt}`);
     this.translations.ruToBurCount = ruToBurCount;
     this.translations.burToRuCount = burToRuCount;
     this.translations.count = count;
+    this.translations.countToday = countToday;
   },
   head(): any {
     return {
