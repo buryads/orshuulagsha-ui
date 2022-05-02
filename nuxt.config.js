@@ -40,7 +40,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'https://t.buryads.com',
+    baseURL: 'https://tt.buryads.com',
     // proxy: true
   },
 
