@@ -40,7 +40,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'https://tt.buryads.com',
+    baseURL: 'http://orshuulga-backend.localhost',
     // proxy: true
   },
 
@@ -59,7 +59,12 @@ export default {
       });
       routes.push({
         name: 'WordsMatcher',
-        path: '/words-matcher/:sourceLanguage',
+        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode',
+        component: resolve(__dirname, 'pages/wordsMatcher.vue')
+      });
+      routes.push({
+        name: 'WordsMatcher',
+        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId',
         component: resolve(__dirname, 'pages/wordsMatcher.vue')
       });
     }
