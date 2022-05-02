@@ -40,7 +40,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://orshuulga-backend.localhost',
+    baseURL: 'https://t.buryads.com',
     // proxy: true
   },
 
