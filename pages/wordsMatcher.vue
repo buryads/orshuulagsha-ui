@@ -91,6 +91,7 @@ import WordMatchLink from '../components/WordMatchLink.vue';
 let input;
 
 export default Vue.extend({
+  middleware: 'auth',
   data () {
     return {
       title: 'Сопоставитель слов',
@@ -135,7 +136,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$axios.$get(`/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId ? this.wordId : 'random'}`).then(data => {
+    this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId ? this.wordId : 'random'}`).then(data => {
       this.word = data;
     })
   },
@@ -167,7 +168,7 @@ export default Vue.extend({
   },
   methods: {
     async loadSimilarWords(word: string) {
-      const words = await this.$axios.$get(`/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
+      const words = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
       this.suggestedWords = words;
     },
     removeWord(index: number) {
@@ -197,13 +198,13 @@ export default Vue.extend({
     },
     async addNewWord() {
       const word = this.searchText.trim();
-      await this.$axios.$post(`/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
+      await this.$axios.$post(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
         name: word
       });
       this.loadSimilarWords(word);
     },
     async save() {
-      this.word = await this.$axios.$put(`/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.word.id}/sync`, this.word);
+      this.word = await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.word.id}/sync`, this.word);
       document.location.href = document.location.href.replace(this.wordId, '').replace(/\/$/, '') + `/${this.word.id}`;
     },
     async saveAndSkip() {

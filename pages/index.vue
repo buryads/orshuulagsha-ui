@@ -272,7 +272,7 @@ export default Vue.extend({
         this.loading = true;
         const value = e.value.trim();
         const translateMethod = this.currentLocale === 'bur' ? 'bur2ru' : 'ru2bur'
-        this.$axios.get('/api/translate/' + translateMethod + '?' + this.jsonObjectToQueryString({
+        this.$axios.get('/api/api/translate/' + translateMethod + '?' + this.jsonObjectToQueryString({
           word: value
         })).then(({data: {data}}: any) => {
           this.translates = data;

@@ -1,5 +1,6 @@
 <template>
   <div class="h-full nuxt-wrapper  dark:bg-gray-800">
+    <Navbar></Navbar>
     <Nuxt/>
   </div>
 </template>
@@ -65,3 +66,9 @@ html, body, .nuxt-wrapper {
   background-color: #35495e;
 }
 </style>
+<script>
+import Navbar from "../components/Navbar";
+export default {
+  components: {Navbar}
+}
+</script>

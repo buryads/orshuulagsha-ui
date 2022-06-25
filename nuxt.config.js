@@ -36,12 +36,36 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   axios: {
     baseURL: 'https://tt.buryads.com',
-    // proxy: true
+    proxy: true,
+    credentials: true
+  },
+
+  auth: {
+    strategies: {
+      laravelSanctum: {
+        provider: 'laravel/sanctum',
+        url: '/api',
+        user: {
+          property: false,
+          autoFetch: true
+        }
+      }
+    }
+  },
+
+  proxy: {
+    '/api': {
+      target: 'https://tt.buryads.com',
+      pathRewrite: {
+        '^/api/': ''
+      }
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -63,9 +87,9 @@ export default {
         component: resolve(__dirname, 'pages/wordsMatcher.vue')
       });
       routes.push({
-        name: 'WordsMatcher',
-        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId',
-        component: resolve(__dirname, 'pages/wordsMatcher.vue')
+        name: 'Login',
+        path: '/login',
+        component: resolve(__dirname, 'pages/login.vue')
       });
     }
   }

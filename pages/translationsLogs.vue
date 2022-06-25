@@ -78,6 +78,7 @@ import moment from "moment";
 let input;
 
 export default Vue.extend({
+  middleware: 'auth',
   data () {
     return {
       title: 'Translations logs',
@@ -90,14 +91,15 @@ export default Vue.extend({
       }
     }
   },
-  async fetch() {
+  async created() {
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
-    this.translations.logs = await this.$axios.$get('/api/translations-logs');
-    const {count} = await this.$axios.$get('/api/translations-logs/count');
-    const {count: ruToBurCount} = await this.$axios.$get('/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
-    const {count: burToRuCount} = await this.$axios.$get('/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
-    const {count: countToday} = await this.$axios.$get(`/api/translations-logs/count?startAt=${startAt}&endAt=${endAt}`);
+    console.log(this.$auth.loggedIn);
+    this.translations.logs = await this.$axios.$get('/api/api/translations-logs');
+    const {count} = await this.$axios.$get('/api/api/translations-logs/count');
+    const {count: ruToBurCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
+    const {count: burToRuCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
+    const {count: countToday} = await this.$axios.$get(`/api/api/translations-logs/count?startAt=${startAt}&endAt=${endAt}`);
     this.translations.ruToBurCount = ruToBurCount;
     this.translations.burToRuCount = burToRuCount;
     this.translations.count = count;
