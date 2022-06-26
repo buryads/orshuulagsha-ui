@@ -22,7 +22,7 @@ services:
     volumes:
       - "${APP_DIR}:/var/www/html"
     working_dir: /var/www/html
-    command: npm i && npm run build && npm run start
+    command: npm run docker-start
     networks:
       - server
 

@@ -41,7 +41,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://orshuulga-backend.localhost',
+    baseURL: 'https://tt.buryads.com',
     proxy: true,
     credentials: true
   },
@@ -61,7 +61,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://orshuulga-backend.localhost',
+      target: 'https://tt.buryads.com',
       pathRewrite: {
         '^/api/': ''
       }
