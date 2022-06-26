@@ -85,6 +85,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue';
 import WordMatchLink from '../components/WordMatchLink.vue';
 

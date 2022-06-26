@@ -57,7 +57,7 @@
                 ref="searchText"
               />
               <div>
-                <button @click.prevent="addNewWord" type="button" class="py-1 lg:w-9/12 w-full focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                <button @click.prevent="addNewWord" :disabled="isDisabledCreateNewRelatedWord" type="button" :class="`py-1 ${isDisabledCreateNewRelatedWord ? 'bg-gray-600 cursor-wait' : 'bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700'} lg:w-9/12 w-full focus:outline-none text-white  focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  dark:focus:ring-green-800`">
                   Добавить слово/фразу в базу данных
                 </button>
               </div>
@@ -84,6 +84,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue';
 import WordMatchLink from '../components/WordMatchLink.vue';
 import Input from "~/components/Input.vue";
@@ -99,6 +100,7 @@ export default Vue.extend({
   data () {
     return {
       rerender: 0,
+      isDisabledCreateNewRelatedWord: false,
       newWord: '',
       searchText: '',
       word: this.defaultWord(),
@@ -116,8 +118,13 @@ export default Vue.extend({
       if (this.loadSuggestedWordsTimeout) {
         clearTimeout(this.loadSuggestedWordsTimeout);
       }
+      this.isDisabledCreateNewRelatedWord = true;
       this.loadSuggestedWordsTimeout = setTimeout(() => {
-        this.loadSimilarWords(newVal);
+        try {
+          this.loadSimilarWords(newVal);
+        } finally {
+          this.isDisabledCreateNewRelatedWord = false;
+        }
       }, 2000);
     }
   },
@@ -173,8 +180,7 @@ export default Vue.extend({
       return await this.$axios.$get(`/api/api/words-matcher/${sourceLanguageCodeCode}/${destinationLanguageCode}/${wordId}`) || this.defaultWord();
     },
     async loadSimilarWords(word: string) {
-      const words = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
-      this.suggestedWords = words;
+        this.suggestedWords = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
     },
     removeWord(index: number) {
       this.word[this.destinationLanguageWordsKey] = this.removeItemFromArray(this.word[this.destinationLanguageWordsKey], index);

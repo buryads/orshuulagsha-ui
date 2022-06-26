@@ -28,7 +28,7 @@
                 @keypress="translate($event.target)"
                 ref="text"
               >
-              <button @click="translate($refs.text)" class=" w-full lg:w-2/12 inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+              <button @click="translate($refs.text, true)" class=" w-full lg:w-2/12 inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                 <span class="pr-5">{{ locale('buttonTranslate') }}</span>
               </button>
             </div>
@@ -50,34 +50,34 @@
               <h2 class="text-2xl">{{ locale('translates') }}</h2>
               <hr>
               <p v-for="result in translates.result">
-          <span>
-            <b>{{ result.name }}</b><br>
-            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
-          </span>
+                <span>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+                </span>
                 <span v-if="result.description">
-            <b>Wiki <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>:</b><br>
-            {{ result.description.short_description }} <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>
-          </span>
+                  <b>Wiki <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>:</b><br>
+                  {{ result.description.short_description }} <a class="text-blue-500" :href="result.description.url" target="_blank">⇪</a>
+                </span>
               </p>
             </div>
             <div v-if="translates.include.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('includes') }}</h2>
               <hr>
               <p v-for="result in translates.include">
-          <span>
-            <b>{{ result.name }}</b><br>
-            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
-          </span>
+                <span>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+                </span>
               </p>
             </div>
             <div v-if="translates.match.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('matches') }}</h2>
               <hr>
               <p v-for="result in translates.match">
-          <span>
-            <b>{{ result.name }}</b><br>
-            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
-          </span>
+                <span>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+                </span>
               </p>
             </div>
             <div v-if="translates.fuzzy.length" class="mb-5 text-gray-800">
@@ -85,7 +85,7 @@
               <hr>
               <p v-for="result in translates.fuzzy">
           <span>
-            <b>{{ result.name }}</b><br>
+            <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
             <span v-for="translation in result.translations">{{ translation.name }}<br></span>
           </span>
               </p>
@@ -135,6 +135,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue';
 import Keyboard from "../keyboard/BuryadKeyboard";
 
@@ -159,6 +160,7 @@ export default Vue.extend({
       showFullKeyboard: false,
       locales: {
         bur: {
+          change: 'залгаха',
           buryad: 'Буряад',
           russian: 'Ород',
           vocabulary: 'толи',
@@ -174,6 +176,7 @@ export default Vue.extend({
           showFullKeyboard: 'Клавиатура харуулха'
         },
         ru: {
+          change: 'править',
           buryad: 'Бурятский',
           russian: 'Русско',
           vocabulary: 'словарь',
@@ -246,6 +249,12 @@ export default Vue.extend({
     locale(key: string): string|null {
       return this.locales[this.currentLocale][key]
     },
+    getLinkToEditForm(word) {
+      if (this.currentLocale === 'bur') {
+        return `/words/bur/ru/${word.id}`
+      }
+      return `/words/ru/bur/${word.id}`
+    },
     toggleShowFullKeyboard() {
       this.showFullKeyboard = !this.showFullKeyboard;
     },
@@ -262,9 +271,9 @@ export default Vue.extend({
         value: this.text
       })
     },
-    translate(e: any): any {
+    translate(e: any, imidiately: boolean = false): any {
       clearTimeout(this.translateTimeout);
-      if (e.value.trim() === '') {
+      if (!e.value || e.value.trim() === '') {
         this.translates = this.defaultTranslates();
         return;
       }
@@ -289,7 +298,7 @@ export default Vue.extend({
         }).finally(() => {
           this.loading = false;
         });
-      }, 1000);
+      }, imidiately ? 1 : 5000);
     },
     jsonObjectToQueryString (obj: object, prefix: string|null = null): string {
       const euc = encodeURIComponent;
