@@ -42,6 +42,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Input from '../components/Input.vue';

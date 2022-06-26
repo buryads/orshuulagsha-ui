@@ -72,6 +72,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue';
 import moment from "moment";
 
