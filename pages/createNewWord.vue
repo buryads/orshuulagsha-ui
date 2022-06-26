@@ -12,50 +12,52 @@
           </header>
           <div class="mt-10 relative">
             <h2 class="inline-block text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200">
-              Языки:
+              Languages:
             </h2>
             <div class="py-3">
-<!--              <p>-->
-<!--                <word-match-link name="с бурятского на английский" :active="$route.fullPath === '/words-matcher/bur/en'" link="/words-matcher/bur/en"/>-->
-<!--              </p>-->
               <p>
-                <word-match-link name="с бурятского на русский" :active="$route.fullPath.includes('/words-matcher/bur/ru')" link="/words-matcher/bur/ru"/>
+                <word-match-link
+                  name="Create Buryad word with Russian translations"
+                  :active="$route.fullPath.includes('/words/bur/ru')"
+                  link="/words/bur/ru"
+                />
               </p>
-<!--              <p>-->
-<!--                <word-match-link name="с английского на бурятский" :active="$route.fullPath.includes('/words-matcher/en/bur')" link="/words-matcher/en/bur"/>-->
-<!--              </p>-->
-<!--              <p>-->
-<!--                <word-match-link name="с английского на русский" :active="$route.fullPath.includes('/words-matcher/en/ru')" link="/words-matcher/en/ru"/>-->
-<!--              </p>-->
               <p>
-                <word-match-link name="с русского на бурятский" :active="$route.fullPath.includes('/words-matcher/ru/bur')" link="/words-matcher/ru/bur"/>
+                <word-match-link
+                  name="Create Russian word with Buryad translations"
+                  :active="$route.fullPath.includes('/words/ru/bur')"
+                  link="/words/ru/bur"
+                />
               </p>
-<!--              <p>-->
-<!--                <word-match-link name="с русского на английский" :active="$route.fullPath.includes('/words-matcher/ru/en')" link="/words-matcher/ru/en"/>-->
-<!--              </p>-->
             </div>
-            <div class="py-3">
-              <p>
-                <b>{{ word.name }}</b>
-              </p>
-              <p class="mt-2 text-lg text-slate-700 dark:text-slate-400" v-for="translation in word.translations">
-                {{ translation.name }}
-              </p>
-              <div class="mt-2 text-lg text-slate-700 dark:text-slate-400">
+            <div class="py-3 w-full" :key="rerender">
+              <p class="pb-1">Word:</p>
+              <Input
+                placeholder="New word"
+                v-model="word.name"
+                ref="newWord"
+              />
+              <p class="pb-1">Description:</p>
+              <textarea
+                v-for="translation in word.translations"
+                placeholder="New word description"
+                rows="6"
+                class="p-2 mb-2 lg:w-9/12 w-full border-2 border-fuchsia-600 rounded"
+                v-model="translation.name"
+              />
+              <div class="my-2 text-lg text-slate-700 dark:text-slate-400">
+                <p class="pb-5">Translations:</p>
                 <div v-for="(w, i) in word[destinationLanguageWordsKey]" class="inline-block">
                   <span :class="`mr-5`">{{ w.name }}<span class="absolute -mt-3 px-2 cursor-pointer text-red-600" @click="removeWord(i)">x</span>&nbsp;</span>
                 </div>
               </div>
-            </div>
-            <div class="py-3 w-full">
-              <input
-                placeholder="Введите слово для поиска"
-                class="p-2 mb-2 w-full border-2 border-fuchsia-600 rounded w-full"
+              <Input
+                placeholder="Enter the translation word"
                 v-model="searchText"
-                ref="text"
-              >
-              <div v-if="!suggestedWords.length && searchText !== ''">
-                <button @click.prevent="addNewWord" type="button" class="py-1 w-full focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                ref="searchText"
+              />
+              <div>
+                <button @click.prevent="addNewWord" type="button" class="py-1 lg:w-9/12 w-full focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                   Добавить слово/фразу в базу данных
                 </button>
               </div>
@@ -67,13 +69,10 @@
             </div>
             <div class="py-3">
               <button @click.prevent="save" type="button" class="py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                Сохранить
+                Save
               </button>
               <button @click.prevent="saveAndSkip" type="button" class="py-2 text-white bg-green-800 hover:bg-green-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                Сохранить и продолжить
-              </button>
-              <button @click.prevent="skip" type="button" class="py-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                Пропустить/Продолжить
+                Save & continue
               </button>
             </div>
 
@@ -87,6 +86,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import WordMatchLink from '../components/WordMatchLink.vue';
+import Input from "~/components/Input.vue";
 
 let input;
 
@@ -98,35 +98,17 @@ export default Vue.extend({
   },
   data () {
     return {
-      title: 'Сопоставитель слов',
+      rerender: 0,
+      newWord: '',
       searchText: '',
-      word: {
-        name: 'Слово',
-        description: 'Слово описание',
-        words: [
-          {
-            id: 1,
-            'name': 'Слово 1',
-            'description': 'Слово 1',
-          },
-          {
-            id: 2,
-            'name': 'Слово 2',
-            'description': 'Слово 2',
-          },
-          {
-            id: 3,
-            'name': 'Слово 3',
-            'description': 'Слово 3',
-          }
-        ]
-      },
+      word: this.defaultWord(),
       suggestedWords: [],
       updateSuggestedWords: 0,
       loadSuggestedWordsTimeout: null
     }
   },
   components: {
+    Input,
     WordMatchLink
   },
   watch: {
@@ -136,15 +118,18 @@ export default Vue.extend({
       }
       this.loadSuggestedWordsTimeout = setTimeout(() => {
         this.loadSimilarWords(newVal);
-      }, 1000);
+      }, 2000);
     }
   },
-  mounted() {
-    this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId ? this.wordId : 'random'}`).then(data => {
-      this.word = data;
-    })
+  async mounted() {
+    if (this.wordId) {
+      this.word = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId}`);
+    }
   },
   computed: {
+    title () {
+      return `${!this.wordId ? 'Add' : 'Edit'} word`;
+    },
     sourceLanguageCodeCode() {
       return this.$route.params.sourceLanguageCode;
     },
@@ -171,6 +156,22 @@ export default Vue.extend({
     }
   },
   methods: {
+    defaultWord () {
+      return {
+        name: null,
+        description: 'Слово описание',
+        translations: [
+          {
+            'description': null
+          }
+        ],
+        ru_words: [],
+        bur_words: []
+      };
+    },
+    async loadWord(sourceLanguageCodeCode, destinationLanguageCode, wordId) {
+      return await this.$axios.$get(`/api/api/words-matcher/${sourceLanguageCodeCode}/${destinationLanguageCode}/${wordId}`) || this.defaultWord();
+    },
     async loadSimilarWords(word: string) {
       const words = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
       this.suggestedWords = words;
@@ -207,9 +208,24 @@ export default Vue.extend({
       });
       this.loadSimilarWords(word);
     },
+    async saveWord(word) {
+      return await this.$axios.$post(`/api/api/words-matcher/${this.destinationLanguageCode}/${this.sourceLanguageCodeCode}`, word);
+    },
+    async sync(word) {
+      return await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}/sync`, word);
+    },
     async save() {
-      this.word = await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.word.id}/sync`, this.word);
-      document.location.href = document.location.href.replace(this.wordId, '').replace(/\/$/, '') + `/${this.word.id}`;
+      let translations = [...this.word.translations];
+      let ruWords = this.word.ru_words ? [...this.word.ru_words] : [];
+      let burWords = this.word.bur_words ? [...this.word.bur_words] : [];
+      let word = await this.saveWord(this.word);
+      word = {
+        ...word,
+        ru_words: ruWords,
+        bur_words: burWords
+      };
+      this.word = await this.sync(word);
+      document.location.href = document.location.href.replace(this.wordId, '').replace(/\/$/, '') + `/${word.id}`;
     },
     async saveAndSkip() {
       await this.save();

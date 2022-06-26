@@ -1,5 +1,5 @@
 <template>
-  <a v-if="!active" :href="link" :class="`text-blue-500 hover:text-blue-800`">{{ name }}</a>
+  <nuxt-link v-if="!active" :to="link" :class="`text-blue-500 hover:text-blue-800`">{{ name }}</nuxt-link>
   <span v-else :class="`text-green-500`">{{ name }}</span>
 </template>
 

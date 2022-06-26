@@ -1,10 +1,19 @@
 <template>
   <input
-    :placeholder="placeholder" :name="name" :id="id" :rows="rows" :type="type"
+    v-if="type !== 'textarea'"
+    :placeholder="placeholder" :name="name" :rows="rows"
     class="p-2 mb-2 lg:w-9/12 w-full border-2 border-fuchsia-600 rounded"
-    :value="modelValue"
-    @input="input"
-  >
+    v-model="val"
+    :type="type"
+  />
+  <textarea
+    v-else
+    :placeholder="placeholder"
+    :name="name"
+    :rows="rows"
+    class="p-2 mb-2 lg:w-9/12 w-full border-2 border-fuchsia-600 rounded"
+    v-model="val"
+  />
 </template>
 
 <script>
@@ -41,9 +50,19 @@ export default {
       default: 'text'
     }
   },
+  computed: {
+    val: {
+      set (value) {
+        return this.input({}, value);
+      },
+      get () {
+        return this.modelValue;
+      }
+    }
+  },
   methods: {
-    input ($event) {
-      this.$emit('input', $event.target.value);
+    input ($event, value = null) {
+      this.$emit('input', value || $event?.target?.value);
     }
   }
 }
