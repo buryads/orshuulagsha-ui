@@ -27,6 +27,9 @@
           <span class="inline-block py-2 px-3 rounded-full">
             <div class="flex items-center relative cursor-pointer whitespace-nowrap">|</div>
           </span>
+          <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/words/bur/ru">
+            <div class="flex items-center relative cursor-pointer whitespace-nowrap">Add new words</div>
+          </nuxt-link>
           <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/logs">
             <div class="flex items-center relative cursor-pointer whitespace-nowrap">Logs</div>
           </nuxt-link>

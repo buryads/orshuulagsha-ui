@@ -41,7 +41,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'https://tt.buryads.com',
+    baseURL: 'http://orshuulga-backend.localhost',
     proxy: true,
     credentials: true
   },
@@ -61,7 +61,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'https://tt.buryads.com',
+      target: 'http://orshuulga-backend.localhost',
       pathRewrite: {
         '^/api/': ''
       }
@@ -83,13 +83,18 @@ export default {
       });
       routes.push({
         name: 'WordsMatcher',
-        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode',
+        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
         component: resolve(__dirname, 'pages/wordsMatcher.vue')
       });
       routes.push({
         name: 'Login',
         path: '/login',
         component: resolve(__dirname, 'pages/login.vue')
+      });
+      routes.push({
+        name: 'CreateNewWord',
+        path: '/words/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
+        component: resolve(__dirname, 'pages/createNewWord.vue')
       });
     }
   }

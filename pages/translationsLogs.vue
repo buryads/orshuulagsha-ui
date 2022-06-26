@@ -78,7 +78,11 @@ import moment from "moment";
 let input;
 
 export default Vue.extend({
-  middleware: 'auth',
+  created() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login');
+    }
+  },
   data () {
     return {
       title: 'Translations logs',
