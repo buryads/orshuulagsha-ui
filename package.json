@@ -6,6 +6,7 @@
     "dev": "nuxt-ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
+    "docker-start": "npm i && npm run build && npm run start",
     "generate": "nuxt-ts generate",
     "test": "jest",
     "lint": "eslint --ext .ts,.js,.vue ."
