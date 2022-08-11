@@ -63,6 +63,14 @@
                 </tr>
                 </tbody>
               </table>
+              <Pagination
+                v-if="translations.count"
+                :offset="pagination.offset"
+                :limit="pagination.limit"
+                :total="translations.count"
+                :key="paginationUpdate"
+                @loadPage="loadListByOffset"
+              />
             </div>
           </div>
         </div>
@@ -75,6 +83,7 @@
 // @ts-nocheck
 import Vue from 'vue';
 import moment from "moment";
+import Pagination from "../components/Pagination.vue";
 
 let input;
 
@@ -84,6 +93,9 @@ export default Vue.extend({
       this.$router.push('/login');
     }
   },
+  components: {
+    Pagination
+},
   data () {
     return {
       title: 'Translations logs',
@@ -93,21 +105,31 @@ export default Vue.extend({
         ruToBurCount: 0,
         burToRuCount: 0,
         countToday: 0,
-      }
+      },
+      meta: {
+        count: 0,
+        to: 0,
+        from: 0
+      },
+      paginationUpdate: 0,
+      pagination: {
+        offset: 0,
+        limit: 100
+      },
+      pages: []
     }
   },
   async created() {
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
     console.log(this.$auth.loggedIn);
-    this.translations.logs = await this.$axios.$get('/api/api/translations-logs');
-    const {count} = await this.$axios.$get('/api/api/translations-logs/count');
+    await this.loadList();
     const {count: ruToBurCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
     const {count: burToRuCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
     const {count: countToday} = await this.$axios.$get(`/api/api/translations-logs/count?startAt=${startAt}&endAt=${endAt}`);
     this.translations.ruToBurCount = ruToBurCount;
     this.translations.burToRuCount = burToRuCount;
-    this.translations.count = count;
+    this.translations.count = this.meta.count;
     this.translations.countToday = countToday;
   },
   head(): any {
@@ -125,6 +147,61 @@ export default Vue.extend({
   methods: {
     formatDate (date: any) {
       return moment(date).format('MMMM Do YYYY, h:mm:ss a')
+    },
+    async loadListByOffset (offset: any, limit: any) {
+      this.pagination.limit = limit || this.pagination.limit;
+      this.pagination.offset = offset === 0 ? 0 : offset || this.pagination.offset;
+      await this.loadList();
+      this.paginationUpdate++;
+    },
+    async loadList () {
+      const {count} = await this.$axios.$get('/api/api/translations-logs/count');
+      this.meta.count = count;
+      this.translations.logs = await this.$axios.$get(`/api/api/translations-logs?limit=${this.pagination.limit}&offset=${this.pagination.offset}`);
+      //this.preparePagination();
+    },
+    preparePagination () {
+      this.meta.from = this.translations.logs[this.translations.logs.length - 1].id;
+      this.meta.to = this.translations.logs[0].id;
+      this.pages = [];
+      const pageCount = Math.ceil(this.meta.count / this.pagination.limit);
+      const currentPage = this.pagination.offset / this.pagination.limit;
+      if (currentPage > 2) {
+        for (let i = 0; i < 3; i++) {
+          this.pages.push({
+            index: i,
+            label: i + 1,
+            current: currentPage === i
+          });
+        }
+        this.pages.push({
+          index: null,
+          label: "...",
+          current: false
+        });
+      }
+      for (let i = currentPage; i < currentPage + 3; i++) {
+        this.pages.push({
+          index: i,
+          label: i + 1,
+          current: currentPage === i
+        });
+      }
+      if (this.pages[0].index !== pageCount - 3) {
+        this.pages.push({
+          index: null,
+          label: "...",
+          current: false
+        });
+        for (let i = pageCount - 3; i < pageCount; i++) {
+          this.pages.push({
+            index: i,
+            label: i + 1,
+            current: currentPage === i
+          });
+        }
+
+      }
     }
   }
 })
