@@ -91,6 +91,11 @@
               </p>
             </div>
           </div>
+          <div class="block mt-5 text-gray-700">
+            <p>
+              {{ locale('dailyTranslationsCount') }}: {{ dailyTranslationsCount }}
+            </p>
+          </div>
           <div class="block mt-5 text-gray-700" v-if="messageFromServer.show">
             <h2 class="text-xl sm:text-xl lg:text-6xl py-1">{{ messageFromServer.body.title }}</h2>
             <p>
@@ -163,7 +168,8 @@ export default Vue.extend({
         bur: locales.bur.index,
         ru: locales.ru.index,
         en: locales.en.index,
-      }
+      },
+      dailyTranslationsCount: 0
     }
   },
   head(): any {
@@ -208,8 +214,13 @@ export default Vue.extend({
         layoutName: shiftToggle
       });
     };
+
+    this.initDailyTranslationsCount();
   },
   methods: {
+    async initDailyTranslationsCount () {
+      this.dailyTranslationsCount = (await this.$axios.$get('/api/api/statistic/daily-translations-count'))?.count || 0;
+    },
     defaultTranslates (): object {
       return {
         result: [],

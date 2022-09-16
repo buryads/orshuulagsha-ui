@@ -13,6 +13,7 @@ export default {
     otherServices: 'Other services',
     disclaimer: 'Translations could be wrong, it\'s not like 100% right translations here',
     toggleLanguage: 'Toggle language',
-    showFullKeyboard: 'Show full keyboard'
+    showFullKeyboard: 'Show full keyboard',
+    dailyTranslationsCount: 'Today was translated'
   }
 }
