@@ -13,7 +13,8 @@ export default {
     otherServices: 'Также можно использовать другие онлайн словари',
     disclaimer: 'Переводы могут быть неточным, 100% правильность не гарантируется',
     toggleLanguage: 'Переключить языки',
-    showFullKeyboard: 'Показать клавиатуру'
+    showFullKeyboard: 'Показать клавиатуру',
+    dailyTranslationsCount: 'Сегодня было переведено'
   }
 
 }

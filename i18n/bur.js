@@ -13,6 +13,7 @@ export default {
     otherServices: 'Тигээд баhа ондо онлайн толинууд',
     disclaimer: 'Оршуулга буруу байжа болохо, 100% зуб гэжэ хэлэхэр бэшэ',
     toggleLanguage: 'Хэлэнуудые hэлгэхэ',
-    showFullKeyboard: 'Клавиатура харуулха'
+    showFullKeyboard: 'Клавиатура харуулха',
+    dailyTranslationsCount: 'Mүнөө үдэр оршуулагда'
   }
 }
