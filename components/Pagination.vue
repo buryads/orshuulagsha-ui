@@ -28,7 +28,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
     export default {
         name: 'Pagination',
         props: {
@@ -55,7 +55,7 @@
             this.preparePagination();
         },
         methods: {
-            loadPage(offset: Number, limit: Number) {
+            loadPage(offset, limit) {
                 if (offset < 0 || offset > this.total + this.limit) {
                     return;
                 }
