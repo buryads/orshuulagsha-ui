@@ -89,8 +89,6 @@
 import Vue from 'vue';
 import WordMatchLink from '../components/WordMatchLink.vue';
 
-let input;
-
 export default Vue.extend({
   created() {
     if (!this.$auth.loggedIn) {

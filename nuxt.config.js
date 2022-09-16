@@ -61,7 +61,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'https://tt.buryads.com',
+      target: 'http://orshuulga-backend.localhost/',
       pathRewrite: {
         '^/api/': ''
       }
