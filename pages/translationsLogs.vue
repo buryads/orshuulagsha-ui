@@ -88,14 +88,9 @@ import Pagination from "../components/Pagination.vue";
 let input;
 
 export default Vue.extend({
-  created() {
-    if (!this.$auth.loggedIn) {
-      this.$router.push('/login');
-    }
-  },
   components: {
     Pagination
-},
+  },
   data () {
     return {
       title: 'Translations logs',
@@ -120,6 +115,9 @@ export default Vue.extend({
     }
   },
   async created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push('/login');
+    }
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
     console.log(this.$auth.loggedIn);
