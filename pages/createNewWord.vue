@@ -62,7 +62,7 @@
                 </button>
               </div>
               <div :key="updateSuggestedWords">
-                <p v-for="(suggestedWord, i) in suggestedWords" href="#" class="mt-2 text-lg text-slate-700 dark:text-slate-400">
+                <p v-for="(suggestedWord, i) in suggestedWords" class="mt-2 text-lg text-slate-700 dark:text-slate-400">
                   <a href="#" :class="`${isAlreadyInWords(suggestedWord) ? 'opacity-25' : ''}`">{{ suggestedWord.name }}</a><span v-if="!isAlreadyInWords(suggestedWord)" class="ml-2 text-green-500 cursor-pointer" @click="addSuggestedWord(suggestedWord)">+</span>
                 </p>
               </div>
@@ -88,8 +88,6 @@
 import Vue from 'vue';
 import WordMatchLink from '../components/WordMatchLink.vue';
 import Input from "~/components/Input.vue";
-
-let input;
 
 export default Vue.extend({
   created() {
@@ -131,6 +129,15 @@ export default Vue.extend({
   async mounted() {
     if (this.wordId) {
       this.word = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId}`);
+    }
+    console.log(this.$route.query.word);
+    if (this.$route.query?.word) {
+      this.word.name = this.$route.query?.word;
+      try {
+        this.$axios.$post(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/word`, this.word).then(word => {
+          this.$router.push(`/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
+        });
+      } catch (ignored) {}
     }
   },
   computed: {
@@ -221,7 +228,6 @@ export default Vue.extend({
       return await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}/sync`, word);
     },
     async save() {
-      let translations = [...this.word.translations];
       let ruWords = this.word.ru_words ? [...this.word.ru_words] : [];
       let burWords = this.word.bur_words ? [...this.word.bur_words] : [];
       let word = await this.saveWord(this.word);
@@ -231,7 +237,7 @@ export default Vue.extend({
         bur_words: burWords
       };
       this.word = await this.sync(word);
-      document.location.href = document.location.href.replace(this.wordId, '').replace(/\/$/, '') + `/${word.id}`;
+      this.$router.push(`/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
     },
     async saveAndSkip() {
       await this.save();

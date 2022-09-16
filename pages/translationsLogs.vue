@@ -33,6 +33,9 @@
                 <thead>
                 <tr>
                   <th class="sticky z-10 top-0 text-sm leading-6 font-semibold text-slate-700 bg-white p-0 dark:bg-slate-900 dark:text-slate-300">
+                    <div class="py-2 pr-2 border-b border-slate-200 dark:border-slate-400/20">#</div>
+                  </th>
+                  <th class="sticky z-10 top-0 text-sm leading-6 font-semibold text-slate-700 bg-white p-0 dark:bg-slate-900 dark:text-slate-300">
                     <div class="py-2 pr-2 border-b border-slate-200 dark:border-slate-400/20">Word/Phrase</div>
                   </th>
                   <th class="sticky z-10 top-0 text-sm leading-6 font-semibold text-slate-700 bg-white p-0 dark:bg-slate-900 dark:text-slate-300 pr-3">
@@ -49,13 +52,24 @@
                 <tbody class="align-baseline">
                 <tr v-for="log in translations.logs" :class="`${!log.results_count ? 'bg-red-300' : ''}`">
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    <b>{{ log.translation_source }}</b>
+                    <b>
+                      <nuxt-link
+                        v-if="log.results_count === 0"
+                        :to="`/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
+                      >
+                        <outline-document-add-icon class="w-5 h-5 inline-block" />
+                      </nuxt-link>
+                    </b>
+                  </td>
+                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                    <p v-if="log.results_count > 0">{{ log.translation_source }}</p>
+                    <b v-else>{{ log.translation_source }}</b>
                   </td>
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
                     {{ log.results_count }}
                   </td>
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    {{ log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru').replace('BurToRu', 'bur') }}
+                    {{ log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru -> bur').replace('BurToRu', 'bur -> ru') }}
                   </td>
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
                     {{ formatDate(log.created_at) }}
