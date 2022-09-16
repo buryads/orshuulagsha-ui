@@ -89,7 +89,6 @@ export default Vue.extend({
         });
         await this.$router.push('/');
         window.location.reload();
-        console.log('Redirected to main page')
       } catch (e) {
         this.error = e.response?.data || this.defaultError('Undefined error');
         console.error(e)

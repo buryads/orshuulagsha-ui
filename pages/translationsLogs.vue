@@ -120,7 +120,6 @@ export default Vue.extend({
     }
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
-    console.log(this.$auth.loggedIn);
     await this.loadList();
     const {count: ruToBurCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
     const {count: burToRuCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
@@ -156,7 +155,6 @@ export default Vue.extend({
       const {count} = await this.$axios.$get('/api/api/translations-logs/count');
       this.meta.count = count;
       this.translations.logs = await this.$axios.$get(`/api/api/translations-logs?limit=${this.pagination.limit}&offset=${this.pagination.offset}`);
-      //this.preparePagination();
     },
     preparePagination () {
       this.meta.from = this.translations.logs[this.translations.logs.length - 1].id;

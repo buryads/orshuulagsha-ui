@@ -65,7 +65,6 @@
                 this.pages = [];
                 const pageCount = Math.ceil(this.total / this.limit);
                 this.currentPage = this.offset / this.limit;
-                console.log(this.currentPage);
                 if (this.currentPage + 1 !== 1) {
                     this.pages.push({
                         index: 0,
