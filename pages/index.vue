@@ -186,7 +186,6 @@ export default Vue.extend({
   },
   watch: {
     text(newVal) {
-      console.log(newVal)
       document.querySelector('.keyboard-app').value = newVal;
     }
   },
@@ -196,7 +195,6 @@ export default Vue.extend({
 
     const keyboard = new Keyboard('keyboard-app', {
       onKeyPress: (button) => {
-        console.log(button)
         if (button === "{shift}" || button === "{lock}") handleShift();
         if (!button.includes('{')) {
           this.text += button;
