@@ -129,7 +129,7 @@ export default Vue.extend({
   },
   computed: {
     translationLogsUrl () {
-      return this.$route.name === 'TranslationsLogsUniqueNotFoundWords' ? '/api/api/translations-logs/unique-not-found-words' : '/api/api/translations-logs'
+      return `/api/api/translations-logs${this.$route.name === 'TranslationsLogsUniqueNotFoundWords' ? '/unique-not-found-words' : ''}`
     }
   },
   async created() {
@@ -139,9 +139,9 @@ export default Vue.extend({
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
     await this.loadList();
-    const {count: ruToBurCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\RuToBurTranslateService');
-    const {count: burToRuCount} = await this.$axios.$get('/api/api/translations-logs/count?method=App\\Services\\BurToRuTranslateService');
-    const {count: countToday} = await this.$axios.$get(`/api/api/translations-logs/count?startAt=${startAt}&endAt=${endAt}`);
+    const {count: ruToBurCount} = await this.$axios.$get(`${this.translationLogsUrl}/count?method=App\\Services\\RuToBurTranslateService`);
+    const {count: burToRuCount} = await this.$axios.$get(`${this.translationLogsUrl}/count?method=App\\Services\\BurToRuTranslateService`);
+    const {count: countToday} = await this.$axios.$get(`${this.translationLogsUrl}/count?startAt=${startAt}&endAt=${endAt}`);
     this.translations.ruToBurCount = ruToBurCount;
     this.translations.burToRuCount = burToRuCount;
     this.translations.count = this.meta.count;
@@ -170,12 +170,12 @@ export default Vue.extend({
       this.paginationUpdate++;
     },
     async loadList () {
-      const {count} = await this.$axios.$get('/api/api/translations-logs/count');
+      const {count} = await this.$axios.$get(`${this.translationLogsUrl}/count`);
       this.meta.count = count;
       this.translations.logs = await this.$axios.$get(`${this.translationLogsUrl}?limit=${this.pagination.limit}&offset=${this.pagination.offset}`);
     },
     async ignore (id) {
-      await this.$axios.$put(`/api/api/translations-logs/${id}/ignore`);
+      await this.$axios.$put(`${this.translationLogsUrl}/${id}/ignore`);
       this.loadList();
     },
     preparePagination () {
