@@ -84,6 +84,11 @@ export default {
         component: resolve(__dirname, 'pages/translationsLogs.vue')
       });
       routes.push({
+        name: 'TranslationsLogsUniqueNotFoundWords',
+        path: '/logs/unique-not-found-words',
+        component: resolve(__dirname, 'pages/translationsLogs.vue')
+      });
+      routes.push({
         name: 'WordsMatcher',
         path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
         component: resolve(__dirname, 'pages/wordsMatcher.vue')
