@@ -39,6 +39,11 @@
               <outline-document-report-icon class="w-5 h-5" /> <span class="hidden lg:inline">Logs</span>
             </div>
           </nuxt-link>
+          <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/logs/unique-not-found-words">
+            <div class="flex items-center relative cursor-pointer whitespace-nowrap">
+              <outline-emoji-sad-icon class="w-5 h-5" />
+            </div>
+          </nuxt-link>
         </div>
 
         <div class="block">

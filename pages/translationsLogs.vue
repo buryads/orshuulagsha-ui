@@ -17,17 +17,6 @@
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Today's translations: {{ translations.countToday }}</p>
           </header>
           <div class="mt-10 relative">
-            <h2 class="group flex whitespace-pre-wrap relative scroll-mt-[var(--scroll-mt)] -ml-4 pl-4" id="class-reference">
-              <a href="#class-reference" class="absolute -ml-10 flex items-center opacity-0 border-0 group-hover:opacity-100" aria-label="Anchor">
-                &ZeroWidthSpace;
-                <div class="w-6 h-6 text-slate-400 ring-1 ring-slate-900/5 rounded-md shadow-sm flex items-center justify-center hover:ring-slate-900/10 hover:shadow hover:text-slate-700 dark:bg-slate-700 dark:text-slate-300 dark:shadow-none dark:ring-0">
-                  <svg width="12" height="12" fill="none" aria-hidden="true">
-                    <path d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                  </svg>
-                </div>
-              </a>
-              <span><span class="sr-only">Quick reference</span></span>
-            </h2>
             <div class="overflow-hidden lg:overflow-auto scrollbar:!w-1.5 scrollbar:!h-1.5 scrollbar:bg-transparent scrollbar-track:!bg-slate-100 scrollbar-thumb:!rounded scrollbar-thumb:!bg-slate-300 scrollbar-track:!rounded dark:scrollbar-track:!bg-slate-500/[0.16] dark:scrollbar-thumb:!bg-slate-500/50">
               <table class="w-full text-left border-collapse">
                 <thead>
@@ -50,19 +39,29 @@
                 </tr>
                 </thead>
                 <tbody class="align-baseline">
-                <tr v-for="log in translations.logs" :class="`${!log.results_count ? 'bg-red-300' : ''}`">
+                <tr v-for="log in translations.logs" :class="`${!log.results_count ? 'bg-red-300' : ''} ${log.ignore ? 'opacity-50 bg-gray-200' : ''}`">
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
                     <b>
                       <nuxt-link
-                        v-if="log.results_count === 0"
+                        v-if="log.results_count === 0 && !log.ignore"
                         :to="`/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
                       >
                         <outline-document-add-icon class="w-5 h-5 inline-block" />
                       </nuxt-link>
+                      <a
+                        v-if="log.results_count === 0 && !log.ignore"
+                        @click.prevent="ignore(log.id)"
+                        href="##"
+                      >
+                        <outline-archive-icon class="w-5 h-5 inline-block"/>
+                      </a>
+                      <span  v-if="log.results_count === 0 && log.ignore">
+                        <outline-eye-off-icon class="w-5 h-5 inline-block"/>
+                      </span>
                     </b>
                   </td>
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    <p v-if="log.results_count > 0">{{ log.translation_source }}</p>
+                    <p v-if="log.results_count !== 0 || log.ignore">{{ log.translation_source }}</p>
                     <b v-else>{{ log.translation_source }}</b>
                   </td>
                   <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
@@ -128,6 +127,11 @@ export default Vue.extend({
       pages: []
     }
   },
+  computed: {
+    translationLogsUrl () {
+      return this.$route.name === 'TranslationsLogsUniqueNotFoundWords' ? '/api/api/translations-logs/unique-not-found-words' : '/api/api/translations-logs'
+    }
+  },
   async created() {
     if (!this.$auth.loggedIn) {
       return this.$router.push('/login');
@@ -168,7 +172,11 @@ export default Vue.extend({
     async loadList () {
       const {count} = await this.$axios.$get('/api/api/translations-logs/count');
       this.meta.count = count;
-      this.translations.logs = await this.$axios.$get(`/api/api/translations-logs?limit=${this.pagination.limit}&offset=${this.pagination.offset}`);
+      this.translations.logs = await this.$axios.$get(`${this.translationLogsUrl}?limit=${this.pagination.limit}&offset=${this.pagination.offset}`);
+    },
+    async ignore (id) {
+      await this.$axios.$put(`/api/api/translations-logs/${id}/ignore`);
+      this.loadList();
     },
     preparePagination () {
       this.meta.from = this.translations.logs[this.translations.logs.length - 1].id;
