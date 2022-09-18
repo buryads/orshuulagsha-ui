@@ -1,5 +1,6 @@
 export default {
   index: {
+    foundWordsInOppositeLanuage: 'Хэлэнуудые hэлгэхэ. Нүгөөдэ хэлэн дээрэ олдоhон үгэнүүд: ',
     change: 'залгаха',
     buryad: 'Буряад',
     russian: 'Ород',

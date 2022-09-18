@@ -40,6 +40,11 @@
               <a href="#" @click.prevent="toggleShowFullKeyboard" class="ml-2 text-blue-300 hover:text-blue-600">{{ locale('showFullKeyboard') }}</a>
             </div>
           </div>
+          <div class="block md:flex" v-if="foundWordsInOppositeLanuage">
+            <div class="flex-auto">
+              <a href="#" @click.prevent="toggleVocabularies(true)" class="ml-2 text-red-400 hover:text-red-800">{{ locale('foundWordsInOppositeLanuage') }} {{ foundWordsInOppositeLanuage }}</a>
+            </div>
+          </div>
           <div class="block md:flex">
             <div class="flex-auto">
               <div class="keyboard-app" v-show="showFullKeyboard"></div>
@@ -155,6 +160,7 @@ export default Vue.extend({
       text: '',
       sourceLanguage: 'ru',
       destinationLanguage: 'bur',
+      foundWordsInOppositeLanuage: 0,
       languages: [
         'ru',
         'bur'
@@ -257,7 +263,7 @@ export default Vue.extend({
     toggleShowFullKeyboard() {
       this.showFullKeyboard = !this.showFullKeyboard;
     },
-    toggleVocabularies() {
+    toggleVocabularies(imidiately: boolean = false) {
       let newLocale = this.currentLocale;
       if (this.currentLocale === 'ru') {
         newLocale = 'bur';
@@ -267,10 +273,11 @@ export default Vue.extend({
         this.setLanguages('ru', 'bur');
       }
       this.setCurrentLocale(newLocale);
-
+      this.foundWordsInOppositeLanuage = 0;
       this.translate({
         value: this.text
-      })
+      }, imidiately);
+      this.translates = this.defaultTranslates();
     },
     setLanguages(source = 'bur', destination = 'ru') {
       this.sourceLanguage = source;
@@ -283,21 +290,19 @@ export default Vue.extend({
     setCurrentLocale(newLocale) {
       this.currentLocale = newLocale;
     },
-    translate(e: any, imidiately: boolean = false): any {
+    async translate(e: any, imidiately: boolean = false): any {
       clearTimeout(this.translateTimeout);
       if (!e.value || e.value.trim() === '') {
         this.translates = this.defaultTranslates();
         return;
       }
-      this.translateTimeout = setTimeout(() => {
+      this.translateTimeout = setTimeout(async () => {
         this.loading = true;
         const value = e.value.trim();
         UrlHelper.setQueryParameter('t', value);
-        this.$axios.get(`/api/api/translate/${this.sourceLanguage}2${this.destinationLanguage}?` + this.jsonObjectToQueryString({
-          word: value
-        })).then(({data: {data}}: any) => {
-          this.translates = data;
-          if (data.message) {
+        try {
+          this.translates = await this.translateText(this.sourceLanguage, this.destinationLanguage, value);
+          if (this.translates.message) {
             this.messageFromServer.body = data.message;
             this.messageFromServer.show = true;
           } else {
@@ -307,10 +312,26 @@ export default Vue.extend({
             };
             this.messageFromServer.show = false;
           }
-        }).finally(() => {
+          const translationResultCount = this.countResultCount(this.translates);
+          if (translationResultCount === 0) {
+            const oppositeTranslates = await this.translateText(this.destinationLanguage, this.sourceLanguage, value);
+            this.foundWordsInOppositeLanuage = this.countResultCount(oppositeTranslates);
+          }
+        } catch (e) {
+          console.error(e);
+        } finally {
           this.loading = false;
-        });
+        }
       }, imidiately ? 1 : 5000);
+    },
+    countResultCount (translates) {
+      return translates.result.filter(word => word.id !== 0 && word?.translations[0]?.id !== 0).length;
+    },
+    async translateText(sourceLanguge, destinationLanguage, text) {
+      const {data: {data}}: any = await this.$axios.get(`/api/api/translate/${sourceLanguge}2${destinationLanguage}?` + this.jsonObjectToQueryString({
+        word: text
+      }));
+      return data;
     },
     jsonObjectToQueryString (obj: object, prefix: string|null = null): string {
       const euc = encodeURIComponent;

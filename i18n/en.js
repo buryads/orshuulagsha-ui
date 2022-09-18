@@ -1,5 +1,6 @@
 export default {
   index: {
+    foundWordsInOppositeLanuage: 'Switch language. Found words in opposite language: ',
     change: 'change',
     buryad: 'Buryat',
     russian: 'Russian',
