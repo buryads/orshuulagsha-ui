@@ -29,81 +29,75 @@
 </template>
 
 <script lang="js">
-    export default {
-        name: 'Pagination',
-        props: {
-            offset: {
-                required: true,
-                type: Number
-            },
-            limit: {
-                required: true,
-                type: Number
-            },
-            total: {
-                required: true,
-                type: Number
+import UrlHelper from '../utils/url.js';
+
+export default {
+    name: 'Pagination',
+    props: {
+        offset: {
+            required: true,
+            type: Number
+        },
+        limit: {
+            required: true,
+            type: Number
+        },
+        total: {
+            required: true,
+            type: Number
+        }
+    },
+    data () {
+        return {
+            pages: [],
+            currentPage: 0
+        };
+    },
+    mounted () {
+        this.preparePagination();
+    },
+    methods: {
+        loadPage(offset, limit) {
+            if (offset < 0 || offset > this.total + this.limit) {
+                return;
             }
+            this.$emit('loadPage', offset, limit);
         },
-        data () {
-            return {
-                pages: [],
-                currentPage: 0
-            };
-        },
-        mounted () {
-            this.preparePagination();
-        },
-        methods: {
-            loadPage(offset, limit) {
-                if (offset < 0 || offset > this.total + this.limit) {
-                    return;
-                }
-                this.$emit('loadPage', offset, limit);
-            },
-            insertUrlParam(key, value) {
-                if (history.pushState) {
-                    let searchParams = new URLSearchParams(window.location.search);
-                    searchParams.set(key, value);
-                    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
-                    window.history.pushState({path: newurl}, '', newurl);
-                }
-            },
-            preparePagination () {
-                this.pages = [];
-                const pageCount = Math.ceil(this.total / this.limit);
-                this.currentPage = this.offset / this.limit;
+        preparePagination () {
+            this.pages = [];
+            const pageCount = Math.ceil(this.total / this.limit);
+            this.currentPage = this.offset / this.limit;
 
-                this.insertUrlParam('page', this.currentPage + 1);
+            UrlHelper.setQueryParameter('page', this.currentPage + 1);
 
-                if (this.currentPage + 1 !== 1) {
-                    this.pages.push({
-                        index: 0,
-                        label: 1,
-                        current: this.currentPage + 1 === 1
-                    });
-                    this.pages.push({
-                        index: null,
-                        label: '...'
-                    });
-                }
+            if (this.currentPage + 1 !== 1) {
                 this.pages.push({
-                    index: this.currentPage,
-                    label: this.currentPage + 1,
-                    current: true
+                    index: 0,
+                    label: 1,
+                    current: this.currentPage + 1 === 1
                 });
-                if (this.currentPage !== pageCount) {
-                    this.pages.push({
-                        index: null,
-                        label: '...'
-                    });
-                    this.pages.push({
-                        index: pageCount,
-                        label: pageCount + 1,
-                        current: this.currentPage === pageCount
-                    });
-                }
+                this.pages.push({
+                    index: null,
+                    label: '...'
+                });
+            }
+            this.pages.push({
+                index: this.currentPage,
+                label: this.currentPage + 1,
+                current: true
+            });
+            if (this.currentPage !== pageCount) {
+                this.pages.push({
+                    index: null,
+                    label: '...'
+                });
+                this.pages.push({
+                    index: pageCount,
+                    label: pageCount + 1,
+                    current: this.currentPage === pageCount
+                });
             }
         }
     }
+}
 </script>

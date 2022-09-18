@@ -16,5 +16,4 @@ export default {
     showFullKeyboard: 'Показать клавиатуру',
     dailyTranslationsCount: 'Сегодня было переведено'
   }
-
 }
