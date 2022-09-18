@@ -39,41 +39,51 @@
                 </tr>
                 </thead>
                 <tbody class="align-baseline">
-                <tr v-for="log in translations.logs" :class="`${!log.results_count ? 'bg-red-300' : ''} ${log.ignore ? 'opacity-50 bg-gray-200' : ''}`">
-                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    <b>
-                      <nuxt-link
-                        v-if="log.results_count === 0 && !log.ignore"
-                        :to="`/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
-                      >
-                        <outline-document-add-icon class="w-5 h-5 inline-block" />
-                      </nuxt-link>
-                      <a
-                        v-if="log.results_count === 0 && !log.ignore"
-                        @click.prevent="ignore(log.id)"
-                        href="##"
-                      >
-                        <outline-archive-icon class="w-5 h-5 inline-block"/>
-                      </a>
-                      <span  v-if="log.results_count === 0 && log.ignore">
+                <template v-for="log in translations.logs">
+                  <tr :class="`${!log.results_count ? 'bg-red-300' : ''} ${log.ignore ? 'opacity-50 bg-gray-200' : ''}`">
+                    <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      <b>
+                        <nuxt-link
+                          v-if="log.results_count === 0 && !log.ignore"
+                          :to="`/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
+                        >
+                          <outline-document-add-icon class="w-5 h-5 inline-block" />
+                        </nuxt-link>
+                        <a
+                          v-if="log.results_count === 0 && !log.ignore"
+                          @click.prevent="ignore(log.id)"
+                          href="##"
+                        >
+                          <outline-archive-icon class="w-5 h-5 inline-block"/>
+                        </a>
+                        <span  v-if="log.results_count === 0 && log.ignore">
                         <outline-eye-off-icon class="w-5 h-5 inline-block"/>
                       </span>
-                    </b>
-                  </td>
-                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    <p v-if="log.results_count !== 0 || log.ignore">{{ log.translation_source }}</p>
-                    <b v-else>{{ log.translation_source }}</b>
-                  </td>
-                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    {{ log.results_count }}
-                  </td>
-                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    {{ log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru -> bur').replace('BurToRu', 'bur -> ru') }}
-                  </td>
-                  <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                    {{ formatDate(log.created_at) }}
-                  </td>
-                </tr>
+                      </b>
+                    </td>
+                    <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      <p v-if="log.results_count !== 0 || log.ignore">{{ log.translation_source }}</p>
+                      <b v-else>{{ log.translation_source }}</b>
+                    </td>
+                    <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      {{ log.results_count }}
+                    </td>
+                    <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      {{ log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru -> bur').replace('BurToRu', 'bur -> ru') }}
+                    </td>
+                    <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      {{ formatDate(log.created_at) }}
+                    </td>
+                  </tr>
+                  <tr v-if="log.location_name || log.user_agent">
+                    <td colspan="1" translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      {{ log.location_name }}
+                    </td>
+                    <td colspan="4" translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
+                      {{ detectDevice(log.user_agent) }}
+                    </td>
+                  </tr>
+                </template>
                 </tbody>
               </table>
               <Pagination
@@ -97,6 +107,7 @@
 import Vue from 'vue';
 import moment from "moment";
 import Pagination from "../components/Pagination.vue";
+import DeviceDetector from "device-detector-js";
 
 let input;
 
@@ -164,6 +175,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    detectDevice (userAgent) {
+      const deviceDetector = new DeviceDetector();
+      const info = deviceDetector.parse(userAgent);
+      return `${info?.device?.brand}(${info?.device?.type}) -> ${info?.os?.name} -> ${info?.client?.name}`;
+    },
     formatDate (date: any) {
       return moment(date).format('MMMM Do YYYY, h:mm:ss a')
     },
