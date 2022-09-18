@@ -72,15 +72,7 @@
                       {{ log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru -> bur').replace('BurToRu', 'bur -> ru') }}
                     </td>
                     <td translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                      {{ formatDate(log.created_at) }}
-                    </td>
-                  </tr>
-                  <tr v-if="log.location_name || log.user_agent">
-                    <td colspan="1" translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                      {{ log.location_name }}
-                    </td>
-                    <td colspan="4" translate="no" class="py-2 font-mono text-xs text-sky-500 dark:text-sky-400">
-                      {{ detectDevice(log.user_agent) }}
+                      {{ formatDate(log.created_at) }} <small v-if="log.location_name || log.user_agent">{{ log.location_name }}({{ detectDevice(log.user_agent) }})</small>
                     </td>
                   </tr>
                 </template>
@@ -178,7 +170,7 @@ export default Vue.extend({
     detectDevice (userAgent) {
       const deviceDetector = new DeviceDetector();
       const info = deviceDetector.parse(userAgent);
-      return info?.client?.name ? `${info?.device?.brand}(${info?.device?.type}) -> ${info?.os?.name} -> ${info?.client?.name}` : userAgent;
+      return info?.client?.name ? `${info?.client?.name}` : userAgent;
     },
     formatDate (date: any) {
       return moment(date).format('MMMM Do YYYY, h:mm:ss a')
