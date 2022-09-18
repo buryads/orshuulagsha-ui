@@ -136,6 +136,10 @@ export default Vue.extend({
     if (!this.$auth.loggedIn) {
       return this.$router.push('/login');
     }
+
+    const currentPage = parseInt(this.$route.query?.page || 1);
+    this.pagination.offset = currentPage <= 1 ? 0 : (currentPage - 1) * 100;
+
     const startAt = moment().format('YYYY-MM-DD');
     const endAt = moment().add(1, 'day').format('YYYY-MM-DD');
     await this.loadList();

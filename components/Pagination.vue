@@ -61,10 +61,21 @@
                 }
                 this.$emit('loadPage', offset, limit);
             },
+            insertUrlParam(key, value) {
+                if (history.pushState) {
+                    let searchParams = new URLSearchParams(window.location.search);
+                    searchParams.set(key, value);
+                    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+                    window.history.pushState({path: newurl}, '', newurl);
+                }
+            },
             preparePagination () {
                 this.pages = [];
                 const pageCount = Math.ceil(this.total / this.limit);
                 this.currentPage = this.offset / this.limit;
+
+                this.insertUrlParam('page', this.currentPage + 1);
+
                 if (this.currentPage + 1 !== 1) {
                     this.pages.push({
                         index: 0,
