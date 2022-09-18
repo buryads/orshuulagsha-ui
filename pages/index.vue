@@ -144,6 +144,7 @@
 import Vue from 'vue';
 import Keyboard from "../keyboard/BuryadKeyboard";
 import locales from "~/i18n/locales";
+import UrlHelper from '~/utils/url.js';
 
 let input;
 
@@ -152,6 +153,12 @@ export default Vue.extend({
     return {
       title: 'Бурятско-Русский словарь',
       text: '',
+      sourceLanguage: 'ru',
+      destinationLanguage: 'bur',
+      languages: [
+        'ru',
+        'bur'
+      ],
       loading: false,
       translateTimeout: null,
       messageFromServer: {
@@ -191,6 +198,7 @@ export default Vue.extend({
   },
   mounted() {
     input = document.createElement('input');
+    input.style.display = 'none';
     document.body.appendChild(input);
 
     const keyboard = new Keyboard('keyboard-app', {
@@ -214,10 +222,23 @@ export default Vue.extend({
     };
 
     this.initDailyTranslationsCount();
+    this.initTextAndLanguageConfigurations();
   },
   methods: {
     async initDailyTranslationsCount () {
       this.dailyTranslationsCount = (await this.$axios.$get('/api/api/statistic/daily-translations-count'))?.count || 0;
+    },
+    initTextAndLanguageConfigurations () {
+      const {s: sourceLanguage, d: destinationLanguage, t: translateWord} = this.$route.query;
+      if (sourceLanguage && destinationLanguage && sourceLanguage !== destinationLanguage) {
+        this.setCurrentLocale(sourceLanguage);
+        this.sourceLanguage = sourceLanguage;
+        this.destinationLanguage = destinationLanguage;
+      }
+      if (translateWord) {
+        this.text = translateWord;
+        this.translate({value: translateWord}, true);
+      }
     },
     defaultTranslates (): object {
       return {
@@ -231,10 +252,7 @@ export default Vue.extend({
       return this.locales[this.currentLocale][key]
     },
     getLinkToEditForm(word) {
-      if (this.currentLocale === 'bur') {
-        return `/words/bur/ru/${word.id}`
-      }
-      return `/words/ru/bur/${word.id}`
+      return `/words/${this.sourceLanguage}/${this.destinationLanguage}/${word.id}`
     },
     toggleShowFullKeyboard() {
       this.showFullKeyboard = !this.showFullKeyboard;
@@ -243,14 +261,27 @@ export default Vue.extend({
       let newLocale = this.currentLocale;
       if (this.currentLocale === 'ru') {
         newLocale = 'bur';
+        this.setLanguages();
       } else {
         newLocale = 'ru';
+        this.setLanguages('ru', 'bur');
       }
-      this.currentLocale = newLocale;
+      this.setCurrentLocale(newLocale);
 
       this.translate({
         value: this.text
       })
+    },
+    setLanguages(source = 'bur', destination = 'ru') {
+      this.sourceLanguage = source;
+      this.destinationLanguage = destination;
+      UrlHelper.setQueryParameters({
+        s: source,
+        d: destination
+      });
+    },
+    setCurrentLocale(newLocale) {
+      this.currentLocale = newLocale;
     },
     translate(e: any, imidiately: boolean = false): any {
       clearTimeout(this.translateTimeout);
@@ -261,8 +292,8 @@ export default Vue.extend({
       this.translateTimeout = setTimeout(() => {
         this.loading = true;
         const value = e.value.trim();
-        const translateMethod = this.currentLocale === 'bur' ? 'bur2ru' : 'ru2bur'
-        this.$axios.get('/api/api/translate/' + translateMethod + '?' + this.jsonObjectToQueryString({
+        UrlHelper.setQueryParameter('t', value);
+        this.$axios.get(`/api/api/translate/${this.sourceLanguage}2${this.destinationLanguage}?` + this.jsonObjectToQueryString({
           word: value
         })).then(({data: {data}}: any) => {
           this.translates = data;
