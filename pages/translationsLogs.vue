@@ -178,7 +178,7 @@ export default Vue.extend({
     detectDevice (userAgent) {
       const deviceDetector = new DeviceDetector();
       const info = deviceDetector.parse(userAgent);
-      return `${info?.device?.brand}(${info?.device?.type}) -> ${info?.os?.name} -> ${info?.client?.name}`;
+      return info ? `${info?.device?.brand}(${info?.device?.type}) -> ${info?.os?.name} -> ${info?.client?.name}` : userAgent;
     },
     formatDate (date: any) {
       return moment(date).format('MMMM Do YYYY, h:mm:ss a')
