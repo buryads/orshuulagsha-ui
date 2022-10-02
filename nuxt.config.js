@@ -79,6 +79,11 @@ export default {
   router: {
     extendRoutes(routes, resolve) {
       routes.push({
+        name: 'Quiz',
+        path: '/quiz',
+        component: resolve(__dirname, 'pages/quiz.vue')
+      });
+      routes.push({
         name: 'TranslationsLogs',
         path: '/logs',
         component: resolve(__dirname, 'pages/translationsLogs.vue')
