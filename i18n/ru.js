@@ -1,5 +1,6 @@
 export default {
   index: {
+    title: 'Бурятско-Русский словарь',
     foundWordsInOppositeLanuage: 'Переключить язык. Найдено на другом языке резултатов: ',
     change: 'править',
     buryad: 'Бурятский',

@@ -1,11 +1,12 @@
 <template>
-  <nav v-if="user.id" class="container mx-auto bg-white w-full flex relative justify-between items-center mx-auto px-8 h-20">
+  <nav class="container mx-auto bg-white w-full flex relative justify-between items-center mx-auto md:px-8 px-3 h-20">
     <!-- logo -->
     <div class="inline-flex">
       <nuxt-link to="/">
-        <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/">
+        <nuxt-link class="inline-block py-2 md:px-3 hover:bg-gray-200 rounded-full" to="/">
           <div class="flex items-center relative cursor-pointer whitespace-nowrap">
             <outline-book-open-icon class="w-12 h-12"/>
+            <span class="ml-3">{{ locale.index.title }}</span>
           </div>
         </nuxt-link>
       </nuxt-link>
@@ -14,7 +15,7 @@
     <!-- end logo -->
 
     <!-- login -->
-    <div class="flex-initial">
+    <div v-if="user.id" class="flex-initial">
       <div class="flex justify-end items-center relative">
         <div class="flex mr-4 items-center">
           <div class="flex items-center relative cursor-pointer whitespace-nowrap">
@@ -65,17 +66,39 @@
         </div>
       </div>
     </div>
+    <div v-else class="flex-initial">
+      <div class="flex justify-end items-center relative">
+        <div class="flex mr-4 items-center">
+          <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/quiz">
+            <div class="flex items-center relative cursor-pointer whitespace-nowrap">Quiz</div>
+          </nuxt-link>
+        </div>
+        <div class="inline relative">
+          <div type="button" class="inline-flex items-center relative md:px-2 rounded-full">
+            <nuxt-link to="/login" class="md:ml-5 p-2 border rounded-full hover:shadow-lg">
+              <outline-login-icon class="w-5 h-5" />
+            </nuxt-link>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- end login -->
   </nav>
 </template>
 
 <script>
+import locales from '../i18n/locales'
 
 export default {
   name: "Navbar",
   data () {
     return {
       user: {}
+    }
+  },
+  computed: {
+    locale () {
+      return locales.ru;
     }
   },
   mounted() {
