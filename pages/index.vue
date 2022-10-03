@@ -21,16 +21,31 @@
           </h2>
           <div class="block md:flex">
             <div class="flex-auto">
-              <input
-                :placeholder="locale('inputText')" name="" id="second" rows="10"
-                class="p-2 mb-2 lg:w-9/12 w-full border-2 border-fuchsia-600 rounded"
-                v-model="text"
-                @keypress="translate($event.target)"
-                ref="text"
-              >
-              <button @click="translate($refs.text, true)" class=" w-full lg:w-2/12 inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                <span class="pr-5">{{ locale('buttonTranslate') }}</span>
-              </button>
+              <div class="w-full">
+                <div class="flex mb-2 border-fuchsia-600 border-2 rounded">
+                  <input
+                    :placeholder="locale('inputText')" name="" id="second" rows="10"
+                    class="p-2 w-full"
+                    v-model="text"
+                    @keypress="translate($event.target)"
+                    ref="text"
+                  >
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ө'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                    ө
+                  </button>
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'h'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                    h
+                  </button>
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ү'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                    ү
+                  </button>
+                </div>
+              </div>
+              <div class="w-full">
+                <button @click="translate($refs.text, true)" class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                  <span class="">{{ locale('buttonTranslate') }}</span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="block md:flex">
