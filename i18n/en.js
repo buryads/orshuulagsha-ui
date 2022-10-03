@@ -1,5 +1,6 @@
 export default {
   index: {
+    title: 'Buryat-Russian vocabulary',
     foundWordsInOppositeLanuage: 'Switch language. Found words in opposite language: ',
     change: 'change',
     buryad: 'Buryat',

@@ -1,11 +1,11 @@
 <template>
-  <div class="container mx-auto px-10">
-    <h1 class="text-2xl sm:text-4xl lg:text-6xl py-10 text-gray-900">
+  <div class="container mx-auto md:px-10 px-3">
+    <h1 class="text-xl sm:text-2xl lg:text-4xl py-10 text-gray-900">
       {{ title }}
     </h1>
     <div class="block md:flex">
       <div class="flex-auto">
-        <div class="container mx-auto px-5 py-5" style="min-width: 600px;">
+        <div class="container mx-auto md:px-5 md:py-5">
           <h2 class="text-gray-800 pb-2 h-7">
       <span v-if="currentLocale === 'bur'">
         {{ locale('buryad') }} <span class="cursor-pointer text-blue-300 hover:text-blue-600 hover:bg-gray-200 rounded-full inline-block text-center" style="width: 20px; height: 20px;" @click="toggleVocabularies">⇄</span> {{ locale('russian') }} {{ locale('vocabulary') }}
@@ -156,7 +156,6 @@ let input;
 export default Vue.extend({
   data () {
     return {
-      title: 'Бурятско-Русский словарь',
       text: '',
       sourceLanguage: 'ru',
       destinationLanguage: 'bur',
@@ -183,6 +182,11 @@ export default Vue.extend({
         en: locales.en.index,
       },
       dailyTranslationsCount: 0
+    }
+  },
+  computed: {
+    title () {
+      return this.locales[this.currentLocale].title;
     }
   },
   head(): any {

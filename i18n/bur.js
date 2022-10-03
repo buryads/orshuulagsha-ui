@@ -1,5 +1,6 @@
 export default {
   index: {
+    title: 'Буряад-Ород толи',
     foundWordsInOppositeLanuage: 'Хэлэнуудые hэлгэхэ. Нүгөөдэ хэлэн дээрэ олдоhон үгэнүүд: ',
     change: 'залгаха',
     buryad: 'Буряад',
