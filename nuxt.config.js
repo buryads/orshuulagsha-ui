@@ -21,6 +21,14 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    {
+      src: '~/plugins/amcharts.js',
+      ssr: false
+    },
+    {
+      src: "~/plugins/echarts.js",
+      ssr: false
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -72,6 +80,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [
+      '@amcharts/amcharts5', '@amcharts/amcharts5/wc', '@amcharts/amcharts5/themes/Animated',
+      'd3-shape', 'd3-path'
+    ]
   },
   server: {
     host: '0.0.0.0' // default: localhost
@@ -82,6 +94,11 @@ export default {
         name: 'Quiz',
         path: '/quiz',
         component: resolve(__dirname, 'pages/quiz.vue')
+      });
+      routes.push({
+        name: 'Names',
+        path: '/names',
+        component: resolve(__dirname, 'pages/names.vue')
       });
       routes.push({
         name: 'TranslationsLogs',

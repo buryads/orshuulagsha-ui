@@ -12,6 +12,7 @@
     "lint": "eslint --ext .ts,.js,.vue ."
   },
   "dependencies": {
+    "@amcharts/amcharts5": "^5.2.27",
     "@nuxt-hero-icons/outline": "^1.0.1",
     "@nuxt-hero-icons/solid": "^1.0.1",
     "@nuxt/typescript-runtime": "^2.0.1",
@@ -22,9 +23,13 @@
     "burlang-keyboard": "^1.0.2",
     "core-js": "^3.8.3",
     "device-detector-js": "^3.0.3",
+    "echarts": "^5.4.0",
+    "echarts-wordcloud": "^2.0.0",
     "moment": "^2.29.3",
     "nuxt": "^2.15.8",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "vue-d3-cloud": "^0.2.0",
+    "vue-echarts-v3": "^2.0.1"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
