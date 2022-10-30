@@ -72,73 +72,24 @@ import IEcharts from 'vue-echarts-v3';
 
 export default {
   name: 'view',
+  head() {
+    return {
+      title: 'Names',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.title
+        }
+      ]
+    }
+  },
   components: {
     IEcharts
   },
   props: {
   },
-  mounted() {
-    // const cloud = echarts.init(document.getElementById('cloud'));
-    // let keywords = this.names;
-    // keywords = JSON.parse(`{${keywords.slice(0, 700).map(({name}) => {
-    //   return `"${name}": ${this.random(10, 1000)}`;
-    // }).join(',')}}`)
-    // var data = [];
-    // const maskImage = Image ? new Image() : {};
-    // maskImage.src = './logo-s-1.png';
-    // for (var name in keywords) {
-    //   data.push({
-    //     name: name,
-    //     value: Math.sqrt(keywords[name])
-    //   })
-    // }
-    // const option = {
-    //   series: [
-    //     {
-    //       type: 'wordCloud',
-    //       sizeRange: [10, 200],
-    //       rotationRange: [-90, 90],
-    //       rotationStep: 20,
-    //       gridSize: 0,
-    //       shape: 'cloud',
-    //       maskImage,
-    //       drawOutOfBound: false,
-    //       layoutAnimation: false,
-    //       keepAspect: false,
-    //       textStyle: {
-    //         fontFamily: 'sans-serif',
-    //         fontWeight: 'regular',
-    //         fontSize: '2px',
-    //         color: () => {
-    //           const colors = [
-    //             '#0036A8',
-    //             '#FFFFFF',
-    //             '#FFDA00'
-    //           ]
-    //           return colors[this.random(0, 2)];
-    //         }
-    //       },
-    //       emphasis: {
-    //         textStyle: {
-    //           color: '#528'
-    //         }
-    //       },
-    //       data: data.sort(function (a, b) {
-    //         return b.value  - a.value;
-    //       })
-    //     }
-    //   ]
-    // };
-    //
-    // maskImage.onload = function () {
-    //   option.series[0].maskImage
-    //   cloud.setOption(option);
-    // }
-    //
-    // window.onresize = function () {
-    //   cloud.resize();
-    // }
-  },
+  mounted() {},
   data: () => {
     return {
       title: 'Бурятские имена',

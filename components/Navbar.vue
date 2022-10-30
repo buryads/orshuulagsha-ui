@@ -69,8 +69,11 @@
     <div v-else class="flex-initial">
       <div class="flex justify-end items-center relative">
         <div class="flex mr-4 items-center">
+          <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/games">
+            <div class="flex items-center relative cursor-pointer whitespace-nowrap">Games</div>
+          </nuxt-link>
           <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/names">
-            <div class="flex items-center relative cursor-pointer whitespace-nowrap">Имена</div>
+            <div class="flex items-center relative cursor-pointer whitespace-nowrap">Names</div>
           </nuxt-link>
           <nuxt-link class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" to="/quiz">
             <div class="flex items-center relative cursor-pointer whitespace-nowrap">Quiz</div>
