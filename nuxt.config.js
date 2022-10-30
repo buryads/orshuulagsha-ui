@@ -101,6 +101,11 @@ export default {
         component: resolve(__dirname, 'pages/names.vue')
       });
       routes.push({
+        name: 'Games',
+        path: '/games',
+        component: resolve(__dirname, 'pages/games.vue')
+      });
+      routes.push({
         name: 'TranslationsLogs',
         path: '/logs',
         component: resolve(__dirname, 'pages/translationsLogs.vue')
