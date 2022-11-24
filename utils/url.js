@@ -13,4 +13,22 @@ export default class UrlHelper {
       Object.keys(parameters).forEach(key => this.setQueryParameter(key, parameters[key]));
     }
   }
+  static jsonObjectToQueryString (obj, prefix) {
+    const euc = encodeURIComponent;
+    const serialize = this.jsonObjectToQueryString;
+    const isNotNullObject = (v) => v !== null && typeof v === "object";
+    const queryStringItems = [];
+
+    for (let p in obj) {
+      if (!obj.hasOwnProperty(p)) {
+        continue
+      }
+
+      const key = p;
+      const k = prefix ? prefix + "[" + p + "]" : p;
+      const v = obj[key];
+      queryStringItems.push(isNotNullObject(v) ? serialize(v, k) : euc(k) + "=" + euc(v));
+    }
+    return queryStringItems.join("&");
+  }
 }
