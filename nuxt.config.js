@@ -49,7 +49,9 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next'
   ],
-
+  i18n: {
+    encodePaths: false
+  },
   axios: {
     baseURL: 'https://tt.buryads.com',
     proxy: true,
