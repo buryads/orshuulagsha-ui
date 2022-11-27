@@ -93,11 +93,6 @@ export default {
   router: {
     extendRoutes(routes, resolve) {
       routes.push({
-        name: 'SingleWordPage',
-        path: '/:sourceLanguageCode/:destinationLanguageCode/:word',
-        component: resolve(__dirname, 'pages/singleWordPage.vue')
-      });
-      routes.push({
         name: 'Quiz',
         path: '/quiz',
         component: resolve(__dirname, 'pages/quiz.vue')
