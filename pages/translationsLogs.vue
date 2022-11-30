@@ -15,6 +15,8 @@
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Bur to Ru translations: {{ translations.burToRuCount }}</p>
             <hr class="mt-3">
             <p class="mt-2 text-lg text-slate-700 dark:text-slate-400">Today's translations: {{ translations.countToday }}</p>
+            <hr class="mt-3" v-if="isUniqueNotFoundWords">
+            <p class="mt-2 text-lg text-red-700 dark:text-red-400" v-if="isUniqueNotFoundWords"><a href="/api/api/translations-logs/unique-not-found-words/csv" target="_blank">Download CSV (all unique words by method)</a></p>
           </header>
           <div class="mt-10 relative">
             <div class="overflow-hidden lg:overflow-auto scrollbar:!w-1.5 scrollbar:!h-1.5 scrollbar:bg-transparent scrollbar-track:!bg-slate-100 scrollbar-thumb:!rounded scrollbar-thumb:!bg-slate-300 scrollbar-track:!rounded dark:scrollbar-track:!bg-slate-500/[0.16] dark:scrollbar-thumb:!bg-slate-500/50">
@@ -132,7 +134,10 @@ export default Vue.extend({
   },
   computed: {
     translationLogsUrl () {
-      return `/api/api/translations-logs${this.$route.name === 'TranslationsLogsUniqueNotFoundWords' ? '/unique-not-found-words' : ''}`
+      return `/api/api/translations-logs${this.isUniqueNotFoundWords ? '/unique-not-found-words' : ''}`
+    },
+    isUniqueNotFoundWords () {
+      return this.$route.name === 'TranslationsLogsUniqueNotFoundWords';
     }
   },
   async created() {
