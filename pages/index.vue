@@ -30,13 +30,13 @@
                     @keypress="translate($event.target)"
                     ref="text"
                   >
-                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ө'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ө'; $refs.text.focus()" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
                     ө
                   </button>
-                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'h'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'h'; $refs.text.focus()" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
                     h
                   </button>
-                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ү'" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
+                  <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ү'; $refs.text.focus()" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
                     ү
                   </button>
                 </div>
