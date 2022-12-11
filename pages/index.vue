@@ -65,13 +65,18 @@
               <div class="keyboard-app" v-show="showFullKeyboard"></div>
             </div>
           </div>
-          <div class="block mt-10 text-gray-500">
+          <div class="block mt-10 text-gray-500" :update="update">
             <div v-if="translates.result.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('translates') }}</h2>
               <hr>
-              <p v-for="result in translates.result">
+              <p v-for="(result, i) in translates.result" :key="result.id">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
+                    <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('result', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                    <a v-else href="#" @click.prevent="pauseSpeech('result', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                  </span>
+                  <br>
                   <span v-for="translation in result.translations">{{ translation.name }}<br></span>
                 </span>
                 <span v-if="result.description">
@@ -83,9 +88,14 @@
             <div v-if="translates.include.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('includes') }}</h2>
               <hr>
-              <p v-for="result in translates.include">
+              <p v-for="(result, i) in translates.include">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
+                    <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('include', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                    <a v-else href="#" @click.prevent="pauseSpeech('include', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                  </span>
+                  <br>
                   <span v-for="translation in result.translations">{{ translation.name }}<br></span>
                 </span>
               </p>
@@ -93,9 +103,14 @@
             <div v-if="translates.match.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('matches') }}</h2>
               <hr>
-              <p v-for="result in translates.match">
+              <p v-for="(result, i) in translates.match">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
+                    <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('match', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                    <a v-else href="#" @click.prevent="pauseSpeech('match', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                  </span>
+                  <br>
                   <span v-for="translation in result.translations">{{ translation.name }}<br></span>
                 </span>
               </p>
@@ -103,11 +118,16 @@
             <div v-if="translates.fuzzy.length" class="mb-5 text-gray-800">
               <h2 class="text-2xl">{{ locale('possibleTranslates') }}</h2>
               <hr>
-              <p v-for="result in translates.fuzzy">
-          <span>
-            <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup><br>
-            <span v-for="translation in result.translations">{{ translation.name }}<br></span>
-          </span>
+              <p v-for="(result, i) in translates.fuzzy">
+                <span>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
+                    <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('fuzzy', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                    <a v-else href="#" @click.prevent="pauseSpeech('fuzzy', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                  </span>
+                  <br>
+                  <span v-for="translation in result.translations">{{ translation.name }}<br></span>
+                </span>
               </p>
             </div>
           </div>
@@ -202,6 +222,10 @@ export default Vue.extend({
         'bur'
       ],
       loading: false,
+      audio: null,
+      audioKey: null,
+      audioIndex: null,
+      update: 0,
       translateTimeout: null,
       messageFromServer: {
         body: {
@@ -272,6 +296,23 @@ export default Vue.extend({
     this.initTextAndLanguageConfigurations();
   },
   methods: {
+    playSpeech (key, index) {
+      console.log("test")
+      this.translates[key][index].isPlaying = true;
+      this.audio = new Audio(this.translates[key][index].speechs[0].url);
+      this.audio.play();
+      this.audio.addEventListener('pause', (event) => {
+        this.translates[key][index].isPlaying = false;
+        this.update++;
+      });
+      this.update++;
+    },
+    pauseSpeech (key, index) {
+      this.translates[key][index].isPlaying = true;
+      this.audio = new Audio(this.translates[key][index].speechs[0].url);
+      this.audio.pause();
+      this.update++;
+    },
     async initDailyTranslationsCount () {
       this.dailyTranslationsCount = (await this.$axios.$get('/api/api/statistic/daily-translations-count'))?.count || 0;
     },
