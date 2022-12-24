@@ -1,17 +1,17 @@
 <template>
   <div class="container mx-auto md:px-10 px-3">
-    <h1 class="text-xl sm:text-2xl lg:text-4xl py-10 text-gray-900">
-      {{ title }}
-    </h1>
     <div class="block md:flex">
       <div class="flex-auto">
-        <div class="container mx-auto md:px-5 md:py-5">
+        <div class="container mx-auto md:px-5 md:pb-5">
+          <h1 class="text-xl lg:hidden sm:text-2xl lg:text-4xl text-gray-900 pb-5">
+            {{ title }}
+          </h1>
           <h2 class="text-gray-800 pb-2 h-7">
       <span v-if="currentLocale === 'bur'">
-        {{ locale('buryad') }} <span class="cursor-pointer text-blue-300 hover:text-blue-600 hover:bg-gray-200 rounded-full inline-block text-center" style="width: 20px; height: 20px;" @click="toggleVocabularies">⇄</span> {{ locale('russian') }} {{ locale('vocabulary') }}
+        {{ $t('buryad') }} <span class="cursor-pointer text-blue-300 hover:text-blue-600 hover:bg-gray-200 rounded-full inline-block text-center" style="width: 20px; height: 20px;" @click="toggleVocabularies">⇄</span> {{ $t('russianDictionary') }}
       </span>
       <span v-else>
-        {{ locale('russian') }} <span class="cursor-pointer text-blue-300 hover:text-blue-600 hover:bg-gray-200 rounded-full inline-block text-center" style="width: 20px; height: 20px;" @click="toggleVocabularies">⇄</span> {{ locale('buryad') }} {{ locale('vocabulary') }}
+        {{ $t('russian') }} <span class="cursor-pointer text-blue-300 hover:text-blue-600 hover:bg-gray-200 rounded-full inline-block text-center" style="width: 20px; height: 20px;" @click="toggleVocabularies">⇄</span> {{ $t('buryadDictionary') }}
       </span>
             &nbsp;
             <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -22,12 +22,15 @@
           <div class="block md:flex">
             <div class="flex-auto">
               <div class="w-full">
-                <div class="flex mb-2 border-fuchsia-600 border-2 rounded">
+                <div class="flex mb-2 border-fuchsia-600 border-2 rounded-lg">
                   <input
-                    :placeholder="locale('inputText')" name="" id="second" rows="10"
+                    :placeholder="$t('inputText')"
+                    name="searchText"
+                    id="second"
                     class="p-2 w-full"
                     v-model="text"
                     @keypress="translate($event.target)"
+                    @keyup.enter="translate($event.target, true)"
                     ref="text"
                   >
                   <button v-if="currentLocale === 'bur'" @click.prevent="text = text + 'ө'; $refs.text.focus()" class="inline bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white px-2">
@@ -41,23 +44,24 @@
                   </button>
                 </div>
               </div>
-              <div class="w-full">
-                <button @click="translate($refs.text, true)" class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                  <span class="">{{ locale('buttonTranslate') }}</span>
+              <div class="justify-center w-full">
+                <button  @click="translate($refs.text, true)" class="w-full inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center hover:text-indigo-600 text-indigo-500 focus:border-none border border-yellow-600 rounded-lg shadow-sm cursor-pointer search-button">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  <span class="relative">{{ $t('translate') }}</span>
                 </button>
               </div>
             </div>
           </div>
           <div class="block md:flex">
             <div class="flex-auto">
-              <a href="#" @click.prevent="toggleVocabularies" class="ml-2 text-blue-300 hover:text-blue-600">{{ locale('toggleLanguage') }}</a>
+              <a href="#" @click.prevent="toggleVocabularies" class="ml-2 text-blue-300 hover:text-blue-600">{{ $t('toggleLanguage') }}</a>
               |
-              <a href="#" @click.prevent="toggleShowFullKeyboard" class="ml-2 text-blue-300 hover:text-blue-600">{{ locale('showFullKeyboard') }}</a>
+              <a href="#" @click.prevent="toggleShowFullKeyboard" class="ml-2 text-blue-300 hover:text-blue-600">{{ $t('showFullKeyboard') }}</a>
             </div>
           </div>
           <div class="block md:flex" v-if="foundWordsInOppositeLanuage">
             <div class="flex-auto">
-              <a href="#" @click.prevent="toggleVocabularies(true)" class="ml-2 text-red-400 hover:text-red-800">{{ locale('foundWordsInOppositeLanuage') }} {{ foundWordsInOppositeLanuage }}</a>
+              <a href="#" @click.prevent="toggleVocabularies(true)" class="ml-2 text-red-400 hover:text-red-800">{{ $t('foundWordsInOppositeLanuage') }} {{ foundWordsInOppositeLanuage }}</a>
             </div>
           </div>
           <div class="block md:flex">
@@ -67,11 +71,11 @@
           </div>
           <div class="block mt-10 text-gray-500" :update="update">
             <div v-if="translates.result.length" class="mb-5 text-gray-800">
-              <h2 class="text-2xl">{{ locale('translates') }}</h2>
+              <h2 class="text-2xl">{{ $t('translates') }}</h2>
               <hr>
               <p v-for="(result, i) in translates.result" :key="result.id">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ $t('change') }}</nuxt-link></sup>
                   <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
                     <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('result', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
                     <a v-else href="#" @click.prevent="pauseSpeech('result', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
@@ -86,11 +90,11 @@
               </p>
             </div>
             <div v-if="translates.include.length" class="mb-5 text-gray-800">
-              <h2 class="text-2xl">{{ locale('includes') }}</h2>
+              <h2 class="text-2xl">{{ $t('includes') }}</h2>
               <hr>
               <p v-for="(result, i) in translates.include">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ $t('change') }}</nuxt-link></sup>
                   <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
                     <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('include', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
                     <a v-else href="#" @click.prevent="pauseSpeech('include', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
@@ -101,11 +105,11 @@
               </p>
             </div>
             <div v-if="translates.match.length" class="mb-5 text-gray-800">
-              <h2 class="text-2xl">{{ locale('matches') }}</h2>
+              <h2 class="text-2xl">{{ $t('matches') }}</h2>
               <hr>
               <p v-for="(result, i) in translates.match">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ $t('change') }}</nuxt-link></sup>
                   <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
                     <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('match', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
                     <a v-else href="#" @click.prevent="pauseSpeech('match', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
@@ -116,11 +120,11 @@
               </p>
             </div>
             <div v-if="translates.fuzzy.length" class="mb-5 text-gray-800">
-              <h2 class="text-2xl">{{ locale('possibleTranslates') }}</h2>
+              <h2 class="text-2xl">{{ $t('possibleTranslates') }}</h2>
               <hr>
               <p v-for="(result, i) in translates.fuzzy">
                 <span>
-                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ locale('change') }}</nuxt-link></sup>
+                  <b>{{ result.name }}</b>&nbsp;<sup v-if="$auth.loggedIn" class="text-blue-600 hover:underline"><nuxt-link :to="getLinkToEditForm(result)">{{ $t('change') }}</nuxt-link></sup>
                   <span v-if="result.speechs && result.speechs.length > 0" class="inline-block mr-2">
                     <a v-if="!result.isPlaying" href="#" @click.prevent="playSpeech('fuzzy', i)"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
                     <a v-else href="#" @click.prevent="pauseSpeech('fuzzy', i)"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
@@ -155,7 +159,7 @@
 
           <div class="block mt-5 text-gray-700">
             <p>
-              {{ locale('dailyTranslationsCount') }}: {{ dailyTranslationsCount }}
+              {{ $t('dailyTranslationsCount') }}: {{ dailyTranslationsCount }}
             </p>
           </div>
           <div class="block mt-5 text-gray-700" v-if="messageFromServer.show">
@@ -166,12 +170,12 @@
           </div>
           <div class="block mt-5 text-gray-500">
             <p>
-              * {{ locale('disclaimer') }}
+              * {{ $t('disclaimer') }}
             </p>
           </div>
           <div class="block mt-5 text-gray-500">
             <p>
-              * {{ locale('otherServices') }}: <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">Burlang.Toli</a>, <a href="https://uulen.gazeta-n1.ru/" class="text-blue-500" target="_blank">Үүлэн</a>
+              * {{ $t('otherServices') }}: <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">Burlang.Toli</a>, <a href="https://uulen.gazeta-n1.ru/" class="text-blue-500" target="_blank">Үүлэн</a>
             </p>
           </div>
           <div class="block mt-5  pb-2 text-gray-500">
@@ -247,7 +251,7 @@ export default Vue.extend({
   },
   computed: {
     title () {
-      return this.locales[this.currentLocale].title;
+      return this.$t('appName');
     }
   },
   head(): any {
@@ -438,4 +442,7 @@ export default Vue.extend({
 </script>
 
 <style>
+  .search-button {
+    background-color: #FEDA00;
+  }
 </style>

@@ -9,12 +9,12 @@
         </div>
       </div>
     </div>
-    <div class="flex bg-white w-full h-screen justify-center">
+    <div class="flex w-full h-screen justify-center">
       <div class="w-full max-w-xl p-3">
         <div class="block md:flex">
           <div class="flex-auto">
             <p class="container mx-auto md:px-10 px-5 text-gray-500 bg-gray-50">
-              Языковые игры локализованные под бурятский язык
+              {{ $t('localizedForBuryadLanguageGames') }}
             </p>
             <div class="container mx-auto md:px-5 md:py-5" v-for="link in links" :key="link.title">
               <a :href="link.link" target="_blank" class="inline-flex justify-center items-center p-5 text-base font-medium text-gray-500 bg-gray-50 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
@@ -41,7 +41,7 @@ export default {
   mounted() {},
   head() {
     return {
-      title: 'Games',
+      title: this.$t('games'),
       meta: [
         {
           hid: 'description',
@@ -51,9 +51,9 @@ export default {
       ]
     }
   },
-  data: () => {
+  data() {
     return {
-      title: 'Games',
+      title: this.$t('games'),
       links: [
         {
           title: 'BombParty',
