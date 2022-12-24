@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div class="flex bg-white w-full h-screen justify-center">
+    <div class="flex w-full h-screen justify-center">
       <div class="w-full max-w-xl p-3">
         <h1 class="font-bold text-3xl text-center text-indigo-700">
           {{ title }}
@@ -19,7 +19,7 @@
             <div class="container mx-auto md:px-5 md:py-5">
               <div class="flex mb-2 border-fuchsia-600 border-2 rounded">
                 <input
-                  placeholder="Введите имя поиска"
+                  :placeholder="$t('inputNameToSearch')"
                   name=""
                   id="searchName"
                   rows="10"
@@ -40,7 +40,7 @@
               </div>
               <div class="w-full mb-5">
                 <button @click="filteredNames = []; searchName='';" class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                  <span class="">Сбросить</span>
+                  <span class="">{{ $t('clear') }}</span>
                 </button>
               </div>
               <div :key="updateNames">
@@ -54,7 +54,7 @@
                     <span v-if="nameInfo.name"><b>{{ nameInfo.name }}</b> - <span>{{ nameInfo.description }}</span></span>
                   </p>
                   <p v-else>
-                    Ничего не найдено
+                    {{ $t('notFound') }}
                   </p>
                 </div>
               </div>
@@ -90,9 +90,9 @@ export default {
   props: {
   },
   mounted() {},
-  data: () => {
+  data() {
     return {
-      title: 'Бурятские имена',
+      title: this.$t('buryadNames'),
       updateNames: 0,
       searchName: '',
       loading: true,

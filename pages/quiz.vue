@@ -82,7 +82,7 @@ import locales from "~/i18n/locales";
 export default Vue.extend({
   data () {
     return {
-      title: 'Quiz',
+      title: this.$t('quiz'),
       idx: 0,
       selectedAnswer: "",
       correctAnswers: 0,
@@ -93,7 +93,7 @@ export default Vue.extend({
   },
   head(): any {
     return {
-      title: 'Quiz',
+      title:this.$t('quiz'),
       meta: [
         {
           hid: 'description',
