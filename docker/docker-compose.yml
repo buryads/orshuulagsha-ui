@@ -17,7 +17,7 @@ services:
       - server
 
   app:
-    image: node:14.17.0-alpine3.13
+    image: node:14.17.4-buster
     restart: "${RESTART_TYPE}"
     volumes:
       - "${APP_DIR}:/var/www/html"
