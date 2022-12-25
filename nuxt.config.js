@@ -1,14 +1,15 @@
+require('dotenv').config();
+
 export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'orshuulagsha-ui',
+    title: process.env.APP_TITLE,
     htmlAttrs: {
       lang: 'en'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'description', name: 'description', content: process.env.APP_DESCRIPTION }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
@@ -48,19 +49,21 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    ['@nuxtjs/dotenv', { filename: '.env' }]
   ],
   i18n: {
     encodePaths: false,
-    locales: ['ru', 'en', 'bur'],
-    defaultLocale: 'ru',
+    locales: ['ru', 'en', 'ua', 'bur'],
+    defaultLocale: process.env.DEFAULT_LOCALE,
     vueI18n: {
-      fallbackLocale: 'ru',
+      fallbackLocale: process.env.DEFAULT_LOCALE,
       messages: {
         ru: {
           appName: 'Бурястко-Русский словарь',
           russian: 'Русско',
           ru: 'Русский',
+          ua:'Украинский',
           bur: 'Бурятский',
           en: 'Английский',
           russianDictionary: 'Русский словарь',
@@ -94,9 +97,50 @@ export default {
           inputNameToSearch: 'Введите имя для поиска',
           notFount: 'Не найдено'
         },
+        ua: {
+          appName: 'Бурятсько-Російський словник',
+          russian: 'російсько',
+          ukrainian:'Українсько',
+          ukrainianDictionary:'Український словник',
+          russianDictionary: 'російський словник',
+          inputText: 'Введіть слово',
+          buryad: 'Бурятсько',
+          bur: 'Бурятська',
+          ru: 'російська',
+          en: 'Англійська',
+          ua:'Українська',
+          buryadNames: 'Бурятські імена',
+          clear: 'Очистити',
+          buryadDictionary: 'Бурятський словник',
+          switchLanguage: 'Змінити мову',
+          showFullKeyboard: 'Показати повну клавіатуру',
+          todayTranslated: 'Перекладено сьогодні',
+          keyboardLayouts: 'Клавітурні розкладки',
+          games: 'Ігри',
+          names: 'Імена',
+          quiz: 'Лотерея',
+          localizedForBuryadLanguageGames: 'Мовні Ігри адаптовані під Бурятську мову.',
+          translate: 'Перекласти',
+          title: 'Бурятсько-Український словник',
+          foundWordsInOppositeLanuage: 'Змінити мову.Результатів знайдено на іншій мові',
+          change: 'змінити',
+          vocabulary: 'словник',
+          buttonTranslate: 'Перекласти',
+          translates: 'Переклади',
+          includes: 'Включено',
+          matches: 'Збіг',
+          possibleTranslates: 'Можливий переклад',
+          otherServices: 'Інші сервіси',
+          disclaimer: 'Переклад можливо не вірний на 100%, правильність не гарантується',
+          toggleLanguage: 'Змінити мову',
+          dailyTranslationsCount: 'Перекладено сьогодні',
+          inputNameToSearch: 'Введіть ім`я для пошуку',
+          notFount: 'Не знайдено'
+        },
         en: {
           appName: 'Buryad-Russian dictionary',
           russian: 'Russian',
+          ua:'Ukrainian',
           russianDictionary: 'Russian dictionary',
           inputText: 'Enter the word',
           buryad: 'Buryad',
@@ -134,6 +178,7 @@ export default {
         bur: {
           appName: 'Буряад-Ород толи',
           russian: 'Ород',
+          ua:'Украинскэ',
           ru: 'Ород хэлэн',
           bur: 'Буряад хэлэн',
           en: 'Англи хэлэн',
@@ -172,7 +217,7 @@ export default {
     }
   },
   axios: {
-    baseURL: 'https://tt.buryads.com',
+    baseURL: process.env.API_BASE_URL,
     proxy: true,
     credentials: true
   },
@@ -192,7 +237,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'https://tt.buryads.com',
+      target: process.env.API_BASE_URL,
       pathRewrite: {
         '^/api/': ''
       }
@@ -202,12 +247,15 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [
-      '@amcharts/amcharts5', '@amcharts/amcharts5/wc', '@amcharts/amcharts5/themes/Animated',
-      'd3-shape', 'd3-path'
+      '@amcharts/amcharts5',
+      '@amcharts/amcharts5/wc',
+      '@amcharts/amcharts5/themes/Animated',
+      'd3-shape',
+      'd3-path'
     ]
   },
   server: {
-    host: '0.0.0.0' // default: localhost
+    host: process.env.APP_HOST
   },
   router: {
     extendRoutes(routes, resolve) {

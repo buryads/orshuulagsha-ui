@@ -17,12 +17,10 @@ services:
       - server
 
   app:
-    image: node:14.17.4-buster
+    build: ../
     restart: "${RESTART_TYPE}"
-    volumes:
-      - "${APP_DIR}:/var/www/html"
-    working_dir: /var/www/html
-    command: npm run docker-start
+    env_file:
+      - .env
     networks:
       - server
 
