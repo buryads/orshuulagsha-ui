@@ -60,7 +60,11 @@ export default {
       fallbackLocale: process.env.DEFAULT_LOCALE,
       messages: {
         ru: {
-          appName: 'Бурястко-Русский словарь',
+          appName: 'Бурятcко-Русский словарь',
+          words: 'Слова',
+          wordsPageDescription: 'База слов',
+          next: 'Следующий',
+          previous: 'Предыдущий',
           russian: 'Русско',
           ru: 'Русский',
           ua:'Украинский',
@@ -99,6 +103,10 @@ export default {
         },
         ua: {
           appName: 'Бурятсько-Російський словник',
+          words: 'Слова',
+          wordsPageDescription: 'База даних слів',
+          next: 'Наступний',
+          previous: 'Попередній',
           russian: 'російсько',
           ukrainian:'Українсько',
           ukrainianDictionary:'Український словник',
@@ -139,6 +147,10 @@ export default {
         },
         en: {
           appName: 'Buryad-Russian dictionary',
+          words: 'Words',
+          wordsPageDescription: 'The words database',
+          next: 'Next',
+          previous: 'Previous',
           russian: 'Russian',
           ua:'Ukrainian',
           russianDictionary: 'Russian dictionary',
@@ -177,6 +189,10 @@ export default {
         },
         bur: {
           appName: 'Буряад-Ород толи',
+          words: 'Үгэнүүд',
+          wordsPageDescription: 'Үгэнүүдэй база',
+          next: 'Удаадахи',
+          previous: 'Урдахи',
           russian: 'Ород',
           ua:'Украинскэ',
           ru: 'Ород хэлэн',
@@ -268,6 +284,11 @@ export default {
         name: 'Words',
         path: '/words/:sourceLanguageCode?',
         component: resolve(__dirname, 'pages/wordsPage.vue')
+      });
+      routes.push({
+        name: 'Words',
+        path: '/words/:sourceLanguageCode/:wordSlug',
+        component: resolve(__dirname, 'pages/singleWordPage.vue')
       });
       routes.push({
         name: 'Names',
