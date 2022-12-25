@@ -21,6 +21,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/i18n": "^7.3.0",
     "@nuxtjs/proxy": "^2.1.0",
+    "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.21.1",
     "burlang-keyboard": "^1.0.2",
     "core-js": "^3.8.3",
