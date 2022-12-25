@@ -41,7 +41,7 @@
     </div>
     <hr>
     <div class="flex w-full justify-center">
-      <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode"/>
+      <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode"  @loadPage="loadPage"/>
     </div>
   </div>
 </template>

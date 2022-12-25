@@ -28,6 +28,11 @@ export default {
   ],
   components: {
     PublicPagination
+  },
+  methods: {
+    loadPage (page) {
+      this.$emit('loadPage', page)
+    }
   }
 }
 </script>
