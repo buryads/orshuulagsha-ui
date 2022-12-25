@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="flex bg-white w-full h-screen justify-center">
+    <div class="flex w-full h-screen justify-center">
       <div class="w-full max-w-xl p-3">
         <div class="block md:flex">
           <div class="flex-auto">
@@ -42,34 +42,47 @@ export default {
   name: 'view',
   head() {
     return {
-      title: `${this.word.name} - Бурятско-Русский словарь`,
+      title: `${this.word?.name} - ${this.$t('appName')}`,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: `Перевод слова "${this.word.translations[0].name}" - переводим слова с бурятского и русского туда и обратно`
+          content: `Перевод слова "${this?.word?.translations[0]?.name}" - переводим слова с бурятского и русского туда и обратно`
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: `${this.word?.name} - ${this.$t('appName')}`
+        },
+        {
+          property: 'og:type',
+          name: 'type',
+          content: `article`
+        },
+        {
+          property: 'og:description',
+          name: 'description',
+          content: `Перевод слова "${this?.word?.translations[0]?.name}" - переводим слова с бурятского и русского туда и обратно`
+        },
+        {
+          property: 'og:image',
+          name: 'image',
+          content: this.word?.images[0]?.url
         }
       ]
     }
   },
   mounted() {},
-  computed: {
-    sourceLanguageCode() {
-      return this.$route.params.sourceLanguageCode;
-    },
-    destinationLanguageCode() {
-      return this.$route.params.destinationLanguageCode;
-    },
-    text() {
-      return this.$route.params.word;
-    }
-  },
   async asyncData ({ $axios, params, error }) {
-    console.log(params)
-    const {data: {data}} = await $axios.get(`/api/translate/${params.sourceLanguageCode}2${params.destinationLanguageCode}?` + UrlHelper.jsonObjectToQueryString({
-      word: params.word
-    }));
-    const word = data?.result[0];
+    let word = null
+    try {
+      document;
+      const {data: {data}} = await $axios.get(`/api/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
+      word = data;
+    } catch (e) {
+      const {data: {data}} = await $axios.get(`/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
+      word = data;
+    }
     console.log(word)
     if (!word || word.id === 0) {
       return error({ statusCode: 404, message: 'Word not found' });
@@ -78,7 +91,30 @@ export default {
       word
     };
   },
-  methods: {}
+  data () {
+    return {
+      word: null
+    };
+  },
+  async beforeMount() {
+    if (!this.word) {
+      this.word = await this.loadWord();
+    }
+  },
+  methods: {
+    isInBrowser () {
+      try {
+        document;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    async loadWord (asyncData = false) {
+      const {data: {data}} = await $axios.get(`/api/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
+      return data;
+    }
+  }
 };
 </script>
 

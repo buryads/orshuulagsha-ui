@@ -11,15 +11,20 @@
         </div>
       </div>
     </div>
-    <div class="flex bg-white w-full h-screen justify-center">
+    <div class="flex w-full h-screen justify-center">
       <div class="w-full max-w-xl p-3">
-        <h1 class="font-bold text-3xl text-center text-indigo-700">
+        <h2 class="font-bold text-3xl text-center text-indigo-700">
           {{ description }}
-        </h1>
+        </h2>
         <div class="block md:flex">
-          <div class="flex-auto">
-            <div class="container mx-auto md:px-5 md:py-5">
+          <div class="flex-auto md:py-5">
+            <div v-for="word in words" :key="word.id" class="container mx-auto md:px-5">
+              <nuxt-link :to="`/words/${sourceLanguageCodeCode}/${word.slug}`" class="p-4 my-8 bg-white border border-gray-200 block rounded-lg shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700" aria-label="Subscribe to the Flowbite newsletter">
+                <div class="mb-3 text-xl font-medium text-gray-900 dark:text-white">{{ word.name }}</div>
+                <p class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">{{ word.translations ? word.translations[0].name : "..." }}</p>
+              </nuxt-link>
             </div>
+            <PublicPagination :pagination="pagination" @paginate="loadPage"/>
           </div>
         </div>
       </div>
@@ -30,6 +35,7 @@
 <script>
 // @ts-nocheck
 import IEcharts from 'vue-echarts-v3';
+import PublicPagination from "~/components/PublicPagination.vue";
 
 export default {
   name: 'view',
@@ -47,23 +53,40 @@ export default {
     }
   },
   components: {
-    IEcharts
+    IEcharts,
+    PublicPagination
   },
   props: {
   },
-  mounted() {},
-  data: () => {
+  mounted() {
+    this.loadPage(this.currentPage);
+  },
+  data() {
     return {
-      title: 'Слова',
-      description: 'Описание',
+      title: this.$t('words'),
+      description: this.$t('wordsPageDescription'),
       updateNames: 0,
       searchName: '',
       loading: true,
       filteredNames: [],
-      names: []
+      names: [],
+      words: [],
+      pagination: {},
+      currentPage: parseInt(this.$route.query?.page || 1)
     };
   },
+  computed: {
+    sourceLanguageCodeCode() {
+      return this.$route.params.sourceLanguageCode ?? 'bur';
+    },
+  },
   methods: {
+    loadPage(page = 1) {
+      this.$axios.$get(`/api/api/words/${this.sourceLanguageCodeCode}?page=${page}`).then(({data, pagination}) => {
+        this.words = data;
+        this.pagination = pagination;
+      });
+    },
     filter (e) {
       const value = e.value.toLowerCase().trim();
       this.filteredNames = [];

@@ -21,6 +21,10 @@
             <outline-information-circle-icon class="w-8 fas fa-stream p-2 bg-gray-200 rounded-full inline-block" />
             <span class="mx-1 hidden lg:inline">{{ $t('quiz') }}</span>
           </nuxt-link>
+          <nuxt-link :to="localePath('/words')" class="px-2 py-1 cursor-pointer hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
+            <outline-view-list-icon class="w-8 fas fa-stream p-2 bg-gray-200 rounded-full inline-block" />
+            <span class="mx-1 hidden lg:inline">{{ $t('words') }}</span>
+          </nuxt-link>
           <div class="inline-block cursor-pointer" @click.prevent="dropdownPopoverShow = !dropdownPopoverShow">
             <nuxt-link to="#" class="px-2 py-1 hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
               <img :src="`/flags/${$i18n.locale}.svg`" class="w-6 inline-block -mt-1"/>
