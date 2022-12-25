@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const burWordSlugs = require('./data/slugs/bur.js').default;
 export default {
   head: {
     title: process.env.APP_TITLE,
@@ -50,8 +50,37 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     '@nuxtjs/i18n',
+    '@nuxtjs/sitemap',
     ['@nuxtjs/dotenv', { filename: '.env' }]
   ],
+  sitemap: {
+    gzip: true,
+    exclude: [
+      '**/singleWordPage',
+      '**/translationsLogs',
+      '**/wordsPage',
+      '**/login',
+      '**/wordsMatcher',
+      '*/wordsMatcher',
+      '**/logs',
+      '**/createNewWord',
+      '**/logs/unique-not-found-words',
+    ],
+    routes: [
+      'words',
+      'bur/words',
+      'en/words',
+      'ua/words',
+      'words/bur',
+      'bur/words/bur',
+      'en/words/bur',
+      'ua/words/bur',
+      ...burWordSlugs.map(s => `words/bur/${s}`),
+      ...burWordSlugs.map(s => `bur/words/bur/${s}`),
+      ...burWordSlugs.map(s => `en/words/bur/${s}`),
+      ...burWordSlugs.map(s => `ua/words/bur/${s}`),
+    ]
+  },
   i18n: {
     encodePaths: false,
     locales: ['ru', 'en', 'ua', 'bur'],
