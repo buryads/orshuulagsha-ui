@@ -1,8 +1,8 @@
 <template>
   <div class="block md:flex">
     <div class="flex-auto md:py-5 pb-10 w-full ">
-      <div v-for="word in words" :key="word.id" class="container mx-auto md:px-5">
-        <nuxt-link :to="localePath(`/words`) + `/${sourceLanguageCodeCode}/${word.slug}`" class="w-full p-4 my-8" :class="{'bg-white border border-gray-200 block rounded-lg shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700': withBg}" aria-label="Subscribe to the Flowbite newsletter">
+      <div v-for="word in words" :key="word.id" class="container mx-auto px-5">
+        <nuxt-link :to="localePath(`/words`) + `/${sourceLanguageCodeCode}/${word.slug}`" class="w-full p-4 my-8 sm:p-6 lg:p-8 " :class="{'bg-white border border-gray-200 block rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700': withBg}" aria-label="Subscribe to the Flowbite newsletter">
           <div class="mb-3 text-xl font-medium text-gray-900 dark:text-white">
             {{ word.name }}
             <span v-if="word.images && word.images[0]" class="opacity-5">*</span>
