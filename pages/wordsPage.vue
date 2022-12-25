@@ -16,20 +16,7 @@
         <h2 class="font-bold text-3xl text-center text-indigo-700">
           {{ description }}
         </h2>
-        <div class="block md:flex">
-          <div class="flex-auto md:py-5 pb-10">
-            <div v-for="word in words" :key="word.id" class="container mx-auto md:px-5">
-              <nuxt-link :to="localePath(`/words`) + `/${sourceLanguageCodeCode}/${word.slug}`" class="p-4 my-8 bg-white border border-gray-200 block rounded-lg shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700" aria-label="Subscribe to the Flowbite newsletter">
-                <div class="mb-3 text-xl font-medium text-gray-900 dark:text-white">
-                  {{ word.name }}
-                  <span v-if="word.images && word.images[0]" class="opacity-5">*</span>
-                </div>
-                <p class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">{{ word.translations ? word.translations[0].name : "..." }}</p>
-              </nuxt-link>
-            </div>
-            <PublicPagination :pagination="pagination" @paginate="loadPage"/>
-          </div>
-        </div>
+        <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode"/>
       </div>
     </div>
   </div>
@@ -37,27 +24,35 @@
 
 <script>
 // @ts-nocheck
-import IEcharts from 'vue-echarts-v3';
-import PublicPagination from "~/components/PublicPagination.vue";
+import Words from "~/components/Words.vue";
 
 export default {
   name: 'view',
   head() {
     return {
-      title: 'Слова',
+      title: this.title,
       description: 'Описание',
       meta: [
         {
           hid: 'description',
           name: 'description',
           content: this.title
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: this.title
+        },
+        {
+          property: 'og:description',
+          name: 'description',
+          content: this.$t('wordsPageDescription')
         }
       ]
     }
   },
   components: {
-    IEcharts,
-    PublicPagination
+    Words
   },
   props: {
   },
@@ -66,7 +61,6 @@ export default {
   },
   data() {
     return {
-      title: this.$t('words'),
       description: this.$t('wordsPageDescription'),
       updateNames: 0,
       searchName: '',
@@ -82,6 +76,9 @@ export default {
     sourceLanguageCodeCode() {
       return this.$route.params.sourceLanguageCode ?? 'bur';
     },
+    title () {
+      return `${this.$t('words')} - ${this.$t(this.sourceLanguageCodeCode)}`;
+    }
   },
   methods: {
     loadPage(page = 1) {

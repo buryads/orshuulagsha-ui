@@ -15,12 +15,14 @@
         </div>
       </div>
     </div>
-    <div class="flex w-full h-screen justify-center">
+    <div class="flex w-full justify-center">
       <div class="w-full max-w-xl p-3">
         <div class="block md:flex">
           <div class="flex-auto">
             <div class="container mx-auto md:px-5 md:py-5">
-              <img v-if="word.images && word.images[0]" :src="word.images[0].url" class="mb-5">
+              <div v-if="word.images && word.images[0]">
+                <img  :src="word.images[0].url" class="mb-5">
+              </div>
               <div class="mb-2">
                 <p class="w-full mb-5">
                   <template v-for="translation in word.translations">
@@ -37,14 +39,21 @@
         </div>
       </div>
     </div>
+    <hr>
+    <div class="flex w-full justify-center">
+      <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode"/>
+    </div>
   </div>
 </template>
 
 <script>
+// @ts-nocheck
+import Words from "~/components/Words.vue";
 import UrlHelper from "../utils/url";
 
 export default {
   name: 'view',
+  components: {Words},
   head() {
     return {
       title: `${this.word?.name} - ${this.$t('appName')}`,
@@ -77,7 +86,14 @@ export default {
       ]
     }
   },
-  mounted() {},
+  mounted() {
+    this.loadPage();
+  },
+  computed: {
+    sourceLanguageCodeCode() {
+      return this.$route.params.sourceLanguageCode ?? 'bur';
+    }
+  },
   async asyncData ({ $axios, params, error }) {
     let word = null
     try {
@@ -98,6 +114,8 @@ export default {
   data () {
     return {
       word: {},
+      words: [],
+      pagination: {},
       audio: {},
       update: 0,
     };
@@ -108,9 +126,15 @@ export default {
     }
   },
   methods: {
+    loadPage(page = 1) {
+      this.$axios.$get(`/api/api/words/${this.sourceLanguageCodeCode}/${this.word.id}/next`).then(({data, pagination}) => {
+        this.words = data;
+        this.pagination = pagination;
+      });
+    },
     playSpeech () {
       this.word.isPlaying = true;
-      this.audio = new Audio(this.word.speechs[0].url);
+      this.audio = new Audio(this.word?.speechs[0].url);
       this.audio.play();
       this.audio.addEventListener('pause', (event) => {
         this.word.isPlaying = false;
@@ -120,7 +144,7 @@ export default {
     },
     pauseSpeech () {
       this.word.isPlaying = true;
-      this.audio = new Audio(this.word.speechs[0].url);
+      this.audio = new Audio(this.word?.speechs[0].url);
       this.audio.pause();
       this.update++;
     },

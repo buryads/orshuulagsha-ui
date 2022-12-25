@@ -99,6 +99,16 @@ export default Vue.extend({
           hid: 'description',
           name: 'description',
           content: this.title
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: this.title
+        },
+        {
+          property: 'og:description',
+          name: 'description',
+          content: this.$t('localizedForBuryadLanguageGames') + ' ' + this.title
         }
       ]
     }

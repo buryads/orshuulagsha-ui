@@ -22,9 +22,22 @@
             <span class="mx-1 hidden lg:inline">{{ $t('quiz') }}</span>
           </nuxt-link>
           <nuxt-link :to="localePath('/words')" class="px-2 py-1 cursor-pointer hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
-            <outline-view-list-icon class="w-8 fas fa-stream p-2 bg-gray-200 rounded-full inline-block" />
-            <span class="mx-1 hidden lg:inline">{{ $t('words') }}</span>
+
           </nuxt-link>
+          <div class="inline-block cursor-pointer" @click.prevent="showDatabaseDropdown = !showDatabaseDropdown">
+            <nuxt-link to="#" class="px-2 py-1 hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
+              <outline-view-list-icon class="w-8 fas fa-stream p-2 bg-gray-200 rounded-full inline-block" />
+              <span class="mx-1 hidden lg:inline">{{ $t('words') }}</span>
+            </nuxt-link>
+            <div v-bind:class="{'hidden': !showDatabaseDropdown, 'block': showDatabaseDropdown}" class="mt-5 absolute bg-white text-gray-700 text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1" style="min-width:12rem" ref="popoverDropdownRef">
+              <nuxt-link :to="localePath('/words/')" class="text-sm py-2 px-4 font-normal hover:bg-gray-200 block w-full whitespace-nowrap bg-transparent ">
+                {{ $t('buryadDictionary') }}
+              </nuxt-link>
+              <nuxt-link :to="localePath('/words/ru')" class="text-sm py-2 px-4 font-normal hover:bg-gray-200 block w-full whitespace-nowrap bg-transparent ">
+                {{ $t('russianDictionary') }}
+              </nuxt-link>
+            </div>
+          </div>
           <div class="inline-block cursor-pointer" @click.prevent="dropdownPopoverShow = !dropdownPopoverShow">
             <nuxt-link to="#" class="px-2 py-1 hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
               <img :src="`/flags/${$i18n.locale}.svg`" class="w-6 inline-block -mt-1"/>
@@ -150,6 +163,7 @@ export default {
   data () {
     return {
       user: {},
+      showDatabaseDropdown: false,
       dropdownPopoverShow: false
     }
   },

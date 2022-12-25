@@ -1,5 +1,6 @@
 require('dotenv').config();
 const burWordSlugs = require('./data/slugs/bur.js').default;
+const ruWordSlugs = require('./data/slugs/ru.js').default;
 export default {
   head: {
     title: process.env.APP_TITLE,
@@ -75,10 +76,18 @@ export default {
       'bur/words/bur',
       'en/words/bur',
       'ua/words/bur',
+      'words/ru',
+      'bur/words/ru',
+      'en/words/ru',
+      'ua/words/ru',
       ...burWordSlugs.map(s => `words/bur/${s}`),
       ...burWordSlugs.map(s => `bur/words/bur/${s}`),
       ...burWordSlugs.map(s => `en/words/bur/${s}`),
       ...burWordSlugs.map(s => `ua/words/bur/${s}`),
+      ...ruWordSlugs.map(s => `words/ru/${s}`),
+      ...ruWordSlugs.map(s => `bur/words/ru/${s}`),
+      ...ruWordSlugs.map(s => `en/words/ru/${s}`),
+      ...ruWordSlugs.map(s => `ua/words/ru/${s}`),
     ]
   },
   i18n: {
