@@ -301,7 +301,6 @@ export default Vue.extend({
   },
   methods: {
     playSpeech (key, index) {
-      console.log("test")
       this.translates[key][index].isPlaying = true;
       this.audio = new Audio(this.translates[key][index].speechs[0].url);
       this.audio.play();

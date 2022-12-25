@@ -6,6 +6,10 @@
           <div id="cloud" class="" style="height: 4em; width: 100em;">
             <h1 class="font-bold text-4xl text-center text-white">
               {{ word.name }}
+              <span :key="update" v-if="word && word.speechs && word.speechs.length > 0" class="inline-block mr-2">
+                  <a v-if="!word.isPlaying" href="#" @click.prevent="playSpeech()"><outline-play-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+                  <a v-else href="#" @click.prevent="pauseSpeech()"><outline-pause-icon class="cursor-pointer w-5 h-5 inline-block" /></a>
+              </span>
             </h1>
           </div>
         </div>
@@ -16,6 +20,7 @@
         <div class="block md:flex">
           <div class="flex-auto">
             <div class="container mx-auto md:px-5 md:py-5">
+              <img v-if="word.images && word.images[0]" :src="word.images[0].url" class="mb-5">
               <div class="mb-2">
                 <p class="w-full mb-5">
                   <template v-for="translation in word.translations">
@@ -83,7 +88,6 @@ export default {
       const {data: {data}} = await $axios.get(`/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
       word = data;
     }
-    console.log(word)
     if (!word || word.id === 0) {
       return error({ statusCode: 404, message: 'Word not found' });
     }
@@ -93,7 +97,9 @@ export default {
   },
   data () {
     return {
-      word: null
+      word: {},
+      audio: {},
+      update: 0,
     };
   },
   async beforeMount() {
@@ -102,13 +108,21 @@ export default {
     }
   },
   methods: {
-    isInBrowser () {
-      try {
-        document;
-        return true;
-      } catch (e) {
-        return false;
-      }
+    playSpeech () {
+      this.word.isPlaying = true;
+      this.audio = new Audio(this.word.speechs[0].url);
+      this.audio.play();
+      this.audio.addEventListener('pause', (event) => {
+        this.word.isPlaying = false;
+        this.update++;
+      });
+      this.update++;
+    },
+    pauseSpeech () {
+      this.word.isPlaying = true;
+      this.audio = new Audio(this.word.speechs[0].url);
+      this.audio.pause();
+      this.update++;
     },
     async loadWord (asyncData = false) {
       const {data: {data}} = await $axios.get(`/api/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
