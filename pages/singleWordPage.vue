@@ -29,7 +29,7 @@
                     {{ translation.name }}<br>
                   </template>
                 </p>
-                <p v-if="word && word.description" class="w-full">
+                <p v-if="word && word.description">
                   <b>Wiki <a class="text-blue-500" :href="word.description.url" target="_blank">⇪</a>:</b><br>
                   {{ word.description.short_description }} <a class="text-blue-500" :href="word.description.url" target="_blank">⇪</a>
                 </p>
@@ -56,17 +56,17 @@ export default {
   components: {Words},
   head() {
     return {
-      title: `${this.word?.name} - ${this.$t('appName')}`,
+      title: `${this.$t('singleWordPageTitle').replace('{word}', this.word.name)} - ${this.$t('appName')}`,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: `Перевод слова "${this?.word?.translations[0]?.name}" - переводим слова с бурятского и русского туда и обратно`
+          content: this.$t('singleWordPageTitle').replace('{word}', this.word.name)
         },
         {
           property: 'og:title',
           name: 'title',
-          content: `${this.word?.name} - ${this.$t('appName')}`
+          content: this.$t('singleWordPageTitle').replace('{word}', this.word.name)
         },
         {
           property: 'og:type',
@@ -76,7 +76,7 @@ export default {
         {
           property: 'og:description',
           name: 'description',
-          content: `Перевод слова "${this?.word?.translations[0]?.name}" - переводим слова с бурятского и русского туда и обратно`
+          content: this.$t('singleWordPageDescription').replace('{word}', this.word.name).replace('{lang}', this.$t(this.sourceLanguageCodeCode === 'bur' ? 'ru' : 'bur'))
         },
         {
           property: 'og:image',

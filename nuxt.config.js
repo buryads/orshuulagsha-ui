@@ -99,6 +99,8 @@ export default {
       messages: {
         ru: {
           appName: 'Бурятcко-Русский словарь',
+          singleWordPageTitle: 'Слово "{word}"',
+          singleWordPageDescription: 'Перевод слова "{word}" на {lang} язык',
           words: 'Слова',
           wordsPageDescription: 'База слов',
           next: 'Следующий',
@@ -141,6 +143,8 @@ export default {
         },
         ua: {
           appName: 'Бурятсько-Російський словник',
+          singleWordPageTitle: 'Слово "{word}"',
+          singleWordPageDescription: 'Переклад слова "{word}" на {lang} мове',
           words: 'Слова',
           wordsPageDescription: 'База даних слів',
           next: 'Наступний',
@@ -185,6 +189,8 @@ export default {
         },
         en: {
           appName: 'Buryad-Russian dictionary',
+          singleWordPageTitle: 'The word "{word}"',
+          singleWordPageDescription: 'The translation of word "{word}" in to {lang} language',
           words: 'Words',
           wordsPageDescription: 'The words database',
           next: 'Next',
@@ -227,6 +233,8 @@ export default {
         },
         bur: {
           appName: 'Буряад-Ород толи',
+          singleWordPageTitle: 'Үгэ "{word}"',
+          singleWordPageDescription: 'Үгын "{word}" оршуулга {lang} дээрэ',
           words: 'Үгэнүүд',
           wordsPageDescription: 'Үгэнүүдэй база',
           next: 'Удаадахи',

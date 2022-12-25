@@ -16,7 +16,7 @@
         <h2 class="font-bold text-3xl text-center text-indigo-700">
           {{ description }}
         </h2>
-        <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode"/>
+        <Words :words="words" :pagination="pagination" :source-language-code-code="sourceLanguageCodeCode" :with-bg="true"/>
       </div>
     </div>
   </div>
