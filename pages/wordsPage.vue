@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-15">
     <div class="flex bg-gray-900 w-full justify-center">
       <div class="w-full max-w-xl p-3">
         <div class="w-full h-full flex align-center justify-center">
@@ -17,9 +17,9 @@
           {{ description }}
         </h2>
         <div class="block md:flex">
-          <div class="flex-auto md:py-5">
+          <div class="flex-auto md:py-5 pb-10">
             <div v-for="word in words" :key="word.id" class="container mx-auto md:px-5">
-              <nuxt-link :to="`/words/${sourceLanguageCodeCode}/${word.slug}`" class="p-4 my-8 bg-white border border-gray-200 block rounded-lg shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700" aria-label="Subscribe to the Flowbite newsletter">
+              <nuxt-link :to="localePath(`/words`) + `/${sourceLanguageCodeCode}/${word.slug}`" class="p-4 my-8 bg-white border border-gray-200 block rounded-lg shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700" aria-label="Subscribe to the Flowbite newsletter">
                 <div class="mb-3 text-xl font-medium text-gray-900 dark:text-white">{{ word.name }}</div>
                 <p class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">{{ word.translations ? word.translations[0].name : "..." }}</p>
               </nuxt-link>
