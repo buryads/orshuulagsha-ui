@@ -79,6 +79,16 @@ export default {
         {
           hid: 'description',
           name: 'description',
+          content: this.$t('localizedForBuryadLanguageGames')
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: this.title
+        },
+        {
+          property: 'og:description',
+          name: 'description',
           content: this.title
         }
       ]

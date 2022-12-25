@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex justify-center">
+  <div v-if="pagination" class="w-full flex justify-center">
     <ul class="flex list-reset text-base border border-grey-light rounded w-auto font-sans">
       <li v-if="pagination.current_page > 1">
         <a class="block hover:text-blue-500 hover:bg-blue text-blue border-r border-grey-light px-3 py-2"
@@ -48,7 +48,7 @@ export default {
       if (!this.pagination.to) {
         return null;
       }
-      let from = this.pagination.current_page - this.offset;
+      let from = this.pagination?.current_page - this.offset;
       if (from < 1) {
         from = 1;
       }
