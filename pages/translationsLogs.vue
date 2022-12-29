@@ -47,7 +47,7 @@
                       <b>
                         <nuxt-link
                           v-if="log.results_count === 0 && !log.ignore"
-                          :to="`/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
+                          :to="`/admin/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
                         >
                           <outline-document-add-icon class="w-5 h-5 inline-block" />
                         </nuxt-link>
@@ -134,7 +134,7 @@ export default Vue.extend({
   },
   computed: {
     translationLogsUrl () {
-      return `/api/api/translations-logs${this.isUniqueNotFoundWords ? '/unique-not-found-words' : ''}`
+      return `/api/api/admin/translations-logs${this.isUniqueNotFoundWords ? '/unique-not-found-words' : ''}`
     },
     isUniqueNotFoundWords () {
       return this.$route.name === 'TranslationsLogsUniqueNotFoundWords';
