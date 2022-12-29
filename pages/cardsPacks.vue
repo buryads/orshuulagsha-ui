@@ -26,7 +26,7 @@
             <div class="overflow-hidden w-full lg:overflow-auto scrollbar:!w-1.5 scrollbar:!h-1.5 scrollbar:bg-transparent scrollbar-track:!bg-slate-100 scrollbar-thumb:!rounded scrollbar-thumb:!bg-slate-300 scrollbar-track:!rounded dark:scrollbar-track:!bg-slate-500/[0.16] dark:scrollbar-thumb:!bg-slate-500/50">
               <div class="grid grid-flow-row-dense grid-cols-4">
                 <div v-for="pack in packs" class="rounded overflow-hidden shadow-lg mx-2 mb-5 lg:col-span-1 md:col-span-2 col-span-4">
-                  <nuxt-link v-if="pack.user_id === $auth.user.id || $authUtils().isUserA('admin')" :to="`/packs/${pack.id}/edit`" class="absolute w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"><outline-pencil-icon/></nuxt-link>
+                  <nuxt-link v-if="pack.user_id === user.id || $authUtils().isUserA('admin')" :to="`/packs/${pack.id}/edit`" class="absolute w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"><outline-pencil-icon/></nuxt-link>
                   <img class="w-full" src="/card-top.jpeg" alt="Sunset in the mountains">
                   <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">{{ pack.name }}</div>
@@ -39,7 +39,6 @@
                   </div>
                 </div>
               </div>
-
               <PublicPagination :pagination="pagination" @paginate="loadPage" class="pb-10"/>
             </div>
           </div>
