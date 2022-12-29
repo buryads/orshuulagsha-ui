@@ -31,6 +31,10 @@ export default {
     {
       src: "~/plugins/echarts.js",
       ssr: false
+    },
+    {
+      src: "~/plugins/authUtils.js",
+      ssr: false
     }
   ],
 
@@ -175,29 +179,66 @@ export default {
         component: resolve(__dirname, 'pages/games.vue')
       });
       routes.push({
-        name: 'TranslationsLogs',
-        path: '/logs',
-        component: resolve(__dirname, 'pages/translationsLogs.vue')
-      });
-      routes.push({
-        name: 'TranslationsLogsUniqueNotFoundWords',
-        path: '/logs/unique-not-found-words',
-        component: resolve(__dirname, 'pages/translationsLogs.vue')
-      });
-      routes.push({
-        name: 'WordsMatcher',
-        path: '/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
-        component: resolve(__dirname, 'pages/wordsMatcher.vue')
-      });
-      routes.push({
         name: 'Login',
         path: '/login',
         component: resolve(__dirname, 'pages/login.vue')
       });
       routes.push({
+        name: 'Signup',
+        path: '/signup',
+        component: resolve(__dirname, 'pages/signup.vue')
+      });
+      routes.push({
+        name: 'Dashboard',
+        path: '/dashboard',
+        component: resolve(__dirname, 'pages/dashboard.vue')
+      });
+
+
+      routes.push({
+        name: 'TranslationsLogs',
+        path: '/admin/logs',
+        component: resolve(__dirname, 'pages/translationsLogs.vue')
+      });
+      routes.push({
+        name: 'TranslationsLogsUniqueNotFoundWords',
+        path: '/admin/logs/unique-not-found-words',
+        component: resolve(__dirname, 'pages/translationsLogs.vue')
+      });
+      routes.push({
+        name: 'WordsMatcher',
+        path: '/admin/words-matcher/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
+        component: resolve(__dirname, 'pages/wordsMatcher.vue')
+      });
+      routes.push({
         name: 'CreateNewWord',
-        path: '/words/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
+        path: '/admin/words/:sourceLanguageCode/:destinationLanguageCode/:wordId?',
         component: resolve(__dirname, 'pages/createNewWord.vue')
+      });
+      routes.push({
+        name: 'Packs',
+        path: '/packs',
+        component: resolve(__dirname, 'pages/cardsPacks.vue')
+      });
+      routes.push({
+        name: 'PackFormPage',
+        path: '/pack/create',
+        component: resolve(__dirname, 'pages/packFormPage.vue')
+      });
+      routes.push({
+        name: 'Cards',
+        path: '/packs/:packName/cards',
+        component: resolve(__dirname, 'pages/cards.vue')
+      });
+      routes.push({
+        name: 'PackQuiz',
+        path: '/packs/:packName/quiz',
+        component: resolve(__dirname, 'pages/packQuiz.vue')
+      });
+      routes.push({
+        name: 'PackFormPage',
+        path: '/packs/:id/edit',
+        component: resolve(__dirname, 'pages/packFormPage.vue')
       });
     }
   }

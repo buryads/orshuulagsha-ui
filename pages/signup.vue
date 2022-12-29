@@ -24,15 +24,22 @@
               <div>
                 <p class="text-red-700 py-2">{{ error.message }}</p>
                 <Input
+                  type="name"
+                  placeholder="Enter your name"
+                  v-model="form.name"
+                />
+                <Input
                   type="email"
+                  placeholder="Enter your email"
                   v-model="form.email"
                 />
                 <Input
                   type="password"
+                  placeholder="Enter your password"
                   v-model="form.password"
                 />
               </div>
-              <Button label="Login" @click="login"/> or <nuxt-link to="/signup" class="text-blue-500">sign up</nuxt-link>
+              <Button label="Sign Up" @click="signup"/> or <nuxt-link to="/login" class="text-blue-500">log in</nuxt-link>
             </div>
           </div>
         </div>
@@ -50,8 +57,9 @@ import Button from "~/components/Button.vue";
 export default Vue.extend({
   data () {
     return {
-      title: 'Log in',
+      title: 'Sign up',
       form: {
+        name: null,
         email: null,
         password: null,
       },
@@ -64,7 +72,7 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      this.$router.push('/dashboard');
+      this.$router.push('/logs');
     }
   },
   head(): any {
@@ -80,9 +88,10 @@ export default Vue.extend({
     }
   },
   methods: {
-    async login () {
+    async signup () {
       try {
         this.error = this.defaultError();
+        await this.$axios.post('/api/api/signup', this.form);
         await this.$auth.loginWith('laravelSanctum', {
           data: this.form
         });
