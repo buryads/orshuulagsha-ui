@@ -1,0 +1,42 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy by SSH commands
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /root/projects/orshuulagsha-ui
+          git pull origin master
+          cd docker
+          docker-compose build app
+          docker-compose up -d app
+  on-success-deploying:
+    needs: [ build ]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect git branch name
+        id: git-branch-name
+        uses: EthanSK/git-branch-name-action@v1
+
+      - name: Send notification to Telegram Chats
+        uses: indiesdev/curl@v1.1
+        with:
+          url: https://ts3-telegram.aow.space/notifications
+          method: POST
+          accept: 200
+          headers: '{ "Content-Type": "application/json" }'
+          body: '{ "message": "\nDeploy successful \n#deploy #successful\n\nRepository: `${{ github.repository }}`\nBranch: `${{ env.GIT_BRANCH_NAME }}`\nPusher: `${{ github.event.pusher.name }}`\n\nHead commit:\n`${{ github.event.head_commit.message }}`\n © `${{ github.event.pusher.name }}` in [commit](${{ github.event.head_commit.url }})", "receivers": ${{ secrets.DEV_TELEGRAM_CHATS }} }'
