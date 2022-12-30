@@ -49,7 +49,6 @@ import Header from "~/components/Header.vue";
 export default Vue.extend({
   data () {
     return {
-      title: `${this.$t('cards')} - ${this.packName}`,
       pack: {}
     }
   },
@@ -67,15 +66,14 @@ export default Vue.extend({
     }
   },
   created() {
-    if (!this.$auth.loggedIn) {
-      this.$router.push('/');
-      return;
-    }
     this.loadPack();
   },
   computed: {
     packName() {
       return this.$route.params.packName;
+    },
+    title() {
+      return this.pack?.name ? `${this.pack?.name}` : `Card pack name`;
     }
   },
   head(): any {
@@ -94,7 +92,6 @@ export default Vue.extend({
     async loadPack () {
       const { data } = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
-      console.log(data)
     }
   }
 })

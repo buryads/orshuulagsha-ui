@@ -5,8 +5,7 @@
         <!--light mode - text and icons-->
         <div class="p-2 text-gray-900 bg-white rounded-lg shadow-lg font-medium capitalize">
           <nuxt-link :to="localePath('/')" class="px-2 mr-2 border-r border-gray-200 cursor-pointer">
-            <img src="/favicon.png"
-                 alt="alt placeholder" class="w-10 h-10 inline mx-auto">
+            <img src="/favicon.png" class="w-10 h-10 inline mx-auto">
             <span class="hidden lg:inline hover:bg-gray-200 hover:text-gray-700">{{ $t('appName') }}</span>
           </nuxt-link>
           <nuxt-link :to="localePath('/games')" class="px-2 py-1 cursor-pointer hover:bg-gray-200 hover:text-gray-700 text-sm rounded mb-5">
@@ -66,7 +65,8 @@
               </nuxt-link>
               <span v-if="$authUtils().isUserA('admin')">
                 <span class="py-2 px-4 block flex items-center relative cursor-pointer whitespace-nowrap">
-                  <outline-beaker-icon class="w-5 h-5 inline lg:hidden" /> <span class="hidden lg:inline">Words Matchers:</span>
+                  <outline-beaker-icon class="w-5 h-5 inline lg:hidden" />
+                  <span class="hidden lg:inline">Words Matchers:</span>
                 </span>
                 <nuxt-link class="block py-2 px-4 hover:bg-gray-200 hover:text-gray-700 text-sm" :to="localePath('/admin/words-matcher/bur/ru')">
                   <span class="flex items-center relative cursor-pointer whitespace-nowrap">Bur>Ru</span>
@@ -107,11 +107,6 @@ export default {
       dropdownPopoverShow: false,
       showUserDropdown: false,
       locales: this.$i18n.locales
-    }
-  },
-  computed: {
-    locale () {
-      return locales.ru;
     }
   },
   mounted() {
