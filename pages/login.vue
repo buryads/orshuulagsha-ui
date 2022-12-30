@@ -64,7 +64,9 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      this.$router.push('/dashboard');
+      this.$router.push(this.localePath('/dashboard'));
+    } else {
+      this.$router.push(this.localePath('/'));
     }
   },
   head(): any {
@@ -86,7 +88,7 @@ export default Vue.extend({
         await this.$auth.loginWith('laravelSanctum', {
           data: this.form
         });
-        await this.$router.push('/dashboard');
+        await this.$router.push(this.localePath('/dashboard'));
         window.location.reload();
       } catch (e) {
         this.error = e.response?.data || this.defaultError('Undefined error');
