@@ -23,7 +23,7 @@
                   <div class="col-span-9 text-left">
                     <p>
                       {{ burword.name }}
-                      <a href="#" v-if="pack.user_id === $auth.user.id || $authUtils().isUserA('admin')" @click="removeBurword(burword)"><outline-trash-icon class="cursor-pointer w-5 h-5 hover:bg-gray-500 rounded inline-block" /></a>
+                      <a href="#" v-if="pack.user_id === $auth.user.data.id || $authUtils().isUserA('admin')" @click="removeBurword(burword)"><outline-trash-icon class="cursor-pointer w-5 h-5 hover:bg-gray-500 rounded inline-block" /></a>
                     </p>
                     <p class="text-gray-700" v-if="burword.translations">
                       {{ burword.translations.map(v => v.name)[0] }}
@@ -41,7 +41,7 @@
                 <Button :label="isEdit ? $t('save') : $t('create')" class="lg:w-full" @click="save()"/>
               </div>
               <div class="col-span-4 text-left pl-5">
-                <Button :label="$t('addBurword')" class="lg:w-full" @click="showAddBurword = true"/>
+                <Button v-if="isEdit" :label="$t('addBurword')" class="lg:w-full" @click="showAddBurword = true"/>
               </div>
             </div>
           </div>
