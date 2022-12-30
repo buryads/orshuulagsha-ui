@@ -39,7 +39,7 @@
                   v-model="form.password"
                 />
               </div>
-              <Button label="Sign Up" @click="signup"/> or <nuxt-link to="/login" class="text-blue-500">log in</nuxt-link>
+              <Button label="Sign Up" @click="signup"/> or <nuxt-link :to="localePath('/login')" class="text-blue-500">log in</nuxt-link>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      this.$router.push('/logs');
+      this.$router.push(this.localePath('/dashboard'));
     }
   },
   head(): any {
@@ -95,7 +95,7 @@ export default Vue.extend({
         await this.$auth.loginWith('laravelSanctum', {
           data: this.form
         });
-        await this.$router.push('/dashboard');
+        await this.$router.push(this.localePath('/dashboard'));
         window.location.reload();
       } catch (e) {
         this.error = e.response?.data || this.defaultError('Undefined error');

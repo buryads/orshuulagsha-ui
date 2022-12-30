@@ -32,7 +32,7 @@
                   v-model="form.password"
                 />
               </div>
-              <Button label="Login" @click="login"/> or <nuxt-link to="/signup" class="text-blue-500">sign up</nuxt-link>
+              <Button label="Login" @click="login"/> or <nuxt-link :to="localePath('/signup')" class="text-blue-500">sign up</nuxt-link>
             </div>
           </div>
         </div>
