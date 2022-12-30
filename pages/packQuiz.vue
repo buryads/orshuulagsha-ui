@@ -13,7 +13,7 @@
             v-if="questions && questions.length > 0 && questions[idx] && questions[idx]['correctAnswer'].images && questions[idx]['correctAnswer'].images.length > 0"
             class="inline-block center my-auto mx-auto"
             :src="questions[idx]['correctAnswer'].images[0].url"
-
+            :class="{'blur': questions && questions.length > 0 && questions[idx] && !questions[idx]['correctAnswer'].answered}"
           />
           <img v-else class="inline-block center my-auto mx-auto" :class="{'blur': questions && questions.length > 0 && questions[idx] && !questions[idx]['correctAnswer'].answered}" src="/card-top.jpeg"/>
         </div>
