@@ -1,5 +1,8 @@
 export default {
   appName: 'Buryad-Russian dictionary',
+  packTitle: '{pack}',
+  packsTitle: 'Packs',
+  packsDescription: 'The words for learning in words packs',
   singleWordPageTitle: 'The word "{word}"',
   singleWordPageDescription: 'The translation of word "{word}" in to {lang} language',
   words: 'Words',

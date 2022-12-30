@@ -48,9 +48,21 @@ import Header from "~/components/Header.vue";
 
 export default Vue.extend({
   data () {
-    return {
-      pack: {}
+    return {}
+  },
+  async asyncData ({ $axios, params, error }) {
+    let pack = null;
+    try {
+      document;
+      const { data } = await $axios.$get(`/api/api/user/packs/${params.packName}/by-slug`);
+      pack = data;
+    } catch (e) {
+      const { data } = await $axios.$get(`/api/user/packs/${params.packName}/by-slug`);
+      pack = data;
     }
+    return {
+      pack
+    };
   },
   components: {
     Header,
@@ -74,17 +86,40 @@ export default Vue.extend({
     },
     title() {
       return this.pack?.name ? `${this.pack?.name}` : `Card pack name`;
+    },
+    hasImage() {
+      return this.pack.burWords && this.pack.burWords.length && this.pack.burWords[0].images && this.pack.burWords[0].images.length;
     }
   },
   head(): any {
     return {
-      title: this.title,
+      title: `${this.$t('packTitle').replace('{pack}', this.pack.name)} - ${this.$t('appName')}`,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.title
-        }
+          content: this.pack.description
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: `${this.$t('packTitle').replace('{pack}', this.pack.name)} - ${this.$t('appName')}`
+        },
+        {
+          property: 'og:type',
+          name: 'type',
+          content: `article`
+        },
+        {
+          property: 'og:description',
+          name: 'description',
+          content: this.pack.description
+        },
+        this.hasImage ? {
+          property: 'og:image',
+          name: 'image',
+          content: this.pack.burWords[0].images[0].url
+        } : {}
       ]
     }
   },

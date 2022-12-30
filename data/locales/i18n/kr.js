@@ -1,5 +1,8 @@
 export default {
   appName: '부랴트어-러시아어',
+  packTitle: '{pack}',
+  packsTitle: 'Packs',
+  packsDescription: 'The words for learning in words packs',
   russian: '러시아어',
   ru: '러시아어',
   bur: '부랴트어',

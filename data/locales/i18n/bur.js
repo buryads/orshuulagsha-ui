@@ -1,5 +1,8 @@
 export default {
   appName: 'Буряад-Ород толи',
+  packTitle: '{pack}',
+  packsTitle: 'Packs',
+  packsDescription: 'The words for learning in words packs',
   singleWordPageTitle: 'Үгэ "{word}"',
   singleWordPageDescription: 'Үгын "{word}" оршуулга {lang} дээрэ',
   words: 'Үгэнүүд',

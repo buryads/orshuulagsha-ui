@@ -30,7 +30,7 @@ import Header from "~/components/Header.vue";
 export default Vue.extend({
   data () {
     return {
-      title: 'Packs',
+      title: this.$t('packsTitle'),
       packs: [],
       pagination: {},
     }
@@ -54,12 +54,27 @@ export default Vue.extend({
   },
   head(): any {
     return {
-      title: this.title,
+      title: `${this.$t('packsTitle')} - ${this.$t('appName')}`,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.title
+          content: `${this.$t('packsTitle')} - ${this.$t('appName')}`
+        },
+        {
+          property: 'og:title',
+          name: 'title',
+          content: `${this.$t('packsTitle')} - ${this.$t('appName')}`
+        },
+        {
+          property: 'og:type',
+          name: 'type',
+          content: `article`
+        },
+        {
+          property: 'og:description',
+          name: 'description',
+          content: `${this.$t('packsDescription')} - ${this.$t('appName')}`
         }
       ]
     }

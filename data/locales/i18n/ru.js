@@ -1,5 +1,8 @@
 export default {
   appName: 'Бурятcко-Русский словарь',
+  packTitle: '{pack}',
+  packsTitle: 'Packs',
+  packsDescription: 'The words for learning in words packs',
   singleWordPageTitle: 'Слово "{word}"',
   singleWordPageDescription: 'Перевод слова "{word}" на {lang} язык',
   words: 'Слова',
