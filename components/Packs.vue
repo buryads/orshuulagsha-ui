@@ -4,7 +4,8 @@
     <div class="grid grid-flow-row-dense grid-cols-4">
       <div v-for="pack in packs" class="rounded overflow-hidden shadow-lg mx-2 mb-5 lg:col-span-1 md:col-span-2 col-span-4">
         <nuxt-link v-if="pack.user_id === $auth.user.data.id || $authUtils().isUserA('admin')" :to="`/packs/${pack.id}/edit`" class="absolute w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"><outline-pencil-icon/></nuxt-link>
-        <img class="w-full" src="/card-top.jpeg" alt="Sunset in the mountains">
+        <img v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length" class="w-full" :src="pack.burWords[0].images[0].url" alt="">
+        <img v-else class="w-full" src="/card-top.jpeg">
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-2">{{ pack.name }}</div>
           <p class="text-gray-700 text-base">

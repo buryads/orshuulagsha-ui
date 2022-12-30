@@ -10,7 +10,7 @@
             <p>
               {{ pack.description }}
             </p>
-            <div class="w-full">
+            <div class="w-full text-center">
               <img v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length" class="inline-block w-6/12" width="50" height="25" :src="pack.burWords[0].images[0].url" alt="">
             </div>
             <div class="grid grid-flow-row-dense grid-cols-1">
