@@ -65,8 +65,6 @@ export default Vue.extend({
   created() {
     if (this.$auth.loggedIn) {
       this.$router.push(this.localePath('/dashboard'));
-    } else {
-      this.$router.push(this.localePath('/'));
     }
   },
   head(): any {
