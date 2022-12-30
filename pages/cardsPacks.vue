@@ -5,12 +5,12 @@
         <div class="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
           <Header>
             {{ title }}
-            <template v-slot:controls>
+            <template v-slot:controls v-if="this.$auth.loggedIn">
               <Button :label="$t('create')" class="ml-5 inline-block lg:w-2/12 md:w-2/12 sm:w-2/12" @click="$router.push(localePath(`/pack/create`))"/>
             </template>
           </Header>
           <div class="mt-10 relative">
-            <Packs :pagination="pagination" :packs="packs" @load-page="loadPage"></Packs>
+            <Packs :pagination="pagination" :packs="packs" @loadPage="loadPage"></Packs>
           </div>
         </div>
       </div>
@@ -45,15 +45,11 @@ export default Vue.extend({
   computed: {
     user: {
       get () {
-        return this.$auth.user?.data
+        return this.$auth.user?.data ?? {}
       }
     }
   },
   async created() {
-    if (!this.$auth.loggedIn) {
-      this.$router.push('/');
-      return;
-    }
     await this.loadPage();
   },
   head(): any {
@@ -70,9 +66,9 @@ export default Vue.extend({
   },
   methods: {
     async loadPage (page = 1) {
-      const {data: {data, pagination}} = await this.$axios.get(`/api/api/user/packs?page=${page}`);
-      this.packs = data;
-      this.pagination = pagination;
+      const response = await this.$axios.get(`/api/api/user/packs?page=${page}`);
+      this.packs = response.data.data;
+      this.pagination = response.data.pagination;
     }
   }
 })
