@@ -29,7 +29,13 @@
                 </div>
                 <hr>
               </div>
-              <!--                <Button :label="$t('learnPack')" class="lg:w-full" @click="$router.push(localePath(`/packs/test/quiz`))"/>-->
+              <div v-if="$auth.loggedIn">
+                <Button v-if="pack.is_attached" :label="$t('learnPack')" class="lg:w-full" @click="learnPack"/>
+                <Button v-else :label="$t('continuePack')" class="lg:w-full" @click="continuePack"/>
+              </div>
+              <div v-else>
+                <Button :label="$t('login')" class="lg:w-full" @click="$router.push(localePath('login'))"/>
+              </div>
             </div>
           </div>
         </div>
@@ -75,6 +81,9 @@ export default Vue.extend({
       get () {
         return this.$auth.user?.data
       }
+    },
+    packName() {
+      return this.$route.params.packName;
     }
   },
   created() {
@@ -127,6 +136,14 @@ export default Vue.extend({
     async loadPack () {
       const { data } = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
+    },
+    async learnPack () {
+      const { data } = await this.$axios.$post(`/api/api/user/packs/${this.pack.id}/attach`);
+      this.continuePack();
+    },
+    continuePack() {
+      this.$router.push(this.localePath(`/packs/${this.pack.slug}/train`));
+
     }
   }
 })
