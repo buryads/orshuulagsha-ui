@@ -6,25 +6,29 @@
     <div class="flex w-full grid grid-flow-row-dense grid-cols-3 bg-white px-12 rounded-lg ">
       <div class="col-span-1 p-3 my-auto">
         <div class="w-full text-center">
-          <div class="inline-block mb-5">
-            <a v-if="true" href="#"><outline-play-icon class="cursor-pointer w-8 h-8 inline-block" /></a>
-            <a v-else href="#"><outline-pause-icon class="cursor-pointer w-8 h-8 inline-block" /></a>
-          </div>
+          <Speech v-if="questions && questions.length > 0 && questions[idx] && questions[idx].correctAnswer.speechs && questions[idx]['correctAnswer'].speechs.length > 0" :speech="questions[idx]['correctAnswer'].speechs[0]"/>
         </div>
         <div class="w-full">
-          <img class="inline-block center my-auto mx-auto" src="/card-top.jpeg" alt="Sunset in the mountains"></p>
+          <img
+            v-if="questions && questions.length > 0 && questions[idx] && questions[idx]['correctAnswer'].images && questions[idx]['correctAnswer'].images.length > 0"
+            class="inline-block center my-auto mx-auto"
+            :src="questions[idx]['correctAnswer'].images[0].url"
+
+          />
+          <img v-else class="inline-block center my-auto mx-auto" :class="{'blur': questions && questions.length > 0 && questions[idx] && !questions[idx]['correctAnswer'].answered}" src="/card-top.jpeg"/>
         </div>
       </div>
       <div class="col-span-2 p-3">
         <div v-if="questions.length > 0" class="w-full mt-8">
           <div v-if="idx < count">
-            <p class="text-2xl font-bold">{{questions[idx]['question']}}</p>
+            <p class="text-2xl font-bold">{{questions[idx]['correctAnswer'].name}}</p>
             <label
-              v-for="(answer, index) in questions[idx].answers"
+              v-for="(answer, index) in questions[idx].answers.data"
               :key="index"
               :for="index"
-              class="block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg"
-              :class="{'hover:bg-gray-100 cursor-pointer' : selectedAnswer === '', 'bg-green-200' : index === questions[idx].correctAnswer && selectedAnswer !== '', 'bg-red-200' : selectedAnswer === index}"
+              class="block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg relative"
+              :class="{'hover:bg-gray-100 cursor-pointer' : selectedAnswer === '', 'bg-green-200' : index === questions[idx].correctAnswer.name && selectedAnswer !== '', 'bg-red-200' : selectedAnswer === index}"
+              @click="answered({target: {value: index}})"
             >
               <input
                 :id="index"
@@ -32,9 +36,11 @@
                 class="hidden"
                 :value="index"
                 @change="answered($event)"
-                :disabled="selectedAnswer !== ''"
+                :disabled="!selectedAnswer"
               />
-              {{answer}}
+              {{ extractTranslation(questions[idx].answers.data[index]) }}
+              <outline-emoji-happy-icon v-if="selectedAnswer === answer.name && questions && questions.length > 0 && questions[idx]['correctAnswer'].answered && questions[idx]['correctAnswer'].correctAnswered" class="w-5 m-5 inline-block absolute right-0 mt-1 mr-2 text-green-500 hover:bg-gray-300 rounded cursor-pointer"/>
+              <outline-emoji-sad-icon v-if="selectedAnswer === answer.name && questions && questions.length > 0 && questions[idx]['correctAnswer'].answered && !questions[idx]['correctAnswer'].correctAnswered" class="w-5 m-5  inline-block absolute right-0 mt-1 mr-2 text-red-500 hover:bg-gray-300 rounded cursor-pointer"/>
             </label>
           </div>
           <div v-else>
@@ -58,7 +64,7 @@
                 @click="resetQuiz"
                 class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
               >
-                Play again
+                Train again <outline-refresh-icon class="w-8 inline-block"/>
               </button>
             </div>
           </div>
@@ -74,14 +80,14 @@
             v-show="selectedAnswer !== '' && idx < count - 1"
             class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
           >
-            Next &gt;
+            Next  <outline-arrow-circle-right-icon class="w-8 inline-block"/>
           </button>
           <button
             @click="showResults"
             v-show="selectedAnswer !== '' && idx === count - 1"
             class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
           >
-            Finish
+            Finish <outline-badge-check-icon class="w-8 inline-block"/>
           </button>
         </div>
       </div>
@@ -92,28 +98,37 @@
 <script lang="ts">
 // @ts-nocheck
 import Vue from 'vue';
-import locales from "~/i18n/locales";
+import Speech from "~/components/Speech.vue";
 
 export default Vue.extend({
+  components: {Speech},
   data () {
     return {
-      title: this.$t('packQuiz'),
       idx: 0,
       selectedAnswer: "",
       correctAnswers: 0,
       wrongAnswers: 0,
       count: 3,
       questions: [],
+      pack: {}
+    }
+  },
+  computed: {
+    packName() {
+      return this.$route.params.packName;
+    },
+    title () {
+      return `${this.pack?.name}`;
     }
   },
   head(): any {
     return {
-      title:this.$t('quiz'),
+      title: `${this.pack?.name} - ${this.$t('appName')}`,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.title
+          content: this.pack?.description
         },
         {
           property: 'og:title',
@@ -123,7 +138,7 @@ export default Vue.extend({
         {
           property: 'og:description',
           name: 'description',
-          content: this.$t('localizedForBuryadLanguageGames') + ' ' + this.title
+          content: this.pack?.description
         }
       ]
     }
@@ -131,18 +146,30 @@ export default Vue.extend({
   watch: {},
   async mounted() {
     await this.loadQuestions();
+    await this.loadPack();
   },
   methods: {
+    async loadPack () {
+      const { data } = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug`);
+      this.pack = data;
+    },
     async loadQuestions() {
-      const {data: {data: questions, meta: {count}}} = await this.$axios.get('/api/api/quiz/questions');
+      const {data: questions, meta: {count}} = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug/questions`);
       this.questions = questions;
       this.count = count;
+      console.log(questions, count)
     },
     answered(e) {
-      this.selectedAnswer = e.target.value;
-      if (this.selectedAnswer == this.questions[this.idx].correctAnswer) {
+      if (this.questions[this.idx].correctAnswer.answered) {
+        return;
+      }
+      this.selectedAnswer = this.questions[this.idx].answers.data[e.target.value].name;
+      this.questions[this.idx].correctAnswer.answered = true;
+      if (this.selectedAnswer == this.questions[this.idx].correctAnswer.name) {
+        this.questions[this.idx].correctAnswer.correctAnswered = true;
         this.correctAnswers++;
       } else {
+        this.questions[this.idx].correctAnswer.correctAnswered = false;
         this.wrongAnswers++;
       }
     },
@@ -162,9 +189,21 @@ export default Vue.extend({
       this.correctAnswers = 0;
       this.wrongAnswers = 0;
     },
+    extractTranslation (word) {
+      if (word.ruWords && word.ruWords.length > 0) {
+        return word.ruWords[0].name
+      }
+      if (word.translations && word.translations.length > 0) {
+        return word.translations[0].name
+      }
+      return '...';
+    }
   }
 })
 </script>
 
 <style>
+  .blur {
+    filter: blur(1.5rem);
+  }
 </style>

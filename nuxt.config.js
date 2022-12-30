@@ -232,7 +232,7 @@ export default {
       });
       routes.push({
         name: 'PackQuiz',
-        path: '/packs/:packName/quiz',
+        path: '/packs/:packName/train',
         component: resolve(__dirname, 'pages/packQuiz.vue')
       });
       routes.push({
