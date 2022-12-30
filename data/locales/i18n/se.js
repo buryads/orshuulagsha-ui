@@ -1,5 +1,8 @@
 export default {
   "appName": "Buryad-rysk ordbok",
+  packTitle: '{pack}',
+  packsTitle: 'Packs',
+  packsDescription: 'The words for learning in words packs',
   "russian": "ryska",
   "russianDictionary": "Rysk ordbok",
   "inputText": "Ange ordet",
