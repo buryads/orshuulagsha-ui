@@ -143,7 +143,6 @@ export default Vue.extend({
     },
     continuePack() {
       this.$router.push(this.localePath(`/packs/${this.pack.slug}/train`));
-
     }
   }
 })
