@@ -151,7 +151,7 @@ export default Vue.extend({
         if (!this.isEdit) {
           const {data: {data: {id}}} = await this.$axios.post('/api/api/user/packs', this.pack);
           this.$router.push(this.localePath(`/packs/`));
-          setTimeout(() => this.$router.push(`/packs/${id}/edit`), 500);
+          setTimeout(() => this.$router.push(this.localePath(`/packs/${id}/edit`)), 500);
           return;
         } else {
           const {data: {data}} = await this.$axios.put(`/api/api/user/packs/${this.pack.id}`, this.pack);
