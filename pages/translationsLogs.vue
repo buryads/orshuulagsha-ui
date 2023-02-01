@@ -47,7 +47,7 @@
                       <b>
                         <nuxt-link
                           v-if="log.results_count === 0 && !log.ignore"
-                          :to="`/admin/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`"
+                          :to="localePath(`/admin/words/${log.method.replace('App\\Services\\', '').replace('TranslateService', '').replace('RuToBur', 'ru/bur').replace('BurToRu', 'bur/ru')}?word=${log.translation_source}`)"
                         >
                           <outline-document-add-icon class="w-5 h-5 inline-block" />
                         </nuxt-link>
