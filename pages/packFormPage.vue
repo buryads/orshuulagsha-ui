@@ -25,7 +25,10 @@
                       {{ burword.name }}
                       <a href="#" v-if="pack.user_id === $auth.user.data.id || $authUtils().isUserA('admin')" @click="removeBurword(burword)"><outline-trash-icon class="cursor-pointer w-5 h-5 hover:bg-gray-500 rounded inline-block" /></a>
                     </p>
-                    <p class="text-gray-700" v-if="burword.translations">
+                    <p class="text-gray-700" v-if="burword.ru_words">
+                      {{ burword.ru_words.map(v => v.name)[0] }}
+                    </p>
+                    <p class="text-gray-700" v-else-if="burword.translations">
                       {{ burword.translations.map(v => v.name)[0] }}
                     </p>
                   </div>
@@ -52,7 +55,7 @@
       <template v-slot:header>Add new word</template>
       <template v-slot:body>
         <Input id="burWord" :placeholder="$t('enterBurWord')" type="text" v-model="burWordSearch" class="lg:w-full inline-block text-base font-extrabold text-slate-900 tracking-tight dark:text-slate-200"/>
-        <div :key="update">
+        <div :key="update" style="max-height: 12rem; overflow-y: scroll;">
           <div v-for="burWord in burWordSearchResults">
             <p>
               {{ burWord.name }}
@@ -164,7 +167,7 @@ export default Vue.extend({
       }
     },
     async loadSimilarWords() {
-       const data = await this.$axios.$get(`/api/api/user/words-matcher/ru/bur?word=${this.burWordSearch}`);
+       const data = await this.$axios.$get(`/api/api/user/words-matcher/ru/bur?word=${this.burWordSearch}&limit=1000`);
       this.$nextTick(() => this.burWordSearchResults = data);
       this.update++;
     },
