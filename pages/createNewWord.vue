@@ -92,7 +92,7 @@ import Input from "~/components/Input.vue";
 export default Vue.extend({
   created() {
     if (!this.$auth.loggedIn) {
-      this.$router.push('/login');
+      this.$router.push(this.localePath('/login'));
     }
   },
   data () {
@@ -135,7 +135,7 @@ export default Vue.extend({
       this.word.name = this.$route.query?.word;
       try {
         this.$axios.$post(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/word`, this.word).then(word => {
-          this.$router.push(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
+          this.$router.push(this.localePath(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`));
         });
       } catch (ignored) {}
     }
@@ -237,7 +237,7 @@ export default Vue.extend({
         bur_words: burWords
       };
       this.word = await this.sync(word);
-      this.$router.push(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
+      this.$router.push(this.localePath(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`));
     },
     async saveAndSkip() {
       await this.save();

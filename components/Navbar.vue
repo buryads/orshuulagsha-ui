@@ -115,7 +115,7 @@ export default {
   methods: {
     async logout() {
       await this.$auth.logout();
-      this.$router.push('/');
+      this.$router.push(this.localePath('/'));
       window.location.reload();
     }
   }
