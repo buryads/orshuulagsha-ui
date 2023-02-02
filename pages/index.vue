@@ -343,7 +343,7 @@ export default Vue.extend({
       return this.locales[this.currentLocale][key]
     },
     getLinkToEditForm(word) {
-      return this.localePath(`/words/${this.sourceLanguage}/${this.destinationLanguage}/${word.id}`)
+      return this.localePath(`/admin/words/${this.sourceLanguage}/${this.destinationLanguage}/${word.id}`)
     },
     toggleShowFullKeyboard() {
       this.showFullKeyboard = !this.showFullKeyboard;
