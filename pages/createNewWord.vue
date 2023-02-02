@@ -19,14 +19,14 @@
                 <word-match-link
                   name="Create Buryad word with Russian translations"
                   :active="$route.fullPath.includes('/words/bur/ru')"
-                  link="/words/bur/ru"
+                  link="/admin/words/bur/ru"
                 />
               </p>
               <p>
                 <word-match-link
                   name="Create Russian word with Buryad translations"
                   :active="$route.fullPath.includes('/words/ru/bur')"
-                  link="/words/ru/bur"
+                  link="/admin/words/ru/bur"
                 />
               </p>
             </div>
@@ -128,14 +128,14 @@ export default Vue.extend({
   },
   async mounted() {
     if (this.wordId) {
-      this.word = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId}`);
+      this.word = await this.$axios.$get(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId}`);
     }
     console.log(this.$route.query.word);
     if (this.$route.query?.word) {
       this.word.name = this.$route.query?.word;
       try {
-        this.$axios.$post(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/word`, this.word).then(word => {
-          this.$router.push(`/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
+        this.$axios.$post(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/word`, this.word).then(word => {
+          this.$router.push(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
         });
       } catch (ignored) {}
     }
@@ -184,10 +184,10 @@ export default Vue.extend({
       };
     },
     async loadWord(sourceLanguageCodeCode, destinationLanguageCode, wordId) {
-      return await this.$axios.$get(`/api/api/words-matcher/${sourceLanguageCodeCode}/${destinationLanguageCode}/${wordId}`) || this.defaultWord();
+      return await this.$axios.$get(`/api/api/admin/words-matcher/${sourceLanguageCodeCode}/${destinationLanguageCode}/${wordId}`) || this.defaultWord();
     },
     async loadSimilarWords(word: string) {
-        this.suggestedWords = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
+        this.suggestedWords = await this.$axios.$get(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
     },
     removeWord(index: number) {
       this.word[this.destinationLanguageWordsKey] = this.removeItemFromArray(this.word[this.destinationLanguageWordsKey], index);
@@ -216,16 +216,16 @@ export default Vue.extend({
     },
     async addNewWord() {
       const word = this.searchText.trim();
-      await this.$axios.$post(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
+      await this.$axios.$post(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
         name: word
       });
       this.loadSimilarWords(word);
     },
     async saveWord(word) {
-      return await this.$axios.$post(`/api/api/words-matcher/${this.destinationLanguageCode}/${this.sourceLanguageCodeCode}`, word);
+      return await this.$axios.$post(`/api/api/admin/words-matcher/${this.destinationLanguageCode}/${this.sourceLanguageCodeCode}`, word);
     },
     async sync(word) {
-      return await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}/sync`, word);
+      return await this.$axios.$put(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}/sync`, word);
     },
     async save() {
       let ruWords = this.word.ru_words ? [...this.word.ru_words] : [];
@@ -237,7 +237,7 @@ export default Vue.extend({
         bur_words: burWords
       };
       this.word = await this.sync(word);
-      this.$router.push(`/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
+      this.$router.push(`/admin/words/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${word.id}`);
     },
     async saveAndSkip() {
       await this.save();
