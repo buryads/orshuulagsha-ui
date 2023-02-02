@@ -19,7 +19,7 @@
 <!--                <word-match-link name="с бурятского на английский" :active="$route.fullPath === '/words-matcher/bur/en'" link="/words-matcher/bur/en"/>-->
 <!--              </p>-->
               <p>
-                <word-match-link name="с бурятского на русский" :active="$route.fullPath.includes('/words-matcher/bur/ru')" link="/words-matcher/bur/ru"/>
+                <word-match-link name="с бурятского на русский" :active="$route.fullPath.includes('/words-matcher/bur/ru')" :link="localePath(`/admin/words-matcher/bur/ru`)"/>
               </p>
 <!--              <p>-->
 <!--                <word-match-link name="с английского на бурятский" :active="$route.fullPath.includes('/words-matcher/en/bur')" link="/words-matcher/en/bur"/>-->
@@ -28,7 +28,7 @@
 <!--                <word-match-link name="с английского на русский" :active="$route.fullPath.includes('/words-matcher/en/ru')" link="/words-matcher/en/ru"/>-->
 <!--              </p>-->
               <p>
-                <word-match-link name="с русского на бурятский" :active="$route.fullPath.includes('/words-matcher/ru/bur')" link="/words-matcher/ru/bur"/>
+                <word-match-link name="с русского на бурятский" :active="$route.fullPath.includes('/words-matcher/ru/bur')" :link="localePath(`/admin/words-matcher/ru/bur`)"/>
               </p>
 <!--              <p>-->
 <!--                <word-match-link name="с русского на английский" :active="$route.fullPath.includes('/words-matcher/ru/en')" link="/words-matcher/ru/en"/>-->
@@ -139,7 +139,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId ? this.wordId : 'random'}`).then(data => {
+    this.$axios.$get(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.wordId ? this.wordId : 'random'}`).then(data => {
       this.word = data;
     })
   },
@@ -171,7 +171,7 @@ export default Vue.extend({
   },
   methods: {
     async loadSimilarWords(word: string) {
-      const words = await this.$axios.$get(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
+      const words = await this.$axios.$get(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}?word=${word}`);
       this.suggestedWords = words;
     },
     removeWord(index: number) {
@@ -201,13 +201,13 @@ export default Vue.extend({
     },
     async addNewWord() {
       const word = this.searchText.trim();
-      await this.$axios.$post(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
+      await this.$axios.$post(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}`, {
         name: word
       });
       this.loadSimilarWords(word);
     },
     async save() {
-      this.word = await this.$axios.$put(`/api/api/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.word.id}/sync`, this.word);
+      this.word = await this.$axios.$put(`/api/api/admin/words-matcher/${this.sourceLanguageCodeCode}/${this.destinationLanguageCode}/${this.word.id}/sync`, this.word);
       document.location.href = document.location.href.replace(this.wordId, '').replace(/\/$/, '') + `/${this.word.id}`;
     },
     async saveAndSkip() {
