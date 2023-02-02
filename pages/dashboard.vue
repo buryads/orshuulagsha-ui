@@ -57,7 +57,7 @@ export default Vue.extend({
   },
   created() {
     if (!this.$auth.loggedIn) {
-      this.$router.push('/');
+      this.$router.push(this.localePath('/'));
     }
   },
   head(): any {

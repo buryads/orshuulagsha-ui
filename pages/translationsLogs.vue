@@ -142,7 +142,7 @@ export default Vue.extend({
   },
   async created() {
     if (!this.$auth.loggedIn) {
-      return this.$router.push('/login');
+      return this.$router.push(this.localePath('/login'));
     }
 
     const currentPage = parseInt(this.$route.query?.page || 1);

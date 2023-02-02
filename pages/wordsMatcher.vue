@@ -92,7 +92,7 @@ import WordMatchLink from '../components/WordMatchLink.vue';
 export default Vue.extend({
   created() {
     if (!this.$auth.loggedIn) {
-      this.$router.push('/login');
+      this.$router.push(this.localePath('/login'));
     }
   },
   data () {

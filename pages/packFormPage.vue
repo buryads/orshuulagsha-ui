@@ -117,7 +117,7 @@ export default Vue.extend({
   },
   async created() {
     if (!this.$auth.loggedIn) {
-      this.$router.push('/');
+      this.$router.push(this.localePath('/'));
     }
     if (this.isEdit) {
       const {data: {data: pack}} = await this.$axios.get(`/api/api/user/packs/${this.packId}`);
