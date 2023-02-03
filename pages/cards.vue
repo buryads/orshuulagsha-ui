@@ -20,7 +20,12 @@
                     <Speech v-if="burword.speechs && burword.speechs.length" :speech="burword.speechs[0]"/>
                     <div class="col-span-9 inline-block text-left">
                       <p>{{ burword.name }}</p>
-                      <p class="text-gray-700" v-if="burword.translations">{{ burword.translations.map(v => v.name)[0] }}</p>
+                      <p class="text-gray-700" v-if="burword.ru_words && burword.ru_words.length">
+                        {{ burword.ru_words.map(v => v.name)[0] }}
+                      </p>
+                      <p class="text-gray-700" v-else-if="burword.translations && burword.translations.length">
+                        {{ burword.translations.map(v => v.name)[0] }}
+                      </p>
                     </div>
                     <div class="inline-block col-span-2">
                       <img v-if="burword.images && burword.images.length" width="50" height="25" :src="burword.images[0].url">

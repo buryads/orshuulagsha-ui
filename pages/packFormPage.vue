@@ -25,10 +25,10 @@
                       {{ burword.name }}
                       <a href="#" v-if="pack.user_id === $auth.user.data.id || $authUtils().isUserA('admin')" @click="removeBurword(burword)"><outline-trash-icon class="cursor-pointer w-5 h-5 hover:bg-gray-500 rounded inline-block" /></a>
                     </p>
-                    <p class="text-gray-700" v-if="burword.ru_words">
+                    <p class="text-gray-700" v-if="burword.ru_words && burword.ru_words.length">
                       {{ burword.ru_words.map(v => v.name)[0] }}
                     </p>
-                    <p class="text-gray-700" v-else-if="burword.translations">
+                    <p class="text-gray-700" v-else-if="burword.translations && burword.translations.length">
                       {{ burword.translations.map(v => v.name)[0] }}
                     </p>
                   </div>

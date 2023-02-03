@@ -190,7 +190,7 @@ export default Vue.extend({
       this.wrongAnswers = 0;
     },
     extractTranslation (word) {
-      if (word.ru_words && word.ru_words.length > 0) {
+      if (word.ru_words && word.ru_words.length) {
         return word.ru_words[0].name
       }
       if (word.translations && word.translations.length > 0) {
