@@ -186,6 +186,9 @@
           <div class="block mt-5  pb-2 text-gray-500">
             <p>Раскладки для клавиатуры: <a href="https://github.com/buryads/buryad-keyboard-layout" class="text-blue-500 hover:text-blue-600 cursor-pointer" target="_blank">GitHub</a></p>
           </div>
+          <div class="block mt-5  pb-2 text-gray-500">
+            <p>Поддержи наш проект на <a href="https://boosty.to/buryads" class="text-blue-500 hover:text-blue-600 cursor-pointer" target="_blank">Boosty</a> или <a href="https://www.patreon.com/buryads" class="text-blue-500 hover:text-blue-600 cursor-pointer" target="_blank">Patreon</a></p>
+          </div>
           <div class="justify-center flex">
             <div class="block mt-5 md:flex justify-center pb-10 text-gray-500">
               <a href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile" target="_blank" class="mr-5">
