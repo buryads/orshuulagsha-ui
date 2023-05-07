@@ -150,11 +150,11 @@ export default Vue.extend({
   },
   methods: {
     async loadPack () {
-      const { data } = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug`);
+      const { data } = await this.$axios.$get(`/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
     },
     async loadQuestions() {
-      const {data: questions, meta: {count}} = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug/questions`);
+      const {data: questions, meta: {count}} = await this.$axios.$get(`/api/user/packs/${this.packName}/by-slug/questions`);
       this.questions = questions;
       this.count = count;
       console.log(questions, count)

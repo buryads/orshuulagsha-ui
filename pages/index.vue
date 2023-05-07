@@ -320,7 +320,7 @@ export default Vue.extend({
       this.update++;
     },
     async initDailyTranslationsCount () {
-      this.dailyTranslationsCount = (await this.$axios.$get('/api/api/statistic/daily-translations-count'))?.count || 0;
+      this.dailyTranslationsCount = (await this.$axios.$get('/api/statistic/daily-translations-count'))?.count || 0;
     },
     initTextAndLanguageConfigurations () {
       const {s: sourceLanguage, d: destinationLanguage, t: translateWord} = this.$route.query;
@@ -416,7 +416,7 @@ export default Vue.extend({
       return translates.result.filter(word => word.id !== 0 && word?.translations[0]?.id !== 0).length;
     },
     async translateText(sourceLanguge, destinationLanguage, text) {
-      const {data: {data}}: any = await this.$axios.get(`/api/api/translate/${sourceLanguge}2${destinationLanguage}?` + this.jsonObjectToQueryString({
+      const {data: {data}}: any = await this.$axios.get(`/api/translate/${sourceLanguge}2${destinationLanguage}?` + this.jsonObjectToQueryString({
         word: text
       }));
       return data;

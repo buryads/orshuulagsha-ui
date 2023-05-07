@@ -98,7 +98,7 @@ export default {
     let word = null
     try {
       document;
-      const {data: {data}} = await $axios.get(`/api/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
+      const {data: {data}} = await $axios.get(`/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
       word = data;
     } catch (e) {
       const {data: {data}} = await $axios.get(`/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     loadPage(page = 1) {
-      this.$axios.$get(`/api/api/words/${this.sourceLanguageCodeCode}/${this.word.id}/next`).then(({data, pagination}) => {
+      this.$axios.$get(`/api/words/${this.sourceLanguageCodeCode}/${this.word.id}/next`).then(({data, pagination}) => {
         this.words = data;
         this.pagination = pagination;
       });
@@ -149,7 +149,7 @@ export default {
       this.update++;
     },
     async loadWord (asyncData = false) {
-      const {data: {data}} = await $axios.get(`/api/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
+      const {data: {data}} = await $axios.get(`/api/words/${params.sourceLanguageCode}/${params.wordSlug}`);
       return data;
     }
   }
