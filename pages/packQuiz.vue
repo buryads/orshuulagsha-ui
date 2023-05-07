@@ -12,7 +12,7 @@
           <img
             v-if="questions && questions.length > 0 && questions[idx] && questions[idx]['correctAnswer'].images && questions[idx]['correctAnswer'].images.length > 0"
             class="inline-block center my-auto mx-auto"
-            :src="questions[idx]['correctAnswer'].images[0].url"
+            :src="extractDefaultBurImageFromBurWord(questions[idx]['correctAnswer'])"
             :class="{'blur': questions && questions.length > 0 && questions[idx] && !questions[idx]['correctAnswer'].answered}"
           />
           <img v-else class="inline-block center my-auto mx-auto" :class="{'blur': questions && questions.length > 0 && questions[idx] && !questions[idx]['correctAnswer'].answered}" src="/card-top.jpeg"/>
@@ -99,6 +99,7 @@
 // @ts-nocheck
 import Vue from 'vue';
 import Speech from "~/components/Speech.vue";
+import extractDefaultBurImageFromBurWord from "~/utils/extractDefaultBurImageFromBurWord";
 
 export default Vue.extend({
   components: {Speech},
@@ -149,6 +150,7 @@ export default Vue.extend({
     await this.loadPack();
   },
   methods: {
+    extractDefaultBurImageFromBurWord,
     async loadPack () {
       const { data } = await this.$axios.$get(`/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
