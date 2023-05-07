@@ -50,6 +50,14 @@
                         <outline-plus-icon/>
                       </button>
                     </div>
+                    <button
+                      v-else-if="isEdit"
+                      label=""
+                      class="absolute w-5 m-1 top-0 hover:bg-gray-300 rounded cursor-pointer bg-gray-500 p-1"
+                      @click.prevent="showEditBurwordModal(burword)"
+                    >
+                      <outline-plus-icon/>
+                    </button>
                   </div>
                 </div>
               </div>
