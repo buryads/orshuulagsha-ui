@@ -11,7 +11,7 @@
           <outline-pencil-icon/>
         </a>
         <outline-check-icon v-if="pack.is_attached" class="absolute right-0 w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"/>
-
+        <div v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length" class="w-full" src=""  :style="`max-height: 10rem; background: url(${extractDefaultBurImageFromBurWord(pack.burWords[0])});`" style="height: 10rem;"/>
         <div v-else class="w-full"  :style="`height: 10rem; background: url(/card-top.jpeg)`"/>
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-2">{{ pack.name }}</div>
@@ -33,6 +33,7 @@
 <script>
 import PublicPagination from "~/components/PublicPagination.vue";
 import Button from "~/components/Button.vue";
+import extractDefaultBurImageFromBurWord from "~/utils/extractDefaultBurImageFromBurWord";
 
 export default {
   name: "Packs",
@@ -45,6 +46,9 @@ export default {
     user () {
       return this.$auth?.user?.data ?? {};
     }
+  },
+  methods: {
+    extractDefaultBurImageFromBurWord
   }
 }
 </script>
