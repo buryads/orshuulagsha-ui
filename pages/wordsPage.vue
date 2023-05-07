@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     loadPage(page = 1) {
-      this.$axios.$get(`/api/api/words/${this.sourceLanguageCodeCode}?page=${page}`).then(({data, pagination}) => {
+      this.$axios.$get(`/api/words/${this.sourceLanguageCodeCode}?page=${page}`).then(({data, pagination}) => {
         this.words = data;
         this.pagination = pagination;
       });

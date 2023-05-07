@@ -127,8 +127,11 @@ export default {
     '/api': {
       target: process.env.API_BASE_URL,
       pathRewrite: {
-        '^/api/': ''
-      }
+        '^/api/sanctum/': '/sanctum/',
+        '^/api/api/': '/api/',
+        '^/api/': '/api/'
+      },
+      secure: false
     }
   },
 

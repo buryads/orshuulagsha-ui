@@ -119,7 +119,7 @@ export default Vue.extend({
   },
   methods: {
     async loadQuestions() {
-      const {data: {data: questions, meta: {count}}} = await this.$axios.get('/api/api/quiz/questions');
+      const {data: {data: questions, meta: {count}}} = await this.$axios.get('/api/quiz/questions');
       this.questions = questions;
       this.count = count;
     },

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt-ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "docker-start": "npm i && npm run build && npm run start",
@@ -29,10 +29,16 @@
     "echarts": "^5.4.0",
     "echarts-wordcloud": "^2.0.0",
     "moment": "^2.29.3",
-    "nuxt": "^2.15.8",
+    "nuxt": "2.15.8",
     "typescript": "^4.6.4",
     "vue-d3-cloud": "^0.2.0",
-    "vue-echarts-v3": "^2.0.1"
+    "vue-echarts-v3": "^2.0.1",
+    "postcss": "^7.0.32",
+    "postcss-import": "^12.0.1",
+    "postcss-import-resolver": "^2.0.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-url": "^8.0.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
