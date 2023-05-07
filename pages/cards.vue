@@ -65,7 +65,7 @@ export default Vue.extend({
     let pack = null;
     try {
       document;
-      const { data } = await $axios.$get(`/api/api/user/packs/${params.packName}/by-slug`);
+      const { data } = await $axios.$get(`/api/user/packs/${params.packName}/by-slug`);
       pack = data;
     } catch (e) {
       const { data } = await $axios.$get(`/api/user/packs/${params.packName}/by-slug`);
@@ -139,11 +139,11 @@ export default Vue.extend({
   },
   methods: {
     async loadPack () {
-      const { data } = await this.$axios.$get(`/api/api/user/packs/${this.packName}/by-slug`);
+      const { data } = await this.$axios.$get(`/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
     },
     async learnPack () {
-      const { data } = await this.$axios.$post(`/api/api/user/packs/${this.pack.id}/attach`);
+      const { data } = await this.$axios.$post(`/api/user/packs/${this.pack.id}/attach`);
       this.continuePack();
     },
     continuePack() {

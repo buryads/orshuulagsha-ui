@@ -91,7 +91,7 @@ export default Vue.extend({
     async signup () {
       try {
         this.error = this.defaultError();
-        await this.$axios.post('/api/api/signup', this.form);
+        await this.$axios.post('/api/signup', this.form);
         await this.$auth.loginWith('laravelSanctum', {
           data: this.form
         });
