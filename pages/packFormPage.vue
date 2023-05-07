@@ -120,7 +120,7 @@ export default Vue.extend({
       this.$router.push(this.localePath('/'));
     }
     if (this.isEdit) {
-      const {data: {data: pack}} = await this.$axios.get(`/api/api/user/packs/${this.packId}`);
+      const {data: {data: pack}} = await this.$axios.get(`/api/user/packs/${this.packId}`);
       this.pack = pack;
       this.burWords = pack.burWords;
     }
@@ -152,12 +152,12 @@ export default Vue.extend({
     async save () {
       try {
         if (!this.isEdit) {
-          const {data: {data: {id}}} = await this.$axios.post('/api/api/user/packs', this.pack);
+          const {data: {data: {id}}} = await this.$axios.post('/api/user/packs', this.pack);
           this.$router.push(this.localePath(`/packs/`));
           setTimeout(() => this.$router.push(this.localePath(`/packs/${id}/edit`)), 500);
           return;
         } else {
-          const {data: {data}} = await this.$axios.put(`/api/api/user/packs/${this.pack.id}`, this.pack);
+          const {data: {data}} = await this.$axios.put(`/api/user/packs/${this.pack.id}`, this.pack);
           this.pack = data;
           this.burWords = data.burWords;
         }
@@ -167,7 +167,7 @@ export default Vue.extend({
       }
     },
     async loadSimilarWords() {
-       const data = await this.$axios.$get(`/api/api/user/words-matcher/ru/bur?word=${this.burWordSearch}&limit=1000`);
+       const data = await this.$axios.$get(`/api/user/words-matcher/ru/bur?word=${this.burWordSearch}&limit=1000`);
       this.$nextTick(() => this.burWordSearchResults = data);
       this.update++;
     },
@@ -175,10 +175,10 @@ export default Vue.extend({
       let response = null;
       try {
         if (!this.isEdit) {
-          const {data: {data: {id}}} = await this.$axios.post('/api/api/user/packs', this.pack);
+          const {data: {data: {id}}} = await this.$axios.post('/api/user/packs', this.pack);
           this.$router.push(this.localePath(`/packs/${id}/edit`));
         } else {
-          response = await this.$axios.post(`/api/api/user/packs/${this.pack.id}`, this.pack);
+          response = await this.$axios.post(`/api/user/packs/${this.pack.id}`, this.pack);
         }
       } catch (e) {
         this.error = e.response.data;
@@ -191,12 +191,12 @@ export default Vue.extend({
       this.saveBurword(word);
     },
     async saveBurword (word) {
-      const {data: {data}} = await this.$axios.post(`/api/api/user/packs/${this.pack.id}/${word.id}`, this.pack);
+      const {data: {data}} = await this.$axios.post(`/api/user/packs/${this.pack.id}/${word.id}`, this.pack);
       this.pack = data;
       this.burWords = data.burWords;
     },
     async removeBurword (word) {
-      const {data: {data}} = await this.$axios.delete(`/api/api/user/packs/${this.pack.id}/${word.id}`, this.pack);
+      const {data: {data}} = await this.$axios.delete(`/api/user/packs/${this.pack.id}/${word.id}`, this.pack);
       this.pack = data;
       this.burWords = data.burWords;
     }

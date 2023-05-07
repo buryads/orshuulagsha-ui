@@ -81,7 +81,7 @@ export default Vue.extend({
   },
   methods: {
     async loadPage (page = 1) {
-      const response = await this.$axios.get(`/api/api/user/packs?page=${page}`);
+      const response = await this.$axios.get(`/api/user/packs?page=${page}`);
       this.packs = response.data.data;
       this.pagination = response.data.pagination;
     }
