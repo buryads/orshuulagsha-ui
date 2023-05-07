@@ -3,9 +3,15 @@
     <slot name="header"></slot>
     <div class="grid grid-flow-row-dense grid-cols-4">
       <div v-for="pack in packs" class="rounded overflow-hidden shadow-lg mx-2 mb-5 lg:col-span-1 md:col-span-2 col-span-4 relative">
-        <nuxt-link v-if="pack.user_id === user.id || $authUtils().isUserA('admin')" :to="localePath(`/packs/${pack.id}/edit`)" class="absolute w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"><outline-pencil-icon/></nuxt-link>
+        <a
+          v-if="pack.user_id === user.id || $authUtils().isUserA('admin')"
+          :href="localePath(`/packs/${pack.id}/edit`).replace('/pack/create', `/packs/${pack.id}/edit`)"
+          class="absolute w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"
+        >
+          <outline-pencil-icon/>
+        </a>
         <outline-check-icon v-if="pack.is_attached" class="absolute right-0 w-5 m-5 hover:bg-gray-300 rounded cursor-pointer"/>
-        <div v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length" class="w-full" src=""  :style="`max-height: 10rem; background: url(${pack.burWords[0].images[0].url});`" style="height: 10rem;"/>
+
         <div v-else class="w-full"  :style="`height: 10rem; background: url(/card-top.jpeg)`"/>
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-2">{{ pack.name }}</div>

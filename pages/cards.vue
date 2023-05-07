@@ -11,7 +11,13 @@
               {{ pack.description }}
             </p>
             <div class="w-full text-center">
-              <img v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length" class="inline-block w-6/12" width="50" height="25" :src="pack.burWords[0].images[0].url" alt="">
+              <img
+                v-if="pack.burWords && pack.burWords.length && pack.burWords[0].images && pack.burWords[0].images.length"
+                class="inline-block"
+                style="max-height: 300px; max-width: 300px;"
+                :src="extractDefaultBurImageFromBurWord(pack.burWords[0])"
+                alt=""
+              />
             </div>
             <div class="grid grid-flow-row-dense grid-cols-1">
               <div v-for="burword in pack.burWords" class="rounded overflow-hidden bg-gray-200 mx-2 col-span-1">
@@ -28,7 +34,7 @@
                       </p>
                     </div>
                     <div class="inline-block col-span-2">
-                      <img v-if="burword.images && burword.images.length" width="50" height="25" :src="burword.images[0].url">
+                      <img v-if="burword.images && burword.images.length" width="100" height="50" :src="extractDefaultBurImageFromBurWord(burword)">
                     </div>
                   </div>
                 </div>
@@ -56,6 +62,7 @@ import Input from '../components/Input.vue';
 import Button from "~/components/Button.vue";
 import Speech from "~/components/Speech.vue";
 import Header from "~/components/Header.vue";
+import extractDefaultBurImageFromBurWord from "~/utils/extractDefaultBurImageFromBurWord";
 
 export default Vue.extend({
   data () {
@@ -138,6 +145,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    extractDefaultBurImageFromBurWord,
     async loadPack () {
       const { data } = await this.$axios.$get(`/api/user/packs/${this.packName}/by-slug`);
       this.pack = data;
