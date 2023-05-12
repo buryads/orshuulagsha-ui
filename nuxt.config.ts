@@ -1,9 +1,11 @@
-require('dotenv').config();
-const burWordSlugs = require('./data/slugs/bur.js').default;
-const ruWordSlugs = require('./data/slugs/ru.js').default;
-const locales = require('./data/locales/index.js').default;
-export default {
-  head: {
+import burWordSlugs from './data/slugs/bur'
+import ruWordSlugs from './data/slugs/ru'
+import locales from './data/locales'
+// https://nuxt.com/docs/api/configuration/nuxt-config
+
+// @ts-ignore
+export default defineNuxtConfig({
+  meta: {
     title: process.env.APP_TITLE,
     htmlAttrs: {
       lang: 'en'
@@ -17,6 +19,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
     ]
   },
+  dir: {
+    public: 'static'
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
@@ -26,34 +31,21 @@ export default {
   plugins: [
     {
       src: '~/plugins/amcharts.js',
-      ssr: false
+      mode: 'client'
     },
     {
       src: "~/plugins/echarts.js",
-      ssr: false
+      mode: 'client'
     },
     {
       src: "~/plugins/authUtils.js",
-      ssr: false
+      mode: 'client'
     }
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build',
+  modules: [
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
-    '@nuxt-hero-icons/outline/nuxt',
-    '@nuxt-hero-icons/solid/nuxt',
-  ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     '@nuxtjs/i18n',
     '@nuxtjs/sitemap',
@@ -104,11 +96,6 @@ export default {
       messages: locales
     }
   },
-  axios: {
-    baseURL: process.env.API_BASE_URL,
-    proxy: true,
-    credentials: true
-  },
 
   auth: {
     strategies: {
@@ -123,7 +110,7 @@ export default {
     }
   },
 
-  proxy: {
+/*  proxy: {
     '/api': {
       target: process.env.API_BASE_URL,
       pathRewrite: {
@@ -133,7 +120,7 @@ export default {
       },
       secure: false
     }
-  },
+  },*/
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -143,19 +130,14 @@ export default {
       '@amcharts/amcharts5/themes/Animated',
       'd3-shape',
       'd3-path'
-    ],
-    extend: function (config, {isDev, isClient}) {
-      config.node = {
-
-        fs: "empty"
-      };
-    }
+    ]
   },
   server: {
     host: process.env.APP_HOST
   },
-  router: {
-    extendRoutes(routes, resolve) {
+  hooks: {
+    // @ts-ignore
+    'pages:extend' (routes, resolve) {
       routes.push({
         name: 'Quiz',
         path: '/quiz',
@@ -196,7 +178,6 @@ export default {
         path: '/dashboard',
         component: resolve(__dirname, 'pages/dashboard.vue')
       });
-
 
       routes.push({
         name: 'TranslationsLogs',
@@ -245,4 +226,4 @@ export default {
       });
     }
   }
-}
+})
