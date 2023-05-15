@@ -4,13 +4,14 @@ export default {
   packsTitle: 'Packs',
   packsDescription: 'The words for learning in words packs',
   singleWordPageTitle: 'The word "{word}"',
-  singleWordPageDescription: 'The translation of word "{word}" in to {lang} language',
+  singleWordPageDescription:
+    'The translation of word "{word}" in to {lang} language',
   words: 'Words',
   wordsPageDescription: 'The words database',
   next: 'Next',
   previous: 'Previous',
   russian: 'Russian',
-  ua:'Ukrainian',
+  ua: 'Ukrainian',
   russianDictionary: 'Russian dictionary',
   inputText: 'Enter the word',
   buryad: 'Buryad',
@@ -24,14 +25,16 @@ export default {
   switchLanguage: 'Switch languages',
   showFullKeyboard: 'Show full keyboard',
   todayTranslated: 'Today was translated',
-  keyboardLayouts: 'Keyboard layouts',
+  keyboardLayouts: 'Keyboard _layouts',
   games: 'Games',
   names: 'Names',
   quiz: 'Quiz',
-  localizedForBuryadLanguageGames: 'The games which has Buryad language database of words.',
+  localizedForBuryadLanguageGames:
+    'The games which has Buryad language database of words.',
   translate: 'Translate',
   title: 'Buryat-Russian vocabulary',
-  foundWordsInOppositeLanuage: 'Switch language. Found words in opposite language: ',
+  foundWordsInOppositeLanuage:
+    'Switch language. Found words in opposite language: ',
   change: 'change',
   vocabulary: 'vocabulary',
   buttonTranslate: 'Tranlsate',
@@ -40,9 +43,10 @@ export default {
   matches: 'Matches',
   possibleTranslates: 'Possible translations',
   otherServices: 'Other services',
-  disclaimer: 'Translations could be wrong, it\'s not like 100% right translations here',
+  disclaimer:
+    "Translations could be wrong, it's not like 100% right translations here",
   toggleLanguage: 'Toggle language',
   dailyTranslationsCount: 'Today was translated',
   inputNameToSearch: 'Enter name to search',
-  notFount: 'Not found'
-}
+  notFount: 'Not found',
+};
