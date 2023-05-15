@@ -1,7 +1,7 @@
 require('dotenv').config();
-const burWordSlugs = require('./data/slugs/bur.js').default;
-const ruWordSlugs = require('./data/slugs/ru.js').default;
-const locales = require('./data/locales/index.js').default;
+const burWordSlugs = require('~/slugs/bur.js').default;
+const ruWordSlugs = require('~/slugs/ru.js').default;
+const locales = require('~/i18n').default;
 export default {
   head: {
     title: process.env.APP_TITLE,
@@ -56,7 +56,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    '@nuxtjs/i18n',
+    '@nuxtjs/_i18n',
     '@nuxtjs/sitemap',
     ['@nuxtjs/dotenv', { filename: '.env' }],
   ],

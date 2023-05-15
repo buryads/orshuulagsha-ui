@@ -1,6 +1,7 @@
 {
   "name": "orshuulga",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -10,6 +11,8 @@
     "docker-start": "npm i && npm run build && npm run start"
   },
   "devDependencies": {
+    "@nuxtjs/i18n": "^8.0.0-beta.12",
+    "@tailwindcss/forms": "^0.5.3",
     "@types/node": "^18",
     "autoprefixer": "^10.4.14",
     "nuxt": "^3.4.3",
