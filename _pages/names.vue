@@ -4,7 +4,7 @@
       <div class="w-full max-w-xl p-3">
         <div class="w-full h-full flex align-center justify-center" style="zoom: 0.22">
           <div id="cloud" class="" style="height: 100em; width: 100em;">
-            <img src="/logo-static.png"/>
+            <img src="/images/logo-static.png"/>
           </div>
         </div>
       </div>

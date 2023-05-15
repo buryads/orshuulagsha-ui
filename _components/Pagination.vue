@@ -4,7 +4,7 @@
             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                 <a href="#" @click.prevent="loadPage(offset - limit, limit)" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span class="sr-only">Previous</span>
-                    <img src="/arrow-left.png" alt="Arrow 64" width="16" height="16"/>
+                    <img src="/images/arrow-left.png" alt="Arrow 64" width="16" height="16"/>
                 </a>
                 <a
                     v-for="page in pages"
@@ -21,7 +21,7 @@
                 </a>
                 <a href="#" @click.prevent="loadPage(offset + limit, limit)" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span class="sr-only">Next</span>
-                    <img src="/arrow-right.png" alt="Next" width="16" height="16"/>
+                    <img src="/images/arrow-right.png" alt="Next" width="16" height="16"/>
                 </a>
             </nav>
         </div>
