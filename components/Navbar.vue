@@ -1,6 +1,6 @@
 <template>
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="container px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button -->
@@ -27,16 +27,16 @@
 
           <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-            <a
-              href="#"
+            <NuxtLink
+              to="/"
               class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">
               Словарь
-            </a>
-            <a
-              href="#"
+            </NuxtLink>
+            <NuxtLink
+              to="/games"
               class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-              Игры
-            </a>
+              {{ $t('games') }}
+            </NuxtLink>
             <a
               href="#"
               class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
@@ -161,4 +161,6 @@
     MenuItems,
   } from '@headlessui/vue';
   import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+
+  const localePath = useLocalePath();
 </script>

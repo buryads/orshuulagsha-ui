@@ -15,7 +15,6 @@ ENV APP_HOST 0.0.0.0
 ENV APP_NAME "Buryad Dictionary"
 ENV APP_TITLE "Бурятско-Русский словарь"
 ENV APP_DESCRIPTION "Бурястко-Русский словарь"
-ENV DEFAULT_LOCALE "ru"
 ENV API_BASE_URL ""
 
 RUN ENVS=$(printenv | sed 's/\(^[^=]*\)=\(.*\)/export \1="\2"/')

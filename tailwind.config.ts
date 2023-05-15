@@ -9,7 +9,11 @@ module.exports = {
     './app.vue',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1.5rem',
+    },
     extend: {},
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };

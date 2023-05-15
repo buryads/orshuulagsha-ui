@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div>
     <label
       for="email"
       class="block text-sm font-medium leading-6 text-gray-900">
-      {{ $t('games') }}
+      Email
     </label>
 
     <div class="mt-2">
@@ -16,9 +16,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  useHead({
-    title: 'Словарь',
-  });
-</script>
