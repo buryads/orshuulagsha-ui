@@ -12,4 +12,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.API_BASE_URL,
+    },
+  },
 });

@@ -1,24 +1,36 @@
 <template>
   <div class="container">
-    <label
-      for="email"
-      class="block text-sm font-medium leading-6 text-gray-900">
-      {{ $t('games') }}
-    </label>
-
-    <div class="mt-2">
-      <input
-        type="email"
-        name="email"
-        id="email"
-        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        placeholder="you@example.com" />
-    </div>
+    <Label>
+      <span>
+        {{ sourceLanguage === 'bur' ? $t('buryad') : $t('russian') }}
+        <span
+          class="inline-block h-5 w-5 cursor-pointer rounded-full text-center text-blue-300 hover:bg-gray-200 hover:text-blue-600"
+          @click="toggleLanguage">
+          ⇄
+        </span>
+        {{
+          sourceLanguage === 'bur'
+            ? $t('russianDictionary')
+            : $t('buryadDictionary')
+        }}
+      </span>
+      <Input :placeholder="$t('inputText')" />
+    </Label>
   </div>
 </template>
 
 <script setup lang="ts">
+  import Label from '~/components/UI/Label.vue';
+  import Input from '~/_components/Input.vue';
+
   useHead({
     title: 'Словарь',
   });
+
+  type translationLanguage = 'bur' | 'ru';
+  const sourceLanguage: Ref<translationLanguage> = ref('ru');
+
+  const toggleLanguage = () => {
+    sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
+  };
 </script>
