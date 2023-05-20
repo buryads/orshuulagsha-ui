@@ -13,7 +13,15 @@ module.exports = {
       center: true,
       padding: '1.5rem',
     },
-    extend: {},
+    fontFamily: {
+      sans: ['Quicksand', 'sans-serif'],
+    },
+    extend: {
+      colors: {
+        'bur-blue': '#0036a7',
+        'bur-yellow': '#f1b742',
+      },
+    },
   },
   plugins: [require('@tailwindcss/forms')],
 };

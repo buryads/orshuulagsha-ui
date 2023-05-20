@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
-    "@heroicons/vue": "^2.0.18"
+    "@heroicons/vue": "^2.0.18",
+    "axios": "^1.4.0",
+    "ohmyfetch": "^0.4.21"
   }
 }
