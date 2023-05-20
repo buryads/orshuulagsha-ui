@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div class="font-sans">
     <Navbar />
 
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <div class="mt-3">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </div>
   </div>
 </template>
 

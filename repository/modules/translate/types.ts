@@ -1,5 +1,3 @@
-import { catchHttpErrors } from '~/utils/catchHttpErrors';
-
 export type translationImage = {
   id: number;
   filepath: string;
@@ -33,10 +31,10 @@ export type translationItem = {
 export type translation = {
   exactTranslations: translationItem[];
   occurrences: translationItem[];
-  possibleTranslation: translationItem[];
+  possibleTranslations: translationItem[];
 };
 
-type translationApiResponse = {
+export type translationApiResponse = {
   data: {
     data: {
       result: translationItem[];
@@ -46,28 +44,9 @@ type translationApiResponse = {
   };
 };
 
-export type TranslateWord = (
-  translationType: string,
-  value: string,
-) => Promise<translation>;
-
-export const translateWord: TranslateWord = async (
-  translationType = 'bur2ru',
-  value,
-) => {
-  try {
-    const {
-      data: { data },
-    } = (await axios.get(
-      `/api/translate/${translationType}?word=${value.toLowerCase()}`,
-    )) as translationApiResponse;
-
-    return {
-      exactTranslations: data.result,
-      occurrences: data.includes,
-      possibleTranslation: data.fuzzy,
-    };
-  } catch (error: unknown) {
-    catchHttpErrors(error);
-  }
-};
+export interface ITranslateModule {
+  translateWord(
+    translationType: 'bur2ru' | 'ru2bur',
+    value: string,
+  ): Promise<translation>;
+}
