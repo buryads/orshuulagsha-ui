@@ -13,10 +13,10 @@ class TranslateModule extends HttpFactory implements ITranslateModule {
     value: string,
   ): Promise<translationType> {
     try {
-      const { data } = (await this.call(
+      const { data }: translationApiResponse = await this.call(
         'GET',
         `${this.RESOURCE}/${translationType}?word=${value.toLowerCase()}`,
-      )) as translationApiResponse;
+      );
 
       return {
         exactTranslations: data.result,
