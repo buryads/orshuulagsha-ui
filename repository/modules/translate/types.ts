@@ -28,7 +28,7 @@ export type translationItem = {
   translations: word[];
 };
 
-export type translation = {
+export type translationType = {
   exactTranslations: translationItem[];
   occurrences: translationItem[];
   possibleTranslations: translationItem[];
@@ -36,11 +36,9 @@ export type translation = {
 
 export type translationApiResponse = {
   data: {
-    data: {
-      result: translationItem[];
-      includes: translationItem[];
-      fuzzy: translationItem[];
-    };
+    result: translationItem[];
+    include: translationItem[];
+    fuzzy: translationItem[];
   };
 };
 
@@ -48,5 +46,5 @@ export interface ITranslateModule {
   translateWord(
     translationType: 'bur2ru' | 'ru2bur',
     value: string,
-  ): Promise<translation>;
+  ): Promise<translationType>;
 }

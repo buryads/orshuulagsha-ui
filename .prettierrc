@@ -3,8 +3,7 @@
   "singleQuote": true,
   "trailingComma": "all",
   "bracketSpacing": true,
-  "bracketSameLine": true,
-  "htmlWhitespaceSensitivity": "ignore",
+  "bracketSameLine": false,
   "vueIndentScriptAndStyle": true,
   "tailwindConfig": "./tailwind.config.ts"
 }
