@@ -3,11 +3,12 @@
     <div class="max-w-4xl">
       <div class="flex flex-col gap-2">
         <Label>
-          <span>
+          <span class="text-base text-neutral-600">
             {{ sourceLanguage === 'bur' ? $t('buryad') : $t('russian') }}
             <span
               class="inline-block h-5 w-5 cursor-pointer rounded-full text-center text-blue-300 hover:bg-gray-200 hover:text-blue-600"
-              @click="toggleLanguage">
+              @click="toggleLanguage"
+            >
               ⇄
             </span>
             {{
@@ -17,16 +18,43 @@
             }}
           </span>
 
-          <Input v-model="inputValue" :placeholder="$t('inputText')" />
+          <Input
+            v-model="inputValue"
+            :placeholder="$t('inputText')"
+            class="mt-2"
+            autofocus
+            @change="translate"
+          />
         </Label>
 
-        <Button class="bg-bur-yellow" @click="translate">
-          {{ $t('translate') }}
+        <Button
+          class="bg-bur-yellow transition-opacity hover:opacity-90"
+          @click="translate"
+        >
+          <span class="relative">
+            {{ $t('translate') }}
+            <span class="absolute left-full top-1/2 -translate-y-1/2">
+              <Spinner
+                v-if="isLoading"
+                class="ml-1.5 h-3.5 w-3.5 animate-spin"
+              />
+            </span>
+          </span>
         </Button>
       </div>
 
       <div class="mt-3">
-        {{ result }}
+        <List
+          :title="$t('translates')"
+          :items="result.exactTranslations || []"
+        />
+
+        <List :title="$t('includes')" :items="result.occurrences || []" />
+
+        <List
+          :title="$t('possibleTranslates')"
+          :items="result.possibleTranslations || []"
+        />
       </div>
     </div>
   </div>
@@ -36,11 +64,12 @@
   import Label from '~/components/UI/Label.vue';
   import Input from '~/components/UI/Input.vue';
   import Button from '~/components/UI/Button.vue';
-  import { Ref } from 'vue';
+  import type { Ref } from 'vue';
+  import type { translationType } from '~/repository/modules/translate/types';
+  import List from '~/components/UI/List.vue';
+  import Spinner from 'assets/icons/Spinner.vue';
 
   const nuxtApp = useNuxtApp();
-
-  console.log(nuxtApp);
 
   useHead({
     title: 'Словарь',
@@ -49,17 +78,29 @@
   type translationLanguage = 'bur' | 'ru';
   const sourceLanguage: Ref<translationLanguage> = ref('ru');
   const inputValue = ref('');
-  const result = ref({});
+  const result: Ref<Partial<translationType>> = ref({});
+  const translationType = computed(() =>
+    sourceLanguage.value === 'ru' ? 'ru2bur' : 'bur2ru',
+  );
+  const isLoading = ref(false);
 
   const toggleLanguage = () => {
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
   };
 
   const translate = async () => {
-    console.log(inputValue.value);
-    result.value = await nuxtApp.$api.translate.translateWord(
-      sourceLanguage.value,
-      inputValue.value,
-    );
+    if (inputValue.value.trim() === '') return;
+
+    try {
+      isLoading.value = true;
+      result.value = await nuxtApp.$api.translate.translateWord(
+        translationType.value,
+        inputValue.value,
+      );
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
   };
 </script>
