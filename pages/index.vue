@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="max-w-4xl">
+    <div class="mx-auto mt-6 max-w-4xl">
       <div class="flex flex-col gap-2">
         <Label>
           <span class="text-base text-neutral-600">
@@ -44,18 +44,25 @@
       </div>
 
       <div class="mt-3">
-        <List
+        <TranslationsList
           :title="$t('translates')"
           :items="result.exactTranslations || []"
         />
 
-        <List :title="$t('includes')" :items="result.occurrences || []" />
+        <TranslationsList
+          :title="$t('includes')"
+          :items="result.occurrences || []"
+        />
 
-        <List
+        <TranslationsList
           :title="$t('possibleTranslates')"
           :items="result.possibleTranslations || []"
         />
       </div>
+
+      <DiscordSection class="mt-10" />
+
+      <DailyTranslationsAmount />
     </div>
   </div>
 </template>
@@ -64,12 +71,14 @@
   import Label from '~/components/UI/Label.vue';
   import Input from '~/components/UI/Input.vue';
   import Button from '~/components/UI/Button.vue';
+  import TranslationsList from '~/components/TranslationsList.vue';
+  import Spinner from 'assets/icons/Spinner.vue';
   import type { Ref } from 'vue';
   import type { translationType } from '~/repository/modules/translate/types';
-  import List from '~/components/UI/List.vue';
-  import Spinner from 'assets/icons/Spinner.vue';
+  import DiscordSection from '~/components/DiscordSection.vue';
+  import DailyTranslationsAmount from '~/components/DailyTranslationsAmount.vue';
 
-  const nuxtApp = useNuxtApp();
+  const { $api } = useNuxtApp();
 
   useHead({
     title: 'Словарь',
@@ -93,7 +102,7 @@
 
     try {
       isLoading.value = true;
-      result.value = await nuxtApp.$api.translate.translateWord(
+      result.value = await $api.translate.translateWord(
         translationType.value,
         inputValue.value,
       );
