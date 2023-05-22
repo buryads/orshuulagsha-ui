@@ -79,7 +79,6 @@
   import type { translationType } from '~/repository/modules/translate/types';
   import DiscordSection from '~/components/DiscordSection.vue';
   import DailyTranslationsAmount from '~/components/DailyTranslationsAmount.vue';
-  import InfoFooter from '~/components/Sections/SocialInfo.vue';
   import SocialInfo from '~/components/Sections/SocialInfo.vue';
 
   const { $api } = useNuxtApp();
