@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="mx-auto mt-6 max-w-4xl">
+  <div class="container mt-2">
+    <div class="mx-auto flex min-h-[calc(100vh-100px)] max-w-4xl flex-col">
       <div class="flex flex-col gap-2">
         <Label>
           <span class="text-base text-neutral-600">
@@ -60,9 +60,11 @@
         />
       </div>
 
-      <DiscordSection class="mt-10" />
+      <DiscordSection class="my-5" />
 
-      <DailyTranslationsAmount />
+      <DailyTranslationsAmount class="mt-auto text-center" />
+
+      <SocialInfo class="mt-4 text-center text-neutral-400" />
     </div>
   </div>
 </template>
@@ -77,6 +79,8 @@
   import type { translationType } from '~/repository/modules/translate/types';
   import DiscordSection from '~/components/DiscordSection.vue';
   import DailyTranslationsAmount from '~/components/DailyTranslationsAmount.vue';
+  import InfoFooter from '~/components/Sections/SocialInfo.vue';
+  import SocialInfo from '~/components/Sections/SocialInfo.vue';
 
   const { $api } = useNuxtApp();
 

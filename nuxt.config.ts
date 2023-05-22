@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
+  // @ts-ignore if you install typescript as a dev dependency, this will help
   app: {
     head: {
       link: [

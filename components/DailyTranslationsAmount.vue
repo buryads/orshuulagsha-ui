@@ -1,21 +1,13 @@
 <template>
-  <div>{{ $t('dailyTranslationsCount') }}: {{ data?.count }}</div>
+  <div class="font-medium text-neutral-600">
+    {{ $t('dailyTranslationsCount') }}: {{ data?.count }}
+  </div>
 </template>
 
 <script setup lang="ts">
-  import { useAsyncData } from '#app';
-  import StatisticModule from '~/repository/modules/statistic';
+  import useMyFetch from '~/composables/useMyFetch';
 
-  const { $api, $config } = useNuxtApp();
+  const { $api } = useNuxtApp();
 
-  const amount = ref();
-
-  async function getTranslationsAmount() {
-    amount.value = await $api.statistic.getTranslationsAmount();
-  }
-
-  //getTranslationsAmount();
-  const { data } = useFetch(StatisticModule.RESOURCE, {
-    baseURL: $config.public.baseURL,
-  });
+  const { data } = useMyFetch($api.statistic.RESOURCE);
 </script>

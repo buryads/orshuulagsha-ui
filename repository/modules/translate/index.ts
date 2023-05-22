@@ -6,7 +6,7 @@ import {
 } from '~/repository/modules/translate/types';
 
 class TranslateModule extends HttpFactory implements ITranslateModule {
-  private readonly RESOURCE = '/api/translate';
+  public readonly RESOURCE = '/api/translate';
 
   async translateWord(
     translationType: 'bur2ru' | 'ru2bur' = 'bur2ru',

@@ -4,7 +4,8 @@
       <div class="flex-auto">
         <div class="container mx-auto md:px-5 md:pb-5">
           <h1
-            class="pb-5 text-xl text-gray-900 sm:text-2xl lg:hidden lg:text-4xl">
+            class="pb-5 text-xl text-gray-900 sm:text-2xl lg:hidden lg:text-4xl"
+          >
             {{ title }}
           </h1>
           <h2 class="h-7 pb-2 text-gray-800">
@@ -13,7 +14,8 @@
               <span
                 class="inline-block cursor-pointer rounded-full text-center text-blue-300 hover:bg-gray-200 hover:text-blue-600"
                 style="width: 20px; height: 20px"
-                @click="toggleVocabularies">
+                @click="toggleVocabularies"
+              >
                 ⇄
               </span>
               {{ $t('russianDictionary') }}
@@ -23,7 +25,8 @@
               <span
                 class="inline-block cursor-pointer rounded-full text-center text-blue-300 hover:bg-gray-200 hover:text-blue-600"
                 style="width: 20px; height: 20px"
-                @click="toggleVocabularies">
+                @click="toggleVocabularies"
+              >
                 ⇄
               </span>
               {{ $t('buryadDictionary') }}
@@ -34,18 +37,21 @@
               class="text-blue -ml-1 mr-3 inline h-5 w-5 animate-spin"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <circle
                 class="opacity-25"
                 cx="12"
                 cy="12"
                 r="10"
                 stroke="currentColor"
-                stroke-width="4"></circle>
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           </h2>
           <div class="block md:flex">
@@ -60,14 +66,16 @@
                     v-model="text"
                     @keypress="translate($event.target)"
                     @keyup.enter="translate($event.target, true)"
-                    ref="text" />
+                    ref="text"
+                  />
                   <button
                     v-if="currentLocale === 'bur'"
                     @click.prevent="
                       text = text + 'ө';
                       $refs.text.focus();
                     "
-                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white">
+                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white"
+                  >
                     ө
                   </button>
                   <button
@@ -76,7 +84,8 @@
                       text = text + 'h';
                       $refs.text.focus();
                     "
-                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white">
+                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white"
+                  >
                     h
                   </button>
                   <button
@@ -85,7 +94,8 @@
                       text = text + 'ү';
                       $refs.text.focus();
                     "
-                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white">
+                    class="inline bg-transparent px-2 font-semibold text-blue-700 hover:bg-blue-500 hover:text-white"
+                  >
                     ү
                   </button>
                 </div>
@@ -93,18 +103,21 @@
               <div class="w-full justify-center">
                 <button
                   @click="translate($refs.text, true)"
-                  class="search-button inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-yellow-600 px-5 py-3 text-center text-base font-medium text-indigo-500 shadow-sm hover:text-indigo-600 focus:border-none">
+                  class="search-button inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-yellow-600 px-5 py-3 text-center text-base font-medium text-indigo-500 shadow-sm hover:text-indigo-600 focus:border-none"
+                >
                   <svg
                     class="mr-2 h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    ></path>
                   </svg>
                   <span class="relative">{{ $t('translate') }}</span>
                 </button>
@@ -116,14 +129,16 @@
               <a
                 href="#"
                 @click.prevent="toggleVocabularies"
-                class="ml-2 text-blue-300 hover:text-blue-600">
+                class="ml-2 text-blue-300 hover:text-blue-600"
+              >
                 {{ $t('toggleLanguage') }}
               </a>
               |
               <a
                 href="#"
                 @click.prevent="toggleShowFullKeyboard"
-                class="ml-2 text-blue-300 hover:text-blue-600">
+                class="ml-2 text-blue-300 hover:text-blue-600"
+              >
                 {{ $t('showFullKeyboard') }}
               </a>
             </div>
@@ -133,7 +148,8 @@
               <a
                 href="#"
                 @click.prevent="toggleVocabularies(true)"
-                class="ml-2 text-red-400 hover:text-red-800">
+                class="ml-2 text-red-400 hover:text-red-800"
+              >
                 {{ $t('foundWordsInOppositeLanuage') }}
                 {{ foundWordsInOppositeLanuage }}
               </a>
@@ -154,27 +170,33 @@
                   &nbsp;
                   <sup
                     v-if="$auth.loggedIn"
-                    class="text-blue-600 hover:underline">
+                    class="text-blue-600 hover:underline"
+                  >
                     <nuxt-link :to="getLinkToEditForm(result)">
                       {{ $t('change') }}
                     </nuxt-link>
                   </sup>
                   <span
                     v-if="result.speechs && result.speechs.length > 0"
-                    class="mr-2 inline-block">
+                    class="mr-2 inline-block"
+                  >
                     <a
                       v-if="!result.isPlaying"
                       href="#"
-                      @click.prevent="playSpeech('result', i)">
+                      @click.prevent="playSpeech('result', i)"
+                    >
                       <outline-play-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                     <a
                       v-else
                       href="#"
-                      @click.prevent="pauseSpeech('result', i)">
+                      @click.prevent="pauseSpeech('result', i)"
+                    >
                       <outline-pause-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                   </span>
                   <br />
@@ -189,7 +211,8 @@
                     <a
                       class="text-blue-500"
                       :href="result.description.url"
-                      target="_blank">
+                      target="_blank"
+                    >
                       ⇪
                     </a>
                     :
@@ -199,7 +222,8 @@
                   <a
                     class="text-blue-500"
                     :href="result.description.url"
-                    target="_blank">
+                    target="_blank"
+                  >
                     ⇪
                   </a>
                 </span>
@@ -214,27 +238,33 @@
                   &nbsp;
                   <sup
                     v-if="$auth.loggedIn"
-                    class="text-blue-600 hover:underline">
+                    class="text-blue-600 hover:underline"
+                  >
                     <nuxt-link :to="getLinkToEditForm(result)">
                       {{ $t('change') }}
                     </nuxt-link>
                   </sup>
                   <span
                     v-if="result.speechs && result.speechs.length > 0"
-                    class="mr-2 inline-block">
+                    class="mr-2 inline-block"
+                  >
                     <a
                       v-if="!result.isPlaying"
                       href="#"
-                      @click.prevent="playSpeech('include', i)">
+                      @click.prevent="playSpeech('include', i)"
+                    >
                       <outline-play-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                     <a
                       v-else
                       href="#"
-                      @click.prevent="pauseSpeech('include', i)">
+                      @click.prevent="pauseSpeech('include', i)"
+                    >
                       <outline-pause-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                   </span>
                   <br />
@@ -254,24 +284,29 @@
                   &nbsp;
                   <sup
                     v-if="$auth.loggedIn"
-                    class="text-blue-600 hover:underline">
+                    class="text-blue-600 hover:underline"
+                  >
                     <nuxt-link :to="getLinkToEditForm(result)">
                       {{ $t('change') }}
                     </nuxt-link>
                   </sup>
                   <span
                     v-if="result.speechs && result.speechs.length > 0"
-                    class="mr-2 inline-block">
+                    class="mr-2 inline-block"
+                  >
                     <a
                       v-if="!result.isPlaying"
                       href="#"
-                      @click.prevent="playSpeech('match', i)">
+                      @click.prevent="playSpeech('match', i)"
+                    >
                       <outline-play-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                     <a v-else href="#" @click.prevent="pauseSpeech('match', i)">
                       <outline-pause-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                   </span>
                   <br />
@@ -291,24 +326,29 @@
                   &nbsp;
                   <sup
                     v-if="$auth.loggedIn"
-                    class="text-blue-600 hover:underline">
+                    class="text-blue-600 hover:underline"
+                  >
                     <nuxt-link :to="getLinkToEditForm(result)">
                       {{ $t('change') }}
                     </nuxt-link>
                   </sup>
                   <span
                     v-if="result.speechs && result.speechs.length > 0"
-                    class="mr-2 inline-block">
+                    class="mr-2 inline-block"
+                  >
                     <a
                       v-if="!result.isPlaying"
                       href="#"
-                      @click.prevent="playSpeech('fuzzy', i)">
+                      @click.prevent="playSpeech('fuzzy', i)"
+                    >
                       <outline-play-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                     <a v-else href="#" @click.prevent="pauseSpeech('fuzzy', i)">
                       <outline-pause-icon
-                        class="inline-block h-5 w-5 cursor-pointer" />
+                        class="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </a>
                   </span>
                   <br />
@@ -325,13 +365,16 @@
             <aside
               id="revue-embed"
               class="my-8 rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800 sm:p-6 lg:p-8"
-              aria-label="Subscribe to the Flowbite newsletter">
+              aria-label="Subscribe to the Flowbite newsletter"
+            >
               <h3
-                class="mb-3 text-xl font-medium text-gray-900 dark:text-white">
+                class="mb-3 text-xl font-medium text-gray-900 dark:text-white"
+              >
                 Не удалось перевести то что нужно?
               </h3>
               <p
-                class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">
+                class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-300"
+              >
                 В случае если вы хотели бы перевести что то но в нашей базе не
                 оказалось того что вам нужно вы можете обратиться за помощью к
                 нам в дискорд сервер.
@@ -340,13 +383,15 @@
                 action="https://www.getrevue.co/profile/flowbite/add_subscriber"
                 method="post"
                 id="revue-form"
-                name="revue-form">
+                name="revue-form"
+              >
                 <div class="flex items-end">
                   <p>
                     <a
                       href="https://discord.gg/8KG84E6y8T"
                       target="_blank"
-                      class="bg-white-100 inline-flex items-center justify-center rounded-lg border border-gray-200 px-6 py-2.5 text-center text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                      class="bg-white-100 inline-flex items-center justify-center rounded-lg border border-gray-200 px-6 py-2.5 text-center text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -354,12 +399,14 @@
                         height="32px"
                         viewBox="0 -28.5 256 256"
                         version="1.1"
-                        preserveAspectRatio="xMidYMid">
+                        preserveAspectRatio="xMidYMid"
+                      >
                         <g>
                           <path
                             d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z"
                             fill="#5865F2"
-                            fill-rule="nonzero" />
+                            fill-rule="nonzero"
+                          />
                         </g>
                         <script xmlns="" />
                       </svg>
@@ -395,14 +442,16 @@
               <a
                 href="https://buryat-lang.ru/"
                 class="text-blue-500"
-                target="_blank">
+                target="_blank"
+              >
                 Burlang.Toli
               </a>
               ,
               <a
                 href="https://uulen.gazeta-n1.ru/"
                 class="text-blue-500"
-                target="_blank">
+                target="_blank"
+              >
                 Үүлэн
               </a>
             </p>
@@ -419,7 +468,8 @@
               <a
                 href="https://github.com/buryads/buryad-keyboard-layout"
                 class="cursor-pointer text-blue-500 hover:text-blue-600"
-                target="_blank">
+                target="_blank"
+              >
                 GitHub
               </a>
             </p>
@@ -430,14 +480,16 @@
               <a
                 href="https://boosty.to/buryads"
                 class="cursor-pointer text-blue-500 hover:text-blue-600"
-                target="_blank">
+                target="_blank"
+              >
                 Boosty
               </a>
               или
               <a
                 href="https://www.patreon.com/buryads"
                 class="cursor-pointer text-blue-500 hover:text-blue-600"
-                target="_blank">
+                target="_blank"
+              >
                 Patreon
               </a>
             </p>
@@ -447,25 +499,30 @@
               <a
                 href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile"
                 target="_blank"
-                class="mr-5">
+                class="mr-5"
+              >
                 <img
                   src="/images/playstore.png"
                   width="150px"
-                  alt="Play Store" />
+                  alt="Play Store"
+                />
               </a>
               <a
                 href="https://apps.apple.com/ru/app/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/id1584232985"
                 target="_blank"
-                class="mr-5">
+                class="mr-5"
+              >
                 <img src="/images/appstore.png" width="150px" alt="App Store" />
               </a>
               <a
                 href="https://chrome.google.com/webstore/detail/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/gmljjdkoihndbbddpmechgpmacpglcei?hl=ru"
-                target="_blank">
+                target="_blank"
+              >
                 <img
                   src="/images/chromewebstore.png"
                   width="150px"
-                  alt="App Store" />
+                  alt="App Store"
+                />
               </a>
             </div>
           </div>

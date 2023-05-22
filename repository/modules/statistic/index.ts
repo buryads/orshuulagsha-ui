@@ -5,7 +5,7 @@ import {
 } from '~/repository/modules/statistic/types';
 
 class StatisticModule extends HttpFactory implements IStatistic {
-  public static readonly RESOURCE = '/api/statistic/daily-translations-count';
+  public readonly RESOURCE = '/api/statistic/daily-translations-count';
 
   async getTranslationsAmount(): Promise<number> {
     try {
