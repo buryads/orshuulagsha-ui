@@ -48,8 +48,8 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
-    '@nuxt-hero-icons/outline/nuxt',
-    '@nuxt-hero-icons/solid/nuxt',
+    '@nuxt-hero-Icons/outline/nuxt',
+    '@nuxt-hero-Icons/solid/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
