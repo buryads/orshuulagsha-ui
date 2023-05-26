@@ -3,22 +3,30 @@
     <div class="mx-auto flex min-h-[calc(100vh-100px)] max-w-4xl flex-col">
       <div class="flex flex-col gap-2">
         <Label>
-          <span class="text-base text-neutral-600">
-            {{ sourceLanguage === 'bur' ? $t('buryad') : $t('russian') }}
-            <span
-              class="inline-block h-5 w-5 cursor-pointer rounded-full text-center text-blue-300 hover:bg-gray-200 hover:text-blue-600"
-              @click="toggleLanguage"
-            >
-              ⇄
+          <span class="flex w-full items-center gap-3">
+            <span class="flex items-center gap-2 text-base text-neutral-600">
+              {{ sourceLanguage === 'bur' ? $t('buryad') : $t('russian') }}
+              –
+              {{
+                sourceLanguage === 'bur'
+                  ? $t('russianDictionary')
+                  : $t('buryadDictionary')
+              }}
             </span>
-            {{
-              sourceLanguage === 'bur'
-                ? $t('russianDictionary')
-                : $t('buryadDictionary')
-            }}
+
+            <ExchangeIcon
+              class="ml-auto h-4 w-4 cursor-pointer"
+              @click="toggleLanguage"
+            />
+
+            <KeyboardIcon
+              class="h-6 w-6 cursor-pointer"
+              @click="showKeyboard = !showKeyboard"
+            />
           </span>
 
           <Input
+            id="input-word"
             v-model="inputValue"
             :placeholder="$t('inputText')"
             class="mt-2"
@@ -41,6 +49,8 @@
             </span>
           </span>
         </Button>
+
+        <BurlangKeyboard v-if="showKeyboard" />
       </div>
 
       <div class="mt-3">
@@ -80,6 +90,8 @@
   import DiscordSection from '~/components/DiscordSection.vue';
   import DailyTranslationsAmount from '~/components/DailyTranslationsAmount.vue';
   import SocialInfo from '~/components/Sections/SocialInfo.vue';
+  import KeyboardIcon from '~/components/Icons/KeyboardIcon.vue';
+  import ExchangeIcon from '~/components/Icons/ExchangeIcon.vue';
 
   const { $api } = useNuxtApp();
 
@@ -95,6 +107,7 @@
     sourceLanguage.value === 'ru' ? 'ru2bur' : 'bur2ru',
   );
   const isLoading = ref(false);
+  const showKeyboard = ref(false);
 
   const toggleLanguage = () => {
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
