@@ -38,6 +38,8 @@
             <UINavbarLink to="/games"> {{ $t('games') }} </UINavbarLink>
             <UINavbarLink to="/names"> {{ $t('names') }} </UINavbarLink>
             <UINavbarLink to="/quiz"> {{ $t('quiz') }} </UINavbarLink>
+
+            <LangSwitcher />
           </div>
         </div>
 
@@ -157,4 +159,5 @@
     MenuItems,
   } from '@headlessui/vue';
   import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+  import Dropdown from '~/components/UI/Dropdown.vue';
 </script>
