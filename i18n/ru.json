@@ -44,5 +44,6 @@
   "toggleLanguage": "Переключить языки",
   "dailyTranslationsCount": "Сегодня было переведено",
   "inputNameToSearch": "Введите имя для поиска",
-  "notFount": "Не найдено"
+  "notFount": "Не найдено",
+  "dictionary": "Словарь"
 }

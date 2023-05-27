@@ -1,6 +1,6 @@
 <template>
   <div class="font-sans">
-    <Navbar />
+    <SectionNavbar />
 
     <div class="mt-3">
       <NuxtLayout>

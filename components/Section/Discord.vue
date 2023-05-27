@@ -25,5 +25,5 @@
 </template>
 
 <script setup lang="ts">
-  import DiscordIcon from 'assets/icons/DiscordIcon.vue';
+  import DiscordIcon from '~/components/Icons/Discord.vue';
 </script>

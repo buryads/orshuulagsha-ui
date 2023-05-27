@@ -44,5 +44,6 @@
   "toggleLanguage": "Toggle language",
   "dailyTranslationsCount": "Today was translated",
   "inputNameToSearch": "Enter name to search",
-  "notFount": "Not found"
+  "notFount": "Not found",
+  "dictionary": "Dictionary"
 }
