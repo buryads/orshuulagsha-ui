@@ -1,10 +1,15 @@
 <template>
-  <div class="container mt-2">
-    <div class="mx-auto flex min-h-[calc(100vh-100px)] max-w-4xl flex-col">
+  <div class="container mt-4">
+    <div class="mx-auto flex min-h-[calc(100vh-100px)] flex-col">
       <div class="flex flex-col gap-2">
-        <Label>
-          <span class="flex w-full items-center gap-3">
-            <span class="flex items-center gap-2 text-base text-neutral-600">
+        <UILabel>
+          <span
+            class="flex w-full select-none items-center gap-3 text-neutral-600"
+          >
+            <span
+              class="flex cursor-pointer items-center gap-2 text-base"
+              @click="toggleLanguage"
+            >
               {{ sourceLanguage === 'bur' ? $t('buryad') : $t('russian') }}
               –
               {{
@@ -14,18 +19,18 @@
               }}
             </span>
 
-            <ExchangeIcon
+            <IconsExchange
               class="ml-auto h-4 w-4 cursor-pointer"
               @click="toggleLanguage"
             />
 
-            <KeyboardIcon
+            <IconsKeyboard
               class="h-6 w-6 cursor-pointer"
               @click="showKeyboard = !showKeyboard"
             />
           </span>
 
-          <Input
+          <UIInput
             id="input-word"
             v-model="inputValue"
             :placeholder="$t('inputText')"
@@ -33,22 +38,23 @@
             autofocus
             @change="translate"
           />
-        </Label>
+        </UILabel>
 
-        <Button
+        <UIButton
           class="bg-bur-yellow transition-opacity hover:opacity-90"
+          :disabled="isLoading"
           @click="translate"
         >
           <span class="relative">
             {{ $t('translate') }}
             <span class="absolute left-full top-1/2 -translate-y-1/2">
-              <Spinner
+              <IconsSpinner
                 v-if="isLoading"
                 class="ml-1.5 h-3.5 w-3.5 animate-spin"
               />
             </span>
           </span>
-        </Button>
+        </UIButton>
 
         <BurlangKeyboard v-if="showKeyboard" />
       </div>
@@ -70,28 +76,18 @@
         />
       </div>
 
-      <DiscordSection class="my-5" />
+      <SectionDiscord class="my-5" />
 
       <DailyTranslationsAmount class="mt-auto text-center" />
 
-      <SocialInfo class="mt-4 text-center text-neutral-400" />
+      <SectionSocialInfo class="mt-4 text-center text-neutral-400" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import Label from '~/components/UI/Label.vue';
-  import Input from '~/components/UI/Input.vue';
-  import Button from '~/components/UI/Button.vue';
-  import TranslationsList from '~/components/TranslationsList.vue';
-  import Spinner from 'assets/icons/Spinner.vue';
   import type { Ref } from 'vue';
   import type { translationType } from '~/repository/modules/translate/types';
-  import DiscordSection from '~/components/DiscordSection.vue';
-  import DailyTranslationsAmount from '~/components/DailyTranslationsAmount.vue';
-  import SocialInfo from '~/components/Sections/SocialInfo.vue';
-  import KeyboardIcon from '~/components/Icons/KeyboardIcon.vue';
-  import ExchangeIcon from '~/components/Icons/ExchangeIcon.vue';
 
   const { $api } = useNuxtApp();
 
