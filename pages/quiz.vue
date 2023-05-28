@@ -4,7 +4,7 @@
       {{ $t('quiz') }}
     </h1>
 
-    <div class="mx-auto mt-6 max-w-2xl rounded-lg bg-white p-3 sm:p-6">
+    <div class="mt-6 max-w-2xl rounded-lg bg-white p-3 sm:p-6">
       <template v-if="currentQuestionIndex < questions?.length">
         <div class="text-center font-bold text-gray-900 sm:text-xl">
           {{ questions?.[currentQuestionIndex]?.question }}
@@ -91,7 +91,7 @@
           </li>
         </ul>
 
-        <div class="mt-6 flex gap-2">
+        <div class="mt-6 flex justify-end gap-3">
           <button
             class="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 md:text-base"
             @click="tryAgain"
