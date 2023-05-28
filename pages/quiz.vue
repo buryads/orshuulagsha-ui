@@ -34,7 +34,7 @@
         </div>
       </template>
 
-      <div v-else>
+      <div v-if="currentQuestionIndex">
         <div class="text-center font-bold text-gray-900 sm:text-xl">
           {{ $t('results') }}
         </div>

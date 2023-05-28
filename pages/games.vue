@@ -9,7 +9,7 @@
     <div
       class="mt-5 divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0"
     >
-      <LinkCard
+      <UILinkCard
         v-for="(game, index) in games"
         :key="game.title"
         :class="[
@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import LinkCard from '~/components/UI/LinkCard.vue';
   import Alias from '~/components/Icons/Games/Alias.vue';
   import BombParty from '~/components/Icons/Games/BombParty.vue';
   import Scribble from '~/components/Icons/Games/Scribble.vue';
