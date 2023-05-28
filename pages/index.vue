@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-2">
         <UILabel>
           <span
-            class="flex w-full select-none items-center gap-3 text-neutral-600"
+            class="flex w-full select-none items-center gap-3 text-gray-700"
           >
             <span
               class="flex cursor-pointer items-center gap-2 text-base"
@@ -88,11 +88,13 @@
 <script setup lang="ts">
   import type { Ref } from 'vue';
   import type { translationType } from '~/repository/modules/translate/types';
+  import { useI18n } from 'vue-i18n';
 
   const { $api } = useNuxtApp();
+  const { t } = useI18n();
 
   useHead({
-    title: 'Словарь',
+    title: t('dictionary'),
   });
 
   type translationLanguage = 'bur' | 'ru';

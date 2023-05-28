@@ -6,10 +6,12 @@
 
 <script setup lang="ts">
   import games from '../constants/games.json';
+  import { useI18n } from 'vue-i18n';
 
-  const { $i18n } = useNuxtApp();
+  const { t } = useI18n();
 
-  /*  useHead({
+  useHead({
+    title: t('games'),
     meta: [
       {
         property: 'og:title',
@@ -19,8 +21,8 @@
       {
         property: 'title',
         name: 'title',
-        content: $t('games'),
+        content: t('games'),
       },
     ],
-  });*/
+  });
 </script>
