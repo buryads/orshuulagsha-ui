@@ -55,7 +55,9 @@
       </p>
     </div>
 
-    <div class="mt-5 justify-center gap-4 md:flex">
+    <div
+      class="mt-5 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4"
+    >
       <a
         href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile"
         target="_blank"
