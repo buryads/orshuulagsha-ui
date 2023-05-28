@@ -19,8 +19,8 @@
   "buryadDictionary": "Buryad dictionary",
   "switchLanguage": "Switch languages",
   "showFullKeyboard": "Show full keyboard",
-  "todayTranslated": "Today was translated",
-  "keyboardLayouts": "Keyboard _layouts",
+  "todayTranslated": "Today has been translated",
+  "keyboardLayouts": "Keyboard layouts",
   "games": "Games",
   "names": "Names",
   "quiz": "Quiz",
@@ -38,7 +38,6 @@
   "otherServices": "Other services",
   "disclaimer": "Translations could be wrong, it's not like 100% right translations here",
   "toggleLanguage": "Toggle language",
-  "dailyTranslationsCount": "Today was translated",
   "inputNameToSearch": "Enter name to search",
   "notFount": "Not found",
   "dictionary": "Dictionary",
@@ -47,5 +46,12 @@
   "newWords": "New words",
   "correctAnswer": "Correct answer",
   "yourAnswer": "Your answer",
-  "loading": "Loading"
+  "loading": "Loading",
+  "failedTranslateSmth": "Haven't managed to translate what you need?",
+  "discordHelp": "If you would like to translate something, but our database does not contain what you need, you can contact us on the discord server for help.",
+  "openDiscord": "Open Discord server: Buryads",
+  "supportOurProject": "Support our project",
+  "or": "or",
+  "on": "on",
+  "chromeExtension": "We also have mobile apps and an extension for the Google Chrome browser"
 }

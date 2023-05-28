@@ -121,6 +121,30 @@
 <script setup lang="ts">
   import { Ref } from 'vue';
   import { quizQuestion } from '~/repository/modules/quiz/types';
+  import { useI18n } from 'vue-i18n';
+
+  const { t } = useI18n();
+
+  useHead({
+    title: t('quiz'),
+    meta: [
+      {
+        property: 'description',
+        name: 'description',
+        content: t('quiz'),
+      },
+      {
+        property: 'og:title',
+        name: 'title',
+        content: t('quiz'),
+      },
+      {
+        property: 'og:description',
+        name: 'description',
+        content: t('localizedForBuryadLanguageGames') + ' ' + t('quiz'),
+      },
+    ],
+  });
 
   const { $api } = useNuxtApp();
   const correctAnswers = ref(0);

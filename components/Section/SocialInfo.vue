@@ -20,12 +20,11 @@
 
     <div class="mt-3 flex flex-col gap-3">
       <p>
-        У нас также есть мобильные приложения и расширение для браузера Google
-        Chrome
+        {{ $t('chromeExtension') }}
       </p>
 
       <p>
-        Раскладки для клавиатуры:
+        {{ $t('keyboardLayouts') }}
         <a
           href="https://github.com/buryads/buryad-keyboard-layout"
           class="cursor-pointer text-blue-500"
@@ -36,7 +35,8 @@
       </p>
 
       <p>
-        Поддержи наш проект на
+        {{ $t('supportOurProject') }}
+        {{ $t('on') }}
         <a
           href="https://boosty.to/buryads"
           class="cursor-pointer text-blue-500"
@@ -44,7 +44,7 @@
         >
           Boosty
         </a>
-        или
+        {{ $t('or') }}
         <a
           href="https://www.patreon.com/buryads"
           class="cursor-pointer text-blue-500"

@@ -4,11 +4,10 @@
     aria-label="Subscribe to the Flowbite newsletter"
   >
     <h3 class="mb-3 text-base font-medium text-gray-700 md:text-xl">
-      Не удалось перевести то что нужно?
+      {{ $t('failedTranslateSmth') }}
     </h3>
     <p class="mb-2 text-sm font-medium text-gray-500">
-      В случае если вы хотели бы перевести что-то, но в нашей базе не оказалось
-      того что вам нужно вы можете обратиться за помощью к нам в дискорд сервер.
+      {{ $t('discordHelp') }}
     </p>
 
     <a
@@ -18,7 +17,7 @@
     >
       <DiscordIcon class="h-8 w-8 shrink-0" />
       <span class="text-center text-base font-medium">
-        Открыть Discord сервер: Buryads
+        {{ $t('openDiscord') }}
       </span>
     </a>
   </section>
