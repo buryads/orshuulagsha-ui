@@ -18,6 +18,7 @@
             ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none'
             : '',
         ]"
+        :icon="game.icon"
         :title="game.title"
         :link="game.link"
         :index="+index"
@@ -28,9 +29,12 @@
 </template>
 
 <script setup lang="ts">
-  import games from '../constants/games.json';
   import { useI18n } from 'vue-i18n';
   import LinkCard from '~/components/UI/LinkCard.vue';
+  import Alias from '~/components/Icons/Games/Alias.vue';
+  import BombParty from '~/components/Icons/Games/BombParty.vue';
+  import Scribble from '~/components/Icons/Games/Scribble.vue';
+  import Wordle from '~/components/Icons/Games/Wordle.vue';
 
   const { t } = useI18n();
 
@@ -54,4 +58,35 @@
       },
     ],
   });
+
+  const games = [
+    {
+      title: 'BombParty',
+      description:
+        'is an explosive word game. Type a word that contains the prompt. Be quick! If the bomb explodes during your turn, you lose a life.',
+      link: 'https://bombparty.games.buryads.com/',
+      icon: BombParty,
+    },
+    {
+      title: 'Alias',
+      description:
+        'is a board game, where the objective of the players is to explain words to each other. Hence, Alias is similar to Taboo, but the only forbidden word in the explanations is the word to be explained. The game is played in teams of varying size, and fits well as a party game for larger crowds.',
+      link: 'https://alias.games.buryads.com/',
+      icon: Alias,
+    },
+    {
+      title: 'Wordle',
+      description:
+        'Guess the Wordle in 6 tries. Each guess must be a valid 5-letter word. The color of the tiles will change to show how close your guess was to the word.',
+      link: 'https://wordle.games.buryads.com/',
+      icon: Wordle,
+    },
+    {
+      title: 'Scribble',
+      description:
+        'Scribble It! is a fun and exciting drawing game that we all know and love. Perfect game if you want to have fun with friends and family.',
+      link: 'http://scribble.games.buryads.com/',
+      icon: Scribble,
+    },
+  ];
 </script>
