@@ -33,7 +33,20 @@
   "otherServices": "Andra tjänster",
   "disclaimer": "Översättningar kan vara fel, det är inte som 100 % rätt översättningar här",
   "toggleLanguage": "Växla språk",
-  "dailyTranslationsCount": "Idag blev översatt",
   "inputNameToSearch": "Ange namn för att söka",
-  "notFount": "Hittades inte"
+  "notFount": "Hittades inte",
+  "dictionary": "Ordbok",
+  "results": "Resultat",
+  "tryAgain": "Försök igen",
+  "newWords": "Nya ord",
+  "correctAnswer": "Rätt svar",
+  "yourAnswer": "Ditt svar",
+  "loading": "Laddar",
+  "failedTranslateSmth": "Kunde du inte översätta det du behöver?",
+  "discordHelp": "Om du skulle vilja översätta något, men vår databas inte innehåller det du behöver, kan du kontakta oss på discord-servern för hjälp.",
+  "openDiscord": "Öppen Discord-server: Buryads",
+  "supportOurProject": "Stöd vårt projekt",
+  "or": "eller",
+  "on": "på",
+  "chromeExtension": "Vi har även mobilappar och ett tillägg för webbläsaren Google Chrome"
 }

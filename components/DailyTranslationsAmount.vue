@@ -1,6 +1,6 @@
 <template>
   <div class="font-medium text-neutral-600">
-    {{ $t('dailyTranslationsCount') }}: {{ data?.count }}
+    {{ $t('todayTranslated') }}: {{ data?.count }}
   </div>
 </template>
 

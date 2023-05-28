@@ -30,6 +30,30 @@
 </template>
 
 <script setup lang="ts">
+  import { useI18n } from 'vue-i18n';
+
+  const { t } = useI18n();
+  useHead({
+    title: t('buryadNames'),
+    meta: [
+      {
+        property: 'description',
+        name: 'description',
+        content: t('buryadNames'),
+      },
+      {
+        property: 'og:title',
+        name: 'title',
+        content: t('buryadNames'),
+      },
+      {
+        property: 'og:description',
+        name: 'description',
+        content: t('buryadNames'),
+      },
+    ],
+  });
+
   const { data } = await useFetch('/api/names');
 
   const searchName = ref('');

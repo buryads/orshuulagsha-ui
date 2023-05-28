@@ -94,7 +94,14 @@
   const { t } = useI18n();
 
   useHead({
-    title: t('dictionary'),
+    title: t('appName'),
+    meta: [
+      {
+        property: 'description',
+        name: 'description',
+        content: t('appName'),
+      },
+    ],
   });
 
   type translationLanguage = 'bur' | 'ru';
