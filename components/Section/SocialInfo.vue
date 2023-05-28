@@ -59,7 +59,7 @@
       class="mt-5 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4"
     >
       <a
-        href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile"
+        href="https://apps.apple.com/ru/app/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/id1584232985"
         target="_blank"
       >
         <img
@@ -69,7 +69,7 @@
         />
       </a>
       <a
-        href="https://apps.apple.com/ru/app/%D0%B1%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%BE-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/id1584232985"
+        href="https://play.google.com/store/apps/details?id=com.buryads.orshuulga_mobile"
         target="_blank"
       >
         <img
