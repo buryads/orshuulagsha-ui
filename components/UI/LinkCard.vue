@@ -11,6 +11,7 @@
         <component :is="icon" class="h-10 w-10" aria-hidden="true" />
       </span>
     </div>
+
     <div class="mt-2">
       <h3 class="text-xl font-semibold leading-6 text-gray-900">
         <a :href="link" class="focus:outline-none">
@@ -23,24 +24,23 @@
         {{ text }}
       </p>
     </div>
-    <span
+
+    <div
       class="pointer-events-none absolute right-6 top-6 text-gray-300 group-hover:text-gray-400"
       aria-hidden="true"
     >
       <IconsArrow class="h-6 w-6" />
-    </span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { VueElement } from '@vue/runtime-dom';
-
   interface Props {
     index: number;
     link: string;
     title: string;
     text: string;
-    icon?: any;
+    icon?: any; // @todo find out what type is it for vue component
   }
 
   const props = defineProps<Props>();
