@@ -40,5 +40,10 @@
   "dailyTranslationsCount": "Сегодня было переведено",
   "inputNameToSearch": "Введите имя для поиска",
   "notFount": "Не найдено",
-  "dictionary": "Словарь"
+  "dictionary": "Словарь",
+  "results": "Результаты",
+  "tryAgain": "Попробовать еще раз",
+  "newWords": "Новые слова",
+  "correctAnswer": "Правильный ответ",
+  "yourAnswer": "Ваш ответ"
 }

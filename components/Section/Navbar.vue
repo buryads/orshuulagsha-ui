@@ -32,8 +32,6 @@
           </div>
 
           <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-            <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-
             <UINavbarLink :to="localePath('/')">
               {{ $t('dictionary') }}
             </UINavbarLink>
@@ -122,7 +120,6 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="space-y-1 pb-4 pt-2">
-        <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
         <DisclosureButton
           as="a"
           href="#"
