@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4 text-gray-600">
+  <div class="container mt-6 text-gray-600">
     <h1 class="text-xl font-bold text-gray-900 md:text-3xl">
       {{ $t('games') }}
     </h1>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container mt-6">
     <div class="mx-auto flex min-h-[calc(100vh-100px)] flex-col">
       <div class="flex flex-col gap-2">
         <UILabel>

@@ -2,11 +2,9 @@
   <div class="font-sans">
     <SectionNavbar />
 
-    <div class="mt-3">
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-    </div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
 
