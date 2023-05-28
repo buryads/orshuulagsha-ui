@@ -4,7 +4,7 @@
   >
   <rect
      width="1199.9999"
-     height="599.99994"
+     height="370"
      rx="0"
      ry="9.2144012"
      x="1.0073095e-06"
@@ -13,7 +13,7 @@
      id="rect8993" />
   <rect
      width="1199.9999"
-     height="300"
+     height="240"
      rx="0"
      ry="9.2143993"
      x="0"
@@ -22,15 +22,16 @@
      id="rect10449" />
   <rect
      width="1199.9999"
-     height="150"
+     height="120"
      rx="0"
      ry="9.2143984"
      x="1.0073095e-06"
-     y="450"
+     y="370"
      style="opacity:1;fill:#ffcb05;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
      id="rect10447" />
+
   <g
-          transform="translate(-100)"
+          transform="translate(-100) scale(0.8)"
      id="g3182">
     <path
        id="path3177"
