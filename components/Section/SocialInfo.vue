@@ -4,17 +4,13 @@
       <li>* {{ $t('disclaimer') }}</li>
       <li>
         <span>* {{ $t('otherServices') }}:</span>
-        <a
-          href="https://buryat-lang.ru/"
-          class="font-medium text-blue-500"
-          target="_blank"
-        >
+        <a href="https://buryat-lang.ru/" class="text-blue-500" target="_blank">
           Burlang.Toli
         </a>
         <span>и</span>
         <a
           href="https://uulen.gazeta-n1.ru/"
-          class="font-medium text-blue-500"
+          class="text-blue-500"
           target="_blank"
         >
           Үүлэн

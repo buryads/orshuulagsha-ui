@@ -17,11 +17,11 @@ export default defineNuxtConfig({
   i18n: {
     locales: [
       { code: 'en', file: 'en.json', name: 'English' },
+      { code: 'bur', file: 'bur.json', name: 'Буряадай' },
+      { code: 'ru', file: 'ru.json', name: 'Русский' },
       { code: 'ua', file: 'ua.json', name: 'Український' },
       { code: 'se', file: 'se.json', name: 'Svenska' },
-      { code: 'ru', file: 'ru.json', name: 'Русский' },
       { code: 'kr', file: 'kr.json', name: '한국인' },
-      { code: 'bur', file: 'bur.json', name: 'Буряадай' },
     ],
     defaultLocale: 'ru',
     langDir: 'i18n',
