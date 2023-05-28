@@ -5,7 +5,14 @@
     </h1>
 
     <div class="mt-6 max-w-2xl rounded-lg bg-white p-3 sm:p-6">
-      <template v-if="currentQuestionIndex < questions?.length">
+      <div
+        v-if="isLoading"
+        class="text-center font-bold text-gray-900 sm:text-xl"
+      >
+        {{ $t('loading') }}...
+      </div>
+
+      <template v-if="!isLoading && currentQuestionIndex < questions?.length">
         <div class="text-center font-bold text-gray-900 sm:text-xl">
           {{ questions?.[currentQuestionIndex]?.question }}
         </div>
@@ -34,7 +41,7 @@
         </div>
       </template>
 
-      <div v-if="currentQuestionIndex">
+      <div v-if="!isLoading && currentQuestionIndex >= questions?.length">
         <div class="text-center font-bold text-gray-900 sm:text-xl">
           {{ $t('results') }}
         </div>
@@ -112,7 +119,6 @@
 </template>
 
 <script setup lang="ts">
-  import { useMyFetch } from '#imports';
   import { Ref } from 'vue';
   import { quizQuestion } from '~/repository/modules/quiz/types';
 
@@ -122,14 +128,26 @@
   const selectedAnswer: Ref<number | null> = ref(null);
   const questions: Ref<quizQuestion[]> = ref([]);
   const currentQuestionIndex = ref(0);
+  const isLoading = ref(true);
 
   const loadData = () => {
-    const { data } = useMyFetch($api.quiz.RESOURCE);
-
-    questions.value = data.value?.data;
+    isLoading.value = true;
+    $api.quiz
+      .getQuizQuestions()
+      .then((res) => {
+        questions.value = res.questions;
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   };
 
-  loadData();
+  onBeforeMount(() => {
+    loadData();
+  });
 
   const handleAnswer = (index: number) => {
     selectedAnswer.value = index;
