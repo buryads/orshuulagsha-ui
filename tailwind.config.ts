@@ -16,7 +16,7 @@ module.exports = {
       padding: '1.5rem',
     },
     fontFamily: {
-      sans: ['Quicksand', 'sans-serif'],
+      sans: ['Roboto', 'sans-serif'],
     },
     extend: {
       colors: {

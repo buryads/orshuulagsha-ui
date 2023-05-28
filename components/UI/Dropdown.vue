@@ -1,11 +1,11 @@
 <template>
-  <Menu as="div" class="relative inline-block text-left">
+  <Menu as="div" v-slot="{ close }" class="relative">
     <div>
       <MenuButton
-        class="flex items-center rounded-full bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+        class="flex items-center rounded-full text-gray-400 hover:text-gray-600 focus:outline-none"
       >
         <span class="sr-only">Open options</span>
-        <EllipsisVerticalIcon class="h-5 w-5" aria-hidden="true" />
+        <slot name="toggle" />
       </MenuButton>
     </div>
 
@@ -18,17 +18,23 @@
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="absolute right-0 top-full z-10 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        :class="dropdownClass"
       >
-        <div class="py-1">
-          <slot />
-        </div>
+        <slot name="content" :close="close" />
       </MenuItems>
     </Transition>
   </Menu>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
-  import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid';
+
+  interface Props {
+    dropdownClass: string;
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    dropdownClass: 'w-40',
+  });
 </script>

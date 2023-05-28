@@ -17,7 +17,7 @@
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
           <div class="flex flex-shrink-0 items-center">
-            <NuxtLink to="/">
+            <NuxtLink :to="localePath('/')">
               <img
                 class="block h-8 w-auto lg:hidden"
                 src="/images/favicon.png"
@@ -34,12 +34,20 @@
           <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
 
-            <UINavbarLink to="/"> {{ $t('dictionary') }} </UINavbarLink>
-            <UINavbarLink to="/games"> {{ $t('games') }} </UINavbarLink>
-            <UINavbarLink to="/names"> {{ $t('names') }} </UINavbarLink>
-            <UINavbarLink to="/quiz"> {{ $t('quiz') }} </UINavbarLink>
+            <UINavbarLink :to="localePath('/')">
+              {{ $t('dictionary') }}
+            </UINavbarLink>
+            <UINavbarLink :to="localePath('/games')">
+              {{ $t('games') }}
+            </UINavbarLink>
+            <UINavbarLink :to="localePath('/names')">
+              {{ $t('names') }}
+            </UINavbarLink>
+            <UINavbarLink :to="localePath('/quiz')">
+              {{ $t('quiz') }}
+            </UINavbarLink>
 
-            <LangSwitcher />
+            <LangSwitcher class="inline-flex items-center" />
           </div>
         </div>
 
@@ -158,6 +166,7 @@
     MenuItem,
     MenuItems,
   } from '@headlessui/vue';
+  const localePath = useLocalePath();
   import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
   import Dropdown from '~/components/UI/Dropdown.vue';
 </script>

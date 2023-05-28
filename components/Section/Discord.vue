@@ -3,7 +3,7 @@
     class="rounded-lg border border-gray-200 bg-white p-4 shadow-md sm:p-6 lg:p-8"
     aria-label="Subscribe to the Flowbite newsletter"
   >
-    <h3 class="mb-3 text-base font-medium text-gray-900 md:text-xl">
+    <h3 class="mb-3 text-base font-medium text-gray-700 md:text-xl">
       Не удалось перевести то что нужно?
     </h3>
     <p class="mb-2 text-sm font-medium text-gray-500">
