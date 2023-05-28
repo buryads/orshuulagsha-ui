@@ -118,36 +118,59 @@
       </div>
     </div>
 
-    <DisclosurePanel class="sm:hidden">
-      <div class="space-y-1 pb-4 pt-2">
-        <DisclosureButton
+    <DisclosurePanel class="sm:hidden" v-slot="{ close }">
+      <div class="flex flex-col pb-4 pt-2">
+        <!--        <DisclosureButton
           as="a"
-          href="#"
+          :href="localePath('/')"
           class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700"
         >
-          Словарь
+          {{ $t('dictionary') }}
         </DisclosureButton>
         <DisclosureButton
           as="a"
-          href="#"
+          :href="localePath('/games')"
           class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
         >
-          Игры
-        </DisclosureButton>
-        <DisclosureButton
-          as="a"
-          href="#"
-          class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+          {{ $t('games') }}
+        </DisclosureButton>-->
+        <UINavbarLink
+          :to="localePath('/')"
+          class="border-l-4 border-transparent !py-2 pl-3 pr-4"
+          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          @click="close"
         >
-          Имена
-        </DisclosureButton>
-        <DisclosureButton
-          as="a"
-          href="#"
-          class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+          {{ $t('dictionary') }}
+        </UINavbarLink>
+        <UINavbarLink
+          :to="localePath('/games')"
+          class="border-l-4 border-transparent !py-2 pl-3 pr-4"
+          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          @click="close"
         >
-          Викторина
-        </DisclosureButton>
+          {{ $t('games') }}
+        </UINavbarLink>
+        <UINavbarLink
+          :to="localePath('/names')"
+          class="border-l-4 border-transparent !py-2 pl-3 pr-4"
+          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          @click="close"
+        >
+          {{ $t('names') }}
+        </UINavbarLink>
+        <UINavbarLink
+          :to="localePath('/quiz')"
+          class="border-l-4 border-transparent !py-2 pl-3 pr-4"
+          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          @click="close"
+        >
+          {{ $t('quiz') }}
+        </UINavbarLink>
+
+        <LangSwitcher
+          class="ml-4 mt-2 inline-flex items-center"
+          dropdown-class="mt-4 w-44 -left-2"
+        />
       </div>
     </DisclosurePanel>
   </Disclosure>
