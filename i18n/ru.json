@@ -45,5 +45,6 @@
   "tryAgain": "Попробовать еще раз",
   "newWords": "Новые слова",
   "correctAnswer": "Правильный ответ",
-  "yourAnswer": "Ваш ответ"
+  "yourAnswer": "Ваш ответ",
+  "loading": "Загрузка"
 }
