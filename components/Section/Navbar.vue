@@ -137,7 +137,7 @@
         <UINavbarLink
           :to="localePath('/')"
           class="border-l-4 border-transparent !py-2 pl-3 pr-4"
-          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          active-class="bg-indigo-50 !border-b-0 !border-indigo-500 !text-indigo-700"
           @click="close"
         >
           {{ $t('dictionary') }}
@@ -145,7 +145,7 @@
         <UINavbarLink
           :to="localePath('/games')"
           class="border-l-4 border-transparent !py-2 pl-3 pr-4"
-          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          active-class="bg-indigo-50 !border-b-0 !border-indigo-500 !text-indigo-700"
           @click="close"
         >
           {{ $t('games') }}
@@ -153,7 +153,7 @@
         <UINavbarLink
           :to="localePath('/names')"
           class="border-l-4 border-transparent !py-2 pl-3 pr-4"
-          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          active-class="bg-indigo-50 !border-b-0 !border-indigo-500 !text-indigo-700"
           @click="close"
         >
           {{ $t('names') }}
@@ -161,7 +161,7 @@
         <UINavbarLink
           :to="localePath('/quiz')"
           class="border-l-4 border-transparent !py-2 pl-3 pr-4"
-          active-class="bg-indigo-50 border-b-0 !border-indigo-500 !text-indigo-700"
+          active-class="bg-indigo-50 !border-b-0 !border-indigo-500 !text-indigo-700"
           @click="close"
         >
           {{ $t('quiz') }}
