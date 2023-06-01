@@ -5,6 +5,8 @@
   "packsDescription": "The words for learning in words packs",
   "singleWordPageTitle": "Слово \"{word}\"",
   "singleWordPageDescription": "Переклад слова \"{word}\" на {lang} мове",
+  "ru": "російська",
+  "bur": "Бурятська",
   "words": "Слова",
   "wordsPageDescription": "База даних слів",
   "next": "Наступний",

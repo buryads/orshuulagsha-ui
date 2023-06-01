@@ -10,4 +10,6 @@ export interface IWordsModule {
     page: number;
     perPage: number;
   }) => Promise<wordsApiResponse>;
+
+  getOneBurWord: (slug: string) => Promise<word>;
 }

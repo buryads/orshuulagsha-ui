@@ -5,6 +5,8 @@
   "packsDescription": "The words for learning in words packs",
   "singleWordPageTitle": "The word \"{word}\"",
   "singleWordPageDescription": "The translation of word \"{word}\" in to {lang} language",
+  "ru": "Russian",
+  "bur": "Buryad",
   "words": "Words",
   "wordsPageDescription": "The words database",
   "next": "Next",
