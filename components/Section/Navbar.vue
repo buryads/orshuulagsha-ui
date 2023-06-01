@@ -44,6 +44,9 @@
             <UINavbarLink :to="localePath('/quiz')">
               {{ $t('quiz') }}
             </UINavbarLink>
+            <UINavbarLink :to="localePath('/words')">
+              {{ $t('words') }}
+            </UINavbarLink>
 
             <LangSwitcher class="inline-flex items-center" />
           </div>
@@ -165,6 +168,14 @@
           @click="close"
         >
           {{ $t('quiz') }}
+        </UINavbarLink>
+        <UINavbarLink
+          :to="localePath('/words')"
+          class="border-l-4 border-transparent !py-2 pl-3 pr-4"
+          active-class="bg-indigo-50 !border-b-0 !border-indigo-500 !text-indigo-700"
+          @click="close"
+        >
+          {{ $t('words') }}
         </UINavbarLink>
 
         <LangSwitcher

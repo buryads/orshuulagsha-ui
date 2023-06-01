@@ -8,13 +8,8 @@ class HttpFactory {
     this.$fetch = fetcher;
   }
 
-  async call<T>(
-    method: string,
-    url: string,
-    data?: object,
-    extras = {},
-  ): Promise<T> {
-    return await this.$fetch(url, { method, body: data, ...extras });
+  async call<T>(method: string, url: string, extras = {}): Promise<T> {
+    return await this.$fetch(url, { method, ...extras });
   }
 }
 
