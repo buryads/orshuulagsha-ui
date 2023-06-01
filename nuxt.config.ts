@@ -13,6 +13,9 @@ export default defineNuxtConfig({
     },
     /* page transition doesn't work https://github.com/nuxt/nuxt/issues/13350 */
   },
+  routeRules: {
+    '/words/**': { prerender: true },
+  },
   css: ['~/assets/css/main.css'],
   modules: ['@nuxtjs/i18n'],
   i18n: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-6">
+  <div class="container my-6">
     <h1
       class="text-center text-xl font-bold capitalize text-gray-900 md:text-3xl"
     >
@@ -10,7 +10,7 @@
       ({{ word.translations?.map((t) => t.name).join(',') }})
     </h2>
 
-    <div class="mx-auto mt-6 max-w-4xl gap-4 sm:columns-2 lg:columns-3">
+    <div class="mx-auto mt-6 max-w-6xl gap-4 sm:columns-2 lg:columns-3">
       <img
         v-for="image in word.images"
         class="m-auto mb-4 h-auto max-w-full rounded-lg"
@@ -30,7 +30,6 @@
   const { $api } = useNuxtApp();
   const { t } = useI18n();
 
-  // @TODO rewrite it with SSG instead of SSR
   const { data } = useMyFetch(
     $api.words.RESOURCE_BUR + '/' + route.params.slug,
   );
