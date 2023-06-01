@@ -85,6 +85,7 @@
   const { data } = useMyFetch($api.words.RESOURCE_BUR, {
     params: {
       per_page: PER_PAGE,
+      page: route.query.page || 1,
     },
   });
 
