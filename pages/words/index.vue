@@ -5,8 +5,16 @@
     </h1>
 
     <section class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      <UICard v-for="word in words" :key="word.id">
-        <a :href="`/words/${word.slug}`" class="focus:outline-none">
+      <UICard
+        v-for="word in words"
+        :key="word.id"
+        :class="[isLoading && '!h-20 !bg-neutral-100 shadow']"
+      >
+        <a
+          v-if="!isLoading"
+          :href="`/words/${word.slug}`"
+          class="focus:outline-none"
+        >
           <span class="absolute inset-0" aria-hidden="true" />
           <span
             class="item-start flex flex-col sm:flex-row sm:items-center sm:gap-2"
@@ -44,7 +52,9 @@
   import { Ref } from 'vue';
   import type { metaResponse, word } from '~/repository/modules/types';
 
+  const PER_PAGE = 51;
   const { t } = useI18n();
+  const route = useRoute();
   const { $api } = useNuxtApp();
 
   useHead({
@@ -70,10 +80,11 @@
 
   const words: Ref<word[]> = ref([]);
   const meta: Ref<Partial<metaResponse>> = ref({});
+  const isLoading = ref(false);
 
   const { data } = useMyFetch($api.words.RESOURCE_BUR, {
     params: {
-      per_page: 30,
+      per_page: PER_PAGE,
     },
   });
 
@@ -81,11 +92,21 @@
   meta.value = data.value?.meta;
 
   async function changePage(page: number) {
-    const { data, meta: newMeta } = await $api.words.getBurWords({
-      page,
-      perPage: 30,
-    });
-    words.value = data;
-    meta.value = newMeta;
+    try {
+      isLoading.value = true;
+      history.replaceState(null, '', `?page=${page}`);
+
+      const { data, meta: newMeta } = await $api.words.getBurWords({
+        page,
+        perPage: PER_PAGE,
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      words.value = data;
+      meta.value = newMeta;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
   }
 </script>
