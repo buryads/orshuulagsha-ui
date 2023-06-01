@@ -4,7 +4,7 @@
 
 <script setup>
   onMounted(async () => {
-    const input = document.getElementById('input-word');
+    const input = document.getElementById('buryad-input');
     const { default: BurlangKeyboard } = await import('burlang-keyboard');
 
     const keyboard = new BurlangKeyboard('burlang-keyboard', {
