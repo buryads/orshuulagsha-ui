@@ -30,18 +30,18 @@
             />
           </span>
 
-          <UIInput
+          <UIBuryadInput
             id="input-word"
             v-model="inputValue"
             :placeholder="$t('inputText')"
             class="mt-2"
-            autofocus
+            :show-buryad-letters="sourceLanguage === 'bur'"
             @change="translate"
           />
         </UILabel>
 
         <UIButton
-          class="bg-bur-yellow transition-opacity hover:opacity-90"
+          class="bg-bur-yellow text-white transition-opacity hover:opacity-90"
           :disabled="isLoading"
           @click="translate"
         >
