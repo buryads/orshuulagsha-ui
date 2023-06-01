@@ -1,9 +1,10 @@
 <template>
   <div class="flex">
     <UIInput
+      id="buryad-input"
       ref="input"
-      type="text"
-      class="rounded-r-none"
+      type="search"
+      :class="{ 'rounded-r-none': showBuryadLetters }"
       v-model="inputValue"
       :placeholder="placeholder"
       autofocus
