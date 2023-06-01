@@ -34,6 +34,7 @@
               ]"
               class="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 md:text-base"
               @click="handleAnswer(i)"
+              :disabled="disabled"
             >
               {{ answer }}
             </button>
@@ -153,6 +154,7 @@
   const questions: Ref<quizQuestion[]> = ref([]);
   const currentQuestionIndex = ref(0);
   const isLoading = ref(true);
+  const disabled = ref(false);
 
   const loadData = () => {
     isLoading.value = true;
@@ -174,6 +176,7 @@
   });
 
   const handleAnswer = (index: number) => {
+    disabled.value = true;
     selectedAnswer.value = index;
     questions.value[currentQuestionIndex.value].yourAnswer = index;
     if (index === questions.value[currentQuestionIndex.value].correctAnswer) {
@@ -185,6 +188,7 @@
     setTimeout(() => {
       currentQuestionIndex.value++;
       selectedAnswer.value = null;
+      disabled.value = false;
     }, 1000);
   };
 
