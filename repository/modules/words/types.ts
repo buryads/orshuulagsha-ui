@@ -5,6 +5,10 @@ export type wordsApiResponse = {
   meta: metaResponse;
 };
 
+export type oneWordApiResponse = {
+  data: word;
+};
+
 export interface IWordsModule {
   getBurWords: (params: {
     page: number;
