@@ -5,34 +5,36 @@
     </h1>
 
     <section class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      <UICard
-        v-for="word in words"
-        :key="word.id"
-        :class="[isLoading && '!h-20 !bg-neutral-100 shadow']"
-      >
-        <a
-          v-if="!isLoading"
-          :href="`/words/${word.slug}`"
-          class="focus:outline-none"
-        >
-          <span class="absolute inset-0" aria-hidden="true" />
-          <span
-            class="item-start flex flex-col sm:flex-row sm:items-center sm:gap-2"
-          >
-            <span class="text-xl font-medium text-gray-900">
-              {{ word.name }}
-            </span>
+      <template v-if="isLoading">
+        <UICard
+          v-for="n in PER_PAGE"
+          :key="n"
+          class="!h-20 !bg-neutral-100 shadow"
+        />
+      </template>
+
+      <template v-else>
+        <UICard v-for="word in words" :key="word.id" class="min-h-[90px]">
+          <a :href="`/words/${word.slug}`" class="focus:outline-none">
+            <span class="absolute inset-0" aria-hidden="true" />
             <span
-              class="text-sm font-medium text-gray-500 sm:ml-auto sm:text-right"
+              class="item-start flex flex-col sm:flex-row sm:items-center sm:gap-2"
             >
-              {{ word.slug.replace('-', ' ') }}
+              <span class="text-xl font-medium text-gray-900">
+                {{ word.name }}
+              </span>
+              <span
+                class="text-sm font-medium text-gray-500 sm:ml-auto sm:text-right"
+              >
+                {{ word.slug.replace('-', ' ') }}
+              </span>
             </span>
-          </span>
-          <p class="text-sm text-gray-500">
-            {{ word.translations.map((t) => t.name).join(',') }}
-          </p>
-        </a>
-      </UICard>
+            <p class="text-sm text-gray-500">
+              {{ word.translations.map((t) => t.name).join(',') }}
+            </p>
+          </a>
+        </UICard>
+      </template>
     </section>
 
     <UIPagination
@@ -48,9 +50,9 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { useMyFetch } from '#imports';
   import { Ref } from 'vue';
   import type { metaResponse, word } from '~/repository/modules/types';
+  import { useAsyncData } from '#app';
 
   const PER_PAGE = 51;
   const { t } = useI18n();
@@ -80,28 +82,35 @@
 
   const words: Ref<word[]> = ref([]);
   const meta: Ref<Partial<metaResponse>> = ref({});
-  const isLoading = ref(false);
+  const isLoading = ref(true);
 
-  const { data } = useMyFetch($api.words.RESOURCE_BUR, {
-    params: {
-      per_page: PER_PAGE,
-      page: route.query.page || 1,
-    },
+  const { data } = useAsyncData('words', async () => {
+    try {
+      isLoading.value = true;
+      const { data, meta: newMeta } = await $api.words.getBurWords({
+        page: route.query.page ? +route.query.page : 1,
+        perPage: PER_PAGE,
+      });
+      words.value = data;
+      meta.value = newMeta;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
   });
-
-  words.value = data.value?.data;
-  meta.value = data.value?.meta;
 
   async function changePage(page: number) {
     try {
       isLoading.value = true;
       history.replaceState(null, '', `?page=${page}`);
+      meta.value.current_page = page;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       const { data, meta: newMeta } = await $api.words.getBurWords({
         page,
         perPage: PER_PAGE,
       });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
       words.value = data;
       meta.value = newMeta;
     } catch (e) {
