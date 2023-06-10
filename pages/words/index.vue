@@ -82,23 +82,14 @@
 
   const words: Ref<word[]> = ref([]);
   const meta: Ref<Partial<metaResponse>> = ref({});
-  const isLoading = ref(true);
+  const isLoading = ref(false);
 
-  const { data } = useAsyncData('words', async () => {
-    try {
-      isLoading.value = true;
-      const { data, meta: newMeta } = await $api.words.getBurWords({
-        page: route.query.page ? +route.query.page : 1,
-        perPage: PER_PAGE,
-      });
-      words.value = data;
-      meta.value = newMeta;
-    } catch (e) {
-      console.error(e);
-    } finally {
-      isLoading.value = false;
-    }
+  const { data, meta: newMeta } = await $api.words.getBurWords({
+    page: route.query.page ? +route.query.page : 1,
+    perPage: PER_PAGE,
   });
+  words.value = data;
+  meta.value = newMeta;
 
   async function changePage(page: number) {
     try {

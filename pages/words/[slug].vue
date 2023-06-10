@@ -23,18 +23,15 @@
 </template>
 
 <script setup lang="ts">
-  import { useMyFetch } from '#imports';
   import { word as wordType } from '~/repository/modules/types';
 
   const route = useRoute();
   const { $api } = useNuxtApp();
   const { t } = useI18n();
 
-  const { data } = useMyFetch(
-    $api.words.RESOURCE_BUR + '/' + route.params.slug,
+  const word: wordType = await $api.words.getOneBurWord(
+    route.params.slug.toString(),
   );
-
-  const word: wordType = data.value?.data || {};
   const title = t('singleWordPageTitle', { word: word.name });
 
   useHead({

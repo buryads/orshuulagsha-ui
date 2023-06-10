@@ -1,6 +1,7 @@
 import HttpFactory from '~/repository/factory';
 import {
   IWordsModule,
+  oneWordApiResponse,
   wordsApiResponse,
 } from '~/repository/modules/words/types';
 import { word } from '~/repository/modules/types';
@@ -26,12 +27,12 @@ class WordsModule extends HttpFactory implements IWordsModule {
 
   async getOneBurWord(slug: string) {
     try {
-      const response: word = await this.call(
+      const { data }: oneWordApiResponse = await this.call(
         'GET',
         `${this.RESOURCE_BUR}/${slug}`,
       );
 
-      return response;
+      return data;
     } catch (error) {
       console.error(error);
       throw error;
