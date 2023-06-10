@@ -74,7 +74,7 @@
 
     <div class="relative hidden w-0 flex-1 lg:block">
       <div
-        class="absolute inset-0 h-full w-full bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat lg:bg-[-150px_10px]"
+        class="absolute inset-0 h-full w-full bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_8px_8px_#f5f5f5_inset] lg:bg-[-150px]"
       />
     </div>
   </div>
