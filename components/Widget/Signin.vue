@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-full flex-1">
+  <div class="flex">
     <div
       class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
     >
@@ -27,7 +27,8 @@
               </UILabel>
 
               <UILabel>
-                <span class="flex justify-between">
+                <span>Password</span>
+                <!--                <span class="flex justify-between">
                   <span>Password</span>
                   <a
                     href="#"
@@ -35,7 +36,7 @@
                   >
                     Forgot password?
                   </a>
-                </span>
+                </span>-->
 
                 <UIInput type="password" v-model="password" required />
               </UILabel>
@@ -50,9 +51,9 @@
             </form>
           </div>
 
-          <WidgetSocialMediaAuth class="mt-10" />
+          <WidgetSocialMediaAuth />
 
-          <div class="mt-6 flex justify-center gap-2 border-t pt-4">
+          <div class="mt-6 border-t pt-4">
             <span>Don't you have an account?</span>
 
             <NuxtLink
@@ -68,9 +69,8 @@
 
     <div class="relative hidden min-h-[600px] w-0 flex-1 lg:block">
       <div
-        class="absolute inset-0 h-full w-full bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_8px_8px_#f5f5f5_inset] lg:bg-[-150px]"
+        class="absolute inset-0 h-full w-full rounded-md bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_2px_2px_#f5f5f5_inset] lg:bg-[-150px]"
       />
-      box-shadow: 0 0 8px 8px white inset;
     </div>
   </div>
 </template>
@@ -82,13 +82,15 @@
   const isLoading = ref(false);
   const email = ref('');
   const password = ref('');
+  const router = useRouter();
 
   async function login() {
     try {
       isLoading.value = true;
-      const data = await $api.auth.login(email.value, password.value);
+      await $api.auth.login(email.value, password.value);
+      //useCookie();
 
-      console.log(data);
+      await router.replace('/dashboard');
     } catch (e) {
       console.error(e);
     } finally {

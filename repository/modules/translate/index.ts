@@ -13,7 +13,9 @@ class TranslateModule extends HttpFactory implements ITranslateModule {
     value: string,
   ): Promise<translationType> {
     try {
-      const { data }: translationApiResponse = await this.call(
+      const {
+        data: { data },
+      }: { data: translationApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE}/${translationType}?word=${value.toLowerCase()}`,
       );

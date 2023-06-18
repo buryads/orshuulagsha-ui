@@ -33,15 +33,7 @@
               </UILabel>
 
               <UILabel>
-                <span class="flex justify-between">
-                  <span>Password</span>
-                  <a
-                    href="#"
-                    class="font-semibold text-bur-blue hover:text-indigo-600"
-                  >
-                    Forgot password?
-                  </a>
-                </span>
+                <span>Password</span>
 
                 <UIInput type="password" required />
               </UILabel>
@@ -57,7 +49,7 @@
 
           <WidgetSocialMediaAuth class="mt-10" />
 
-          <div class="mt-6 flex justify-center gap-2 border-t pt-4">
+          <div class="mt-6 border-t pt-4">
             <span>Do you have an account already?</span>
 
             <NuxtLink
@@ -74,7 +66,7 @@
 
     <div class="relative hidden w-0 flex-1 lg:block">
       <div
-        class="absolute inset-0 h-full w-full bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_8px_8px_#f5f5f5_inset] lg:bg-[-150px]"
+        class="absolute inset-0 h-full w-full rounded-md bg-[url(/images/baikal.jpg)] bg-cover bg-center bg-no-repeat shadow-[0_0_2px_2px_#f5f5f5_inset] lg:bg-[-150px]"
       />
     </div>
   </div>

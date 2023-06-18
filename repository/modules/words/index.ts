@@ -12,13 +12,13 @@ class WordsModule extends HttpFactory implements IWordsModule {
 
   async getBurWords({ page, perPage }: { page: number; perPage: number }) {
     try {
-      const response: wordsApiResponse = await this.call(
+      const { data }: { data: wordsApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE_BUR}`,
         { query: { page, per_page: perPage } },
       );
 
-      return response;
+      return data;
     } catch (error) {
       console.error(error);
       throw error;
@@ -27,7 +27,9 @@ class WordsModule extends HttpFactory implements IWordsModule {
 
   async getOneBurWord(slug: string) {
     try {
-      const { data }: oneWordApiResponse = await this.call(
+      const {
+        data: { data },
+      }: { data: oneWordApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE_BUR}/${slug}`,
       );
