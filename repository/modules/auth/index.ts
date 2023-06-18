@@ -6,21 +6,9 @@ class AuthModule extends HttpFactory implements IAuthModule {
 
   async login(email: string, password: string) {
     try {
-      await this.call('GET', '/sanctum/csrf-cookie', {
-        headers: {
-          'Accept': 'application/json'
-        },
-        credentials: 'include'
-      });
-      console.log(useCookie('XSRF-TOKEN'));
+      // await this.call('GET', '/sanctum/csrf-cookie');
       return await this.call('POST', this.RESOURCE_LOGIN, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-XSRF-TOKEN': useCookie('XSRF-TOKEN').value,
-        },
-        credentials: 'include',
-        body: {
+        data: {
           email,
           password,
         },

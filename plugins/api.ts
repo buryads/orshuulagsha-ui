@@ -1,10 +1,10 @@
-import { $fetch, FetchOptions } from 'ohmyfetch';
 import { defineNuxtPlugin } from '#app';
 import TranslateModule from '~/repository/modules/translate';
 import StatisticModule from '~/repository/modules/statistic';
 import QuizModule from '~/repository/modules/quiz';
 import WordsModule from '~/repository/modules/words';
 import AuthModule from '~/repository/modules/auth';
+import axios, { AxiosRequestConfig } from 'axios';
 
 export interface IApiInstance {
   translate: TranslateModule;
@@ -15,11 +15,12 @@ export interface IApiInstance {
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const fetchOptions: FetchOptions = {
+  const options: AxiosRequestConfig = {
     baseURL: nuxtApp.$config.public.baseURL,
+    withCredentials: true,
   };
 
-  const apiFetcher = $fetch.create(fetchOptions);
+  const apiFetcher = axios.create(options);
 
   const modules: IApiInstance = {
     translate: new TranslateModule(apiFetcher),
