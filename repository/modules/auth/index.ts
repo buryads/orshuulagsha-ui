@@ -1,8 +1,8 @@
 import HttpFactory from '~/repository/factory';
 
 class AuthModule extends HttpFactory implements IAuthModule {
-  public RESOURCE_LOGIN = '/api/login';
-  public RESOURCE_REGISTER = '/api/signup';
+  public RESOURCE_LOGIN = '/api/jwt/login';
+  public RESOURCE_REGISTER = '/api/jwt/signup';
 
   async login(email: string, password: string) {
     try {

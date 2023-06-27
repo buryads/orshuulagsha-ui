@@ -47,13 +47,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      baseURL: process.env.PROXY_API_BASE_URL,
-    },
-  },
-  nitro: {
-    routeRules: {
-      // "/sanctum/csrf-cookie": { proxy: `${process.env.API_BASE_URL}/sanctum/csrf-cookie` },
-      '/api/**': { proxy: `${process.env.API_BASE_URL}/api/**` },
+      baseURL: process.env.API_BASE_URL,
     },
   },
 });
