@@ -1,4 +1,10 @@
-interface IAuthModule {
-  login: (email: string, password: string) => Promise<any>;
-  register: (name: string, email: string, password: string) => Promise<any>;
+export type tokenType = {
+  token_type: string;
+  token: string;
+  expired_at: Date;
+};
+
+export interface IAuthModule {
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
 }

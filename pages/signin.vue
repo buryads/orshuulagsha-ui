@@ -15,4 +15,16 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { useUserStore } from '~/store/user';
+
+  definePageMeta({
+    middleware() {
+      const store = useUserStore();
+
+      if (store.user) {
+        return navigateTo('/profile');
+      }
+    },
+  });
+</script>

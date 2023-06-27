@@ -1,4 +1,4 @@
-export interface Role {
+export interface IRole {
   id: number;
   level: number;
   name: string;
@@ -10,7 +10,7 @@ export interface IUser {
   id: number;
   email: string;
   name: string;
-  role: Role[];
+  role: IRole[];
 }
 
 export interface IUserModule {

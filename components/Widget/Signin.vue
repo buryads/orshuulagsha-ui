@@ -53,7 +53,7 @@
 
           <WidgetSocialMediaAuth />
 
-          <div class="mt-6 border-t pt-4">
+          <div class="mt-6 border-t pt-4 text-center">
             <span>Don't you have an account?</span>
 
             <NuxtLink
@@ -82,15 +82,14 @@
   const isLoading = ref(false);
   const email = ref('');
   const password = ref('');
-  const router = useRouter();
 
   async function login() {
     try {
       isLoading.value = true;
       await $api.auth.login(email.value, password.value);
-      //useCookie();
+      await $api.user.getUser();
 
-      await router.replace('/dashboard');
+      navigateTo('/profile');
     } catch (e) {
       console.error(e);
     } finally {

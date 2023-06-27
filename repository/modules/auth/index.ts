@@ -1,4 +1,5 @@
 import HttpFactory from '~/repository/factory';
+import { IAuthModule, tokenType } from '~/repository/modules/auth/types';
 
 class AuthModule extends HttpFactory implements IAuthModule {
   public RESOURCE_LOGIN = '/api/jwt/login';
@@ -6,13 +7,22 @@ class AuthModule extends HttpFactory implements IAuthModule {
 
   async login(email: string, password: string) {
     try {
-      // await this.call('GET', '/sanctum/csrf-cookie');
-      return await this.call('POST', this.RESOURCE_LOGIN, {
-        data: {
-          email,
-          password,
+      const {
+        data: { data },
+      }: { data: { data: tokenType } } = await this.call(
+        'POST',
+        this.RESOURCE_LOGIN,
+        {
+          data: {
+            email,
+            password,
+          },
         },
-      });
+      );
+
+      useCookie('token', {
+        expires: data.expired_at,
+      }).value = data.token;
     } catch (error) {
       console.error(error);
 
@@ -22,13 +32,23 @@ class AuthModule extends HttpFactory implements IAuthModule {
 
   async register(name: string, email: string, password: string) {
     try {
-      return await this.call('POST', this.RESOURCE_REGISTER, {
-        body: {
-          name,
-          email,
-          password,
+      const {
+        data: { data },
+      }: { data: { data: tokenType } } = await this.call(
+        'POST',
+        this.RESOURCE_REGISTER,
+        {
+          data: {
+            name,
+            email,
+            password,
+          },
         },
-      });
+      );
+
+      useCookie('token', {
+        expires: data.expired_at,
+      }).value = data.token;
     } catch (error) {
       console.error(error);
 

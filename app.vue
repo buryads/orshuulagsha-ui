@@ -16,4 +16,10 @@
       class: 'bg-neutral-100',
     },
   });
+
+  if (useCookie('token').value) {
+    const { $api } = useNuxtApp();
+
+    await $api.user.getUser();
+  }
 </script>
