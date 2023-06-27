@@ -19,23 +19,23 @@
 
         <div class="mt-10">
           <div>
-            <form action="#" method="POST" class="space-y-6">
+            <form @submit.prevent="register" class="space-y-6">
               <UILabel>
                 <span>Name</span>
 
-                <UIInput type="text" required />
+                <UIInput type="text" v-model="name" required />
               </UILabel>
 
               <UILabel>
                 <span>Email</span>
 
-                <UIInput type="email" required />
+                <UIInput type="email" v-model="email" required />
               </UILabel>
 
               <UILabel>
                 <span>Password</span>
 
-                <UIInput type="password" required />
+                <UIInput type="password" v-model="password" required />
               </UILabel>
 
               <UIButton
@@ -49,7 +49,7 @@
 
           <WidgetSocialMediaAuth class="mt-10" />
 
-          <div class="mt-6 border-t pt-4">
+          <div class="mt-6 border-t pt-4 text-center">
             <span>Do you have an account already?</span>
 
             <NuxtLink
@@ -74,4 +74,24 @@
 
 <script setup lang="ts">
   const localePath = useLocalePath();
+  const { $api } = useNuxtApp();
+  const isLoading = ref(false);
+  const name = ref('');
+  const email = ref('');
+  const password = ref('');
+  const router = useRouter();
+
+  async function register() {
+    try {
+      isLoading.value = true;
+      await $api.auth.register(name.value, email.value, password.value);
+      await $api.user.getUser();
+
+      navigateTo('/profile');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
 </script>

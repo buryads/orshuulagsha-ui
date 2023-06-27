@@ -1,13 +1,11 @@
 <template>
   <Menu as="div" v-slot="{ close }" class="relative">
-    <div>
-      <MenuButton
-        class="flex items-center rounded-full text-gray-400 hover:text-gray-600 focus:outline-none"
-      >
-        <span class="sr-only">Open options</span>
-        <slot name="toggle" />
-      </MenuButton>
-    </div>
+    <MenuButton
+      class="group flex items-center rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
+    >
+      <span class="sr-only">Open options</span>
+      <slot name="toggle" />
+    </MenuButton>
 
     <Transition
       enter-active-class="transition ease-out duration-100"
