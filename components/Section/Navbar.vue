@@ -89,10 +89,10 @@
                 </UIDropdownItem>
                 <UIDropdownItem>
                   <NuxtLink
-                    :to="localePath('/cards')"
+                    :to="localePath('/packs')"
                     class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
                   >
-                    {{ $t('cards') }}
+                    {{ $t('packs') }}
                   </NuxtLink>
                 </UIDropdownItem>
                 <UIDropdownItem>

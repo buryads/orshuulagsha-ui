@@ -52,7 +52,6 @@
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
   import type { metaResponse, word } from '~/repository/modules/types';
-  import { useAsyncData } from '#app';
 
   const PER_PAGE = 51;
   const { t } = useI18n();

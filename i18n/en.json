@@ -1,8 +1,5 @@
 {
   "appName": "Buryad-Russian dictionary",
-  "packTitle": "{pack}",
-  "packsTitle": "Packs",
-  "packsDescription": "The words for learning in words packs",
   "singleWordPageTitle": "The word \"{word}\"",
   "singleWordPageDescription": "The translation of word \"{word}\" in to {lang} language",
   "ru": "Russian",
@@ -56,5 +53,10 @@
   "or": "or",
   "on": "on",
   "chromeExtension": "We also have mobile apps and an extension for the Google Chrome browser",
-  "login": "Sign in"
+  "login": "Sign in",
+  "packs": "Packs",
+  "profile": "Profile",
+  "logout": "Logout",
+  "packsTitle": "Word packs to learn",
+  "packsDescription": "The words for learning in words packs"
 }
