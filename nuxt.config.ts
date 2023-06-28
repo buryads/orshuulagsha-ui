@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     '/words/**': { prerender: true },
   },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@pinia/nuxt'],
   i18n: {
     locales: [
       { code: 'en', file: 'en.json', name: 'English' },

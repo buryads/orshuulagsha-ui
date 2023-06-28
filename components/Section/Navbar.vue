@@ -20,18 +20,18 @@
             <NuxtLink :to="localePath('/')">
               <img
                 class="block h-8 w-auto lg:hidden"
-                src="/images/favicon.png"
+                src="/images/logo.png"
                 alt="buryads.com"
               />
               <img
                 class="hidden h-8 w-auto lg:block"
-                src="/images/favicon.png"
+                src="/images/logo.png"
                 alt="buryads.com"
               />
             </NuxtLink>
           </div>
 
-          <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <div class="hidden w-full sm:ml-6 sm:flex sm:gap-8">
             <UINavbarLink :to="localePath('/')">
               {{ $t('dictionary') }}
             </UINavbarLink>
@@ -49,74 +49,64 @@
             </UINavbarLink>
 
             <LangSwitcher class="inline-flex items-center" />
+
+            <UINavbarLink
+              v-if="!user"
+              :to="localePath('/signin')"
+              class="ml-auto pr-0"
+            >
+              {{ $t('login') }}
+            </UINavbarLink>
           </div>
         </div>
 
         <div
+          v-if="user"
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <!--          <button
-            type="button"
-            class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
+          <!-- Profile dropdown -->
+          <UIDropdown dropdown-class="mt-0.5 w-32" class="flex h-full">
+            <template #toggle>
+              <div class="flex items-center gap-1.5">
+                <UserIcon class="h-5 w-5" />
+                <span
+                  class="max-w-[50px] overflow-hidden text-ellipsis text-sm font-medium text-gray-500 group-hover:text-gray-600"
+                >
+                  {{ user.name }}
+                </span>
+              </div>
+            </template>
 
-          &lt;!&ndash; Profile dropdown &ndash;&gt;
-          <Menu as="div" class="relative ml-3">
-            <div>
-              <MenuButton
-                class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <span class="sr-only">Open user menu</span>
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="" />
-              </MenuButton>
-            </div>
-
-            <transition
-              enter-active-class="transition ease-out duration-200"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95">
-              <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <MenuItem v-slot="{ active }">
+            <template #content="{ close }">
+              <div class="p-3">
+                <UIDropdownItem>
+                  <NuxtLink
+                    :to="localePath('/profile')"
+                    class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+                  >
+                    {{ $t('profile') }}
+                  </NuxtLink>
+                </UIDropdownItem>
+                <UIDropdownItem>
+                  <NuxtLink
+                    :to="localePath('/cards')"
+                    class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+                  >
+                    {{ $t('cards') }}
+                  </NuxtLink>
+                </UIDropdownItem>
+                <UIDropdownItem>
                   <a
                     href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]">
-                    Your Profile
+                    class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+                    @click.prevent="logout"
+                  >
+                    {{ $t('logout') }}
                   </a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]">
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]">
-                    Sign out
-                  </a>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>-->
+                </UIDropdownItem>
+              </div>
+            </template>
+          </UIDropdown>
         </div>
       </div>
     </div>
@@ -187,17 +177,30 @@
   </Disclosure>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import {
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
   } from '@headlessui/vue';
+  import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+  import { UserIcon } from '@heroicons/vue/24/solid';
+  import { useUserStore } from '~/store/user';
+  import { IUser } from '~/repository/modules/user/types';
+  import { Ref } from 'vue';
+
   const localePath = useLocalePath();
-  import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-  import Dropdown from '~/components/UI/Dropdown.vue';
+  const user: Ref<IUser | null> = ref(useUserStore().user);
+
+  useUserStore().$subscribe((mutation, state) => {
+    user.value = state.user as IUser;
+  });
+
+  function logout() {
+    useCookie('token').value = null;
+    useUserStore().$patch({
+      user: null,
+    });
+    navigateTo('/');
+  }
 </script>

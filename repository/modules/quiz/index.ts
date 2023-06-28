@@ -9,14 +9,14 @@ class QuizModule extends HttpFactory implements IQuiz {
 
   async getQuizQuestions() {
     try {
-      const response: quizQuestionsApiResponse = await this.call(
+      const { data }: { data: quizQuestionsApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE}`,
       );
 
       return {
-        questions: response.data,
-        count: response.meta.count,
+        questions: data.data,
+        count: data.meta.count,
       };
     } catch (error) {
       console.error(error);
