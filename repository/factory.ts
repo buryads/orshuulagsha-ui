@@ -1,15 +1,14 @@
-// @ts-ignore
-import { $Fetch } from 'ohmyfetch';
+import { AxiosInstance } from 'axios';
 
 class HttpFactory {
-  private readonly $fetch: $Fetch;
+  private readonly $fetch: AxiosInstance;
 
-  constructor(fetcher: $Fetch) {
+  constructor(fetcher: AxiosInstance) {
     this.$fetch = fetcher;
   }
 
   async call<T>(method: string, url: string, extras = {}): Promise<T> {
-    return await this.$fetch(url, { method, ...extras });
+    return await this.$fetch({ url, method, ...extras });
   }
 }
 

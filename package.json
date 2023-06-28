@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.0.0-beta.12",
+    "@sidebase/nuxt-auth": "^0.6.0-beta.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^18",
@@ -25,7 +26,13 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.18",
+    "@pinia/nuxt": "^0.4.11",
+    "axios": "^1.4.0",
     "burlang-keyboard": "^1.0.2",
-    "ohmyfetch": "^0.4.21"
+    "ohmyfetch": "^0.4.21",
+    "pinia": "^2.1.4"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

@@ -12,7 +12,7 @@
             :to="localePath('/')"
             class="mr-2 cursor-pointer border-r border-gray-200 px-2"
           >
-            <img src="/images/favicon.png" class="mx-auto inline h-10 w-10" />
+            <img src="/images/logo.png" class="mx-auto inline h-10 w-10" />
             <span
               class="hidden hover:bg-gray-200 hover:text-gray-700 lg:inline"
             >

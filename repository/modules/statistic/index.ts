@@ -9,7 +9,9 @@ class StatisticModule extends HttpFactory implements IStatistic {
 
   async getTranslationsAmount(): Promise<number> {
     try {
-      const { count }: translationsAmountApiResponse = await this.call(
+      const {
+        data: { count },
+      }: { data: translationsAmountApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE}`,
       );
