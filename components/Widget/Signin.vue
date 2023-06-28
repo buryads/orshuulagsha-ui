@@ -41,17 +41,31 @@
                 <UIInput type="password" v-model="password" required />
               </UILabel>
 
+              <Transition mode="out-in">
+                <div v-if="errors" class="mt-2 font-medium text-red-500">
+                  {{ errors }}
+                </div>
+              </Transition>
+
               <UIButton
                 type="submit"
                 :disabled="isLoading"
                 class="w-full bg-bur-blue text-white hover:opacity-80"
               >
-                Sign in
+                <span class="relative">
+                  {{ $t('Sign in') }}
+                  <span class="absolute left-full top-1/2 -translate-y-1/2">
+                    <IconsSpinner
+                      v-if="isLoading"
+                      class="ml-1.5 h-3.5 w-3.5 animate-spin"
+                    />
+                  </span>
+                </span>
               </UIButton>
             </form>
           </div>
 
-          <WidgetSocialMediaAuth />
+          <!--          <WidgetSocialMediaAuth />-->
 
           <div class="mt-6 border-t pt-4 text-center">
             <span>Don't you have an account?</span>
@@ -82,9 +96,11 @@
   const isLoading = ref(false);
   const email = ref('');
   const password = ref('');
+  const errors = ref();
 
   async function login() {
     try {
+      errors.value = '';
       isLoading.value = true;
       await $api.auth.login(email.value, password.value);
       await $api.user.getUser();
@@ -92,6 +108,7 @@
       navigateTo('/profile');
     } catch (e) {
       console.error(e);
+      errors.value = e.response.data.message;
     } finally {
       isLoading.value = false;
     }
