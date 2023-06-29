@@ -19,6 +19,10 @@ export type translation = {
   name: string;
 };
 
+type ruWord = {
+  name: string;
+};
+
 export type word = {
   id: number;
   slug: string | null;
@@ -26,6 +30,7 @@ export type word = {
   images: wordImage[];
   speechs: wordVoiceActing[];
   translations: translation[];
+  ru_words: ruWord[];
 };
 
 export type metaResponse = {
