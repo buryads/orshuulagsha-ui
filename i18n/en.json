@@ -58,5 +58,8 @@
   "profile": "Profile",
   "logout": "Logout",
   "packsTitle": "Word packs to learn",
-  "packsDescription": "The words for learning in words packs"
+  "packsDescription": "The words for learning in words packs",
+  "train the pack": "Train the pack",
+  "training": "Training",
+  "pack": "Pack"
 }

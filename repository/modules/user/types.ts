@@ -1,3 +1,5 @@
+import { quizQuestion } from '~/repository/modules/quiz/types';
+
 export interface IRole {
   id: number;
   level: number;
@@ -15,4 +17,5 @@ export interface IUser {
 
 export interface IUserModule {
   getUser: (id: number) => Promise<IUser>;
+  getUserPackQuizQuestionsByPack: (packSlug: string) => Promise<quizQuestion[]>;
 }
