@@ -2,13 +2,24 @@
   <div class="container mt-5">
     <Breadcrumbs :pages="pages" />
 
-    <h1 class="title mt-4">
-      {{ pack.name }}
-    </h1>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="title mt-4">
+          {{ pack.name }}
+        </h1>
 
-    <p class="prose mt-2">{{ pack.description }}</p>
+        <p class="prose mt-2">{{ pack.description }}</p>
+      </div>
 
-    <ul role="list" class="divide-y divide-gray-200">
+      <UIButton
+        :to="localePath(`/packs/training/${pack.slug}`)"
+        class="bg-bur-yellow text-white transition-opacity hover:opacity-90"
+      >
+        {{ $t('train the pack') }}
+      </UIButton>
+    </div>
+
+    <ul role="list" class="mt-4 divide-y divide-gray-200">
       <li
         v-for="word in pack.burWords"
         :key="word.id"
@@ -40,9 +51,7 @@
           </div>
         </div>
 
-        <div class="hidden sm:flex sm:flex-col sm:items-end">
-          <Speech v-if="word.speechs?.length > 0" :speech="word.speechs[0]" />
-        </div>
+        <Speech v-if="word.speechs?.length > 0" :speech="word.speechs[0]" />
       </li>
     </ul>
   </div>
@@ -53,7 +62,9 @@
   import { Ref } from 'vue';
   import { packType } from '~/repository/modules/packs/types.js';
   import Breadcrumbs from '~/components/UI/Breadcrumbs.vue';
+  import { useUserStore } from '~/store/user';
 
+  const user = useUserStore().user;
   const { t } = useI18n();
   const localePath = useLocalePath();
   const { $api } = useNuxtApp();
@@ -63,24 +74,24 @@
   pack.value = await $api.packs.getPack(route.params.slug.toString());
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
-    { name: pack.value.name, current: true },
+    { name: pack.value.name, to: '', current: true },
   ];
 
+  const title = `${t('pack')} ${pack.value.name}`;
+
   useHead({
-    title: pack.value.name,
+    title,
     meta: [
       {
         property: 'og:title',
         name: 'title',
-        content: pack.value.name,
+        content: title,
       },
       {
         property: 'title',
         name: 'title',
-        content: pack.value.name,
+        content: title,
       },
     ],
   });
-
-  function play() {}
 </script>

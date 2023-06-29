@@ -1,6 +1,5 @@
 {
   "appName": "Бурятcко-Русский словарь",
-  "packTitle": "{pack}",
   "singleWordPageTitle": "Слово \"{word}\"",
   "singleWordPageDescription": "Перевод слова \"{word}\" на {lang} язык",
   "ru": "Русский",
@@ -58,5 +57,8 @@
   "profile": "Profile",
   "logout": "Logout",
   "packsTitle": "Наборы слов для изучения",
-  "packsDescription": "The words for learning in words packs"
+  "packsDescription": "The words for learning in words packs",
+  "train the pack": "Тренироваться",
+  "training": "Тренировка",
+  "pack": "Набор"
 }
