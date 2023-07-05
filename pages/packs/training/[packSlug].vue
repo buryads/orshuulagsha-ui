@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <Breadcrumbs :pages="pages" />
+    <UIBreadcrumbs :pages="pages" />
 
     <h1 class="title mt-4">{{ $t('training') }}</h1>
 
@@ -15,10 +15,9 @@
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
-  import { packType } from '~/repository/modules/packs/types.js';
-  import Breadcrumbs from '~/components/UI/Breadcrumbs.vue';
   import { useUserStore } from '~/store/user';
   import { quizQuestion } from '~/repository/modules/quiz/types';
+  import { packType } from '~/repository/modules/user/types';
 
   const user = useUserStore().user;
   const { t } = useI18n();
@@ -29,7 +28,7 @@
   const isLoading = ref(true);
   const route = useRoute();
 
-  pack.value = await $api.packs.getPack(route.params.packSlug.toString());
+  pack.value = await $api.user.getPack(route.params.packSlug.toString());
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     {
@@ -64,7 +63,7 @@
   async function loadQuestions() {
     try {
       isLoading.value = true;
-      questions.value = await $api.user.getUserPackQuizQuestionsByPack(
+      questions.value = await $api.user.getPackQuizQuestionsBySlug(
         pack.value.slug || '',
       );
     } catch (e) {
