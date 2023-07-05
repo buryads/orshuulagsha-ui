@@ -2,11 +2,20 @@
   <div class="container mt-5">
     <UIBreadcrumbs :pages="pages" />
 
-    <div class="flex flex-wrap items-center justify-between gap-3">
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h1 class="title mt-4">
-          {{ pack.name }}
-        </h1>
+        <div class="flex items-center gap-2">
+          <h1 class="title">
+            {{ pack.name }}
+          </h1>
+          <NuxtLink
+            v-if="pack.user_id === user?.id"
+            :to="`/packs/edit/${pack.slug}`"
+            class="text-blue-500 hover:underline"
+          >
+            ( {{ $t('edit') }} )
+          </NuxtLink>
+        </div>
 
         <p class="prose mt-2">{{ pack.description }}</p>
       </div>

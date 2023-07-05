@@ -67,5 +67,9 @@
   "packDescription": "Pack description",
   "create": "Create",
   "creating a pack": "Creating a pack",
-  "private": "Private"
+  "editing a pack": "Editing a pack",
+  "private": "Private",
+  "edit": "edit",
+  "update": "Update",
+  "delete": "Delete"
 }

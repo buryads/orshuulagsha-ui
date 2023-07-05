@@ -66,5 +66,9 @@
   "packDescription": "Описание набора",
   "create": "Создать",
   "creating a pack": "Создание набора",
-  "private": "Приватный"
+  "editing a pack": "Редактирование набора",
+  "private": "Приватный",
+  "edit": "редактировать",
+  "update": "Обновить",
+  "delete": "Удалить"
 }
