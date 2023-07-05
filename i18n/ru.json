@@ -60,5 +60,11 @@
   "packsDescription": "The words for learning in words packs",
   "train the pack": "Тренироваться",
   "training": "Тренировка",
-  "pack": "Набор"
+  "pack": "Набор",
+  "create new pack": "Создать новый набор",
+  "packName": "Название набора",
+  "packDescription": "Описание набора",
+  "create": "Создать",
+  "creating a pack": "Создание набора",
+  "private": "Приватный"
 }

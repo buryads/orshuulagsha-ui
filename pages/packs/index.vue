@@ -1,8 +1,17 @@
 <template>
   <div class="container mt-5">
-    <h1 class="title">
-      {{ $t('packsTitle') }}
-    </h1>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h1 class="title">
+        {{ $t('packsTitle') }}
+      </h1>
+
+      <UIButton
+        :to="localePath('/packs/create')"
+        class="bg-bur-yellow text-white transition-opacity hover:opacity-90"
+      >
+        {{ $t('create new pack') }}
+      </UIButton>
+    </div>
 
     <ul
       role="list"
@@ -16,7 +25,9 @@
           <div
             class="h-48 w-full bg-cover bg-center bg-no-repeat group-hover:opacity-80"
             :style="{
-              backgroundImage: `url(${pack.burWords[0].images[0].url})`,
+              backgroundImage: `url(${
+                pack.burWords[0]?.images[0]?.url || '/images/stub-image.jpg'
+              })`,
             }"
           />
           <button type="button" class="absolute inset-0 focus:outline-none">
@@ -62,5 +73,5 @@
   const { $api } = useNuxtApp();
   const packs: Ref<packType[]> = ref([]);
 
-  packs.value = await $api.packs.getPacks();
+  packs.value = await $api.user.getPacks();
 </script>

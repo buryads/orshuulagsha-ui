@@ -6,7 +6,6 @@ import WordsModule from '~/repository/modules/words';
 import AuthModule from '~/repository/modules/auth';
 import axios, { AxiosRequestConfig } from 'axios';
 import UserModule from '~/repository/modules/user';
-import PacksModule from '~/repository/modules/packs';
 
 export interface IApiInstance {
   translate: TranslateModule;
@@ -15,7 +14,6 @@ export interface IApiInstance {
   words: WordsModule;
   auth: AuthModule;
   user: UserModule;
-  packs: PacksModule;
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -33,7 +31,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     words: new WordsModule(apiFetcher),
     auth: new AuthModule(apiFetcher),
     user: new UserModule(apiFetcher),
-    packs: new PacksModule(apiFetcher),
   };
 
   return {

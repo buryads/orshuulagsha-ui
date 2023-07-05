@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <Breadcrumbs :pages="pages" />
+    <UIBreadcrumbs :pages="pages" />
 
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div>
@@ -12,6 +12,7 @@
       </div>
 
       <UIButton
+        v-if="pack.burWords?.length"
         :to="localePath(`/packs/training/${pack.slug}`)"
         class="bg-bur-yellow text-white transition-opacity hover:opacity-90"
       >
@@ -19,7 +20,11 @@
       </UIButton>
     </div>
 
-    <ul role="list" class="mt-4 divide-y divide-gray-200">
+    <ul
+      v-if="pack.burWords?.length"
+      role="list"
+      class="mt-4 divide-y divide-gray-200"
+    >
       <li
         v-for="word in pack.burWords"
         :key="word.id"
@@ -60,9 +65,8 @@
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
-  import { packType } from '~/repository/modules/packs/types.js';
-  import Breadcrumbs from '~/components/UI/Breadcrumbs.vue';
   import { useUserStore } from '~/store/user';
+  import { packType } from '~/repository/modules/user/types';
 
   const user = useUserStore().user;
   const { t } = useI18n();
@@ -71,7 +75,7 @@
   const pack: Ref<Partial<packType>> = ref({});
   const route = useRoute();
 
-  pack.value = await $api.packs.getPack(route.params.slug.toString());
+  pack.value = await $api.user.getPack(route.params.slug.toString());
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     { name: pack.value.name, to: '', current: true },

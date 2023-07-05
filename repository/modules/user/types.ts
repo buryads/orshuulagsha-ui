@@ -1,4 +1,16 @@
 import { quizQuestion } from '~/repository/modules/quiz/types';
+import { word } from '~/repository/modules/types';
+
+export type packType = {
+  id: string;
+  slug: string;
+  user_id: number;
+  is_private: number;
+  name: string;
+  description: string;
+  is_attached: false;
+  burWords: word[];
+};
 
 export interface IRole {
   id: number;
@@ -17,5 +29,9 @@ export interface IUser {
 
 export interface IUserModule {
   getUser: (id: number) => Promise<IUser>;
-  getUserPackQuizQuestionsByPack: (packSlug: string) => Promise<quizQuestion[]>;
+  getPacks: () => Promise<packType[] | undefined>;
+  getPack: (slug: string) => Promise<packType | undefined>;
+  getPackQuizQuestionsBySlug: (
+    packSlug: string,
+  ) => Promise<quizQuestion[] | undefined>;
 }
