@@ -49,14 +49,35 @@ class UserModule extends HttpFactory implements IUserModule {
     }
   }
 
-  async updatePack(data: {
-    name: string;
-    description: string;
-    is_private: boolean;
-  }) {
+  async updatePack(
+    id: number,
+    data: {
+      name: string;
+      description: string;
+      is_private: boolean;
+    },
+  ) {
     try {
-      await this.call('PUT', `${this.RESOURCE}/packs`, {
+      const {
+        data: { data: response },
+      } = await this.call('PUT', `${this.RESOURCE}/packs/${id}`, {
         data,
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
+      });
+
+      return response;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async deletePack(id: number) {
+    try {
+      await this.call('DELETE', `${this.RESOURCE}/packs/${id}`, {
         headers: {
           Authorization: 'Bearer ' + useCookie('token').value,
         },
