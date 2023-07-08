@@ -68,6 +68,15 @@
         <Speech v-if="word.speechs?.length > 0" :speech="word.speechs[0]" />
       </li>
     </ul>
+
+    <UIButton
+      @click="showModal = !showModal"
+      class="mt-4 bg-bur-yellow text-white transition-opacity hover:opacity-90"
+    >
+      {{ $t('add word') }}
+    </UIButton>
+
+    <WidgetAddingNewWordModal :visible="showModal" @close="showModal = false" />
   </div>
 </template>
 
@@ -83,6 +92,7 @@
   const { $api } = useNuxtApp();
   const pack: Ref<Partial<packType>> = ref({});
   const route = useRoute();
+  const showModal = ref(false);
 
   pack.value = await $api.user.getPack(route.params.slug.toString());
   const pages = [
