@@ -1,5 +1,10 @@
 import HttpFactory from '~/repository/factory';
-import { IUser, IUserModule, packType } from '~/repository/modules/user/types';
+import {
+  foundWord,
+  IUser,
+  IUserModule,
+  packType,
+} from '~/repository/modules/user/types';
 import { useUserStore } from '~/store/user';
 import { quizQuestion } from '~/repository/modules/quiz/types';
 // @todo don't use axios here
@@ -167,9 +172,40 @@ class UserModule extends HttpFactory implements IUserModule {
     }
   }
 
+  async findWordsByInput(str: string, wordType: 'ru' | 'bur' = 'bur') {
+    const url =
+      wordType === 'bur'
+        ? `${this.RESOURCE}/words-matcher/ru/bur`
+        : `${this.RESOURCE}/words-matcher/bur/ru`;
+
+    try {
+      const { data }: { data: foundWord[] } = await this.call('GET', url, {
+        params: {
+          word: str,
+          limit: 1000,
+        },
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
+      });
+
+      console.log(data);
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
   async attachWordToPack(packId: number, wordId: number) {
     try {
-      await this.call('POST', `${this.RESOURCE}/packs/${packId}/${wordId}`);
+      await this.call('POST', `${this.RESOURCE}/packs/${packId}/${wordId}`, {
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
+      });
     } catch (error) {
       console.error(error);
 

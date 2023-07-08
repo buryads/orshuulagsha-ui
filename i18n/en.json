@@ -71,5 +71,7 @@
   "private": "Private",
   "edit": "edit",
   "update": "Update",
-  "delete": "Delete"
+  "delete": "Delete",
+  "add word": "Add word",
+  "add": "Add"
 }

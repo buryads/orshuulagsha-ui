@@ -35,3 +35,8 @@ export interface IUserModule {
     packSlug: string,
   ) => Promise<quizQuestion[] | undefined>;
 }
+
+export type foundWord = {
+  id: number;
+  name: string;
+};
