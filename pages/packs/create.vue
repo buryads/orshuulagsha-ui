@@ -51,6 +51,7 @@
   async function createPack() {
     try {
       await $api.user.createPack(form);
+      await navigateTo('/packs');
     } catch (e) {
       console.error(e);
     }
