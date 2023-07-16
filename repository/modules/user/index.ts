@@ -189,8 +189,6 @@ class UserModule extends HttpFactory implements IUserModule {
         },
       });
 
-      console.log(data);
-
       return data;
     } catch (error) {
       console.error(error);

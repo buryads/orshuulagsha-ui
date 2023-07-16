@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container my-5">
     <UIBreadcrumbs :pages="pages" />
 
     <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
@@ -43,11 +43,7 @@
           <div
             class="h-12 w-12 flex-none rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
             :style="{
-              backgroundImage: `url(${
-                word.images.find(
-                  (img) => word?.pivot?.bur_word_image_id === img.id,
-                )?.url
-              })`,
+              backgroundImage: `url(${word.images[0]?.url})`,
             }"
           />
           <div class="min-w-0 flex-auto">
@@ -76,7 +72,12 @@
       {{ $t('add word') }}
     </UIButton>
 
-    <WidgetAddingNewWordModal :visible="showModal" @close="showModal = false" />
+    <WidgetAddingNewWordModal
+      :visible="showModal"
+      :pack-id="+pack.id"
+      @close="showModal = false"
+      @attached="getPack"
+    />
   </div>
 </template>
 
@@ -117,4 +118,9 @@
       },
     ],
   });
+
+  async function getPack() {
+    showModal.value = false;
+    pack.value = await $api.user.getPack(route.params.slug.toString());
+  }
 </script>
