@@ -31,6 +31,11 @@ export type word = {
   speechs: wordVoiceActing[];
   translations: translation[];
   ru_words: ruWord[];
+  pivot: {
+    bur_word_image_id: number | null;
+    burword_id: number;
+    pack_id: number;
+  };
 };
 
 export type metaResponse = {

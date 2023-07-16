@@ -9,7 +9,7 @@
             {{ pack.name }}
           </h1>
           <NuxtLink
-            v-if="pack.user_id === user?.id"
+            v-if="isPackOfTheCurrentUser"
             :to="`/packs/edit/${pack.slug}`"
             class="text-blue-500 hover:underline"
           >
@@ -41,9 +41,11 @@
       >
         <div class="flex gap-x-4">
           <div
-            class="h-12 w-12 flex-none rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
+            @click="openSelectingImageModal(word)"
+            :title="isPackOfTheCurrentUser && 'Edit image'"
+            class="h-12 w-12 flex-none cursor-pointer rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
             :style="{
-              backgroundImage: `url(${word.images[0]?.url})`,
+              backgroundImage: `url(${getWordImage(word)})`,
             }"
           />
           <div class="min-w-0 flex-auto">
@@ -61,21 +63,34 @@
           </div>
         </div>
 
+        <TrashIcon
+          v-if="isPackOfTheCurrentUser"
+          class="ml-auto h-4 w-4 cursor-pointer"
+          @click="deleteWord(word.id)"
+        />
         <Speech v-if="word.speechs?.length > 0" :speech="word.speechs[0]" />
       </li>
     </ul>
 
     <UIButton
-      @click="showModal = !showModal"
+      @click="showAddingWordModal = true"
       class="mt-4 bg-bur-yellow text-white transition-opacity hover:opacity-90"
     >
       {{ $t('add word') }}
     </UIButton>
 
     <WidgetAddingNewWordModal
-      :visible="showModal"
+      :visible="showAddingWordModal"
       :pack-id="+pack.id"
-      @close="showModal = false"
+      @close="showAddingWordModal = false"
+      @attached="getPack"
+    />
+
+    <WidgetSelectingImageModal
+      :visible="showSelectingImageModal"
+      :pack-id="+pack.id"
+      :word="selectedWord"
+      @close="showSelectingImageModal = false"
       @attached="getPack"
     />
   </div>
@@ -86,6 +101,8 @@
   import { Ref } from 'vue';
   import { useUserStore } from '~/store/user';
   import { packType } from '~/repository/modules/user/types';
+  import { TrashIcon } from '@heroicons/vue/24/outline';
+  import { word as wordType } from '~/repository/modules/types';
 
   const user = useUserStore().user;
   const { t } = useI18n();
@@ -93,13 +110,16 @@
   const { $api } = useNuxtApp();
   const pack: Ref<Partial<packType>> = ref({});
   const route = useRoute();
-  const showModal = ref(false);
+  const showAddingWordModal = ref(false);
+  const showSelectingImageModal = ref(false);
+  const selectedWord = ref();
 
   pack.value = await $api.user.getPack(route.params.slug.toString());
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     { name: pack.value.name, to: '', current: true },
   ];
+  const isPackOfTheCurrentUser = pack.value.user_id === user?.id;
 
   const title = `${t('pack')} ${pack.value.name}`;
 
@@ -119,8 +139,37 @@
     ],
   });
 
+  function getWordImage(word: wordType) {
+    if (word.pivot.bur_word_image_id) {
+      return word.images.find(
+        (image) => image.id === word.pivot.bur_word_image_id,
+      )?.url;
+    }
+
+    return word.images[0]?.url;
+  }
+
   async function getPack() {
-    showModal.value = false;
+    showAddingWordModal.value = false;
+    showSelectingImageModal.value = false;
     pack.value = await $api.user.getPack(route.params.slug.toString());
+  }
+
+  async function deleteWord(wordId: number) {
+    if (!pack.value.id) return;
+
+    try {
+      await $api.user.deleteAttachedWordFromPack(pack.value.id, wordId);
+      await getPack();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function openSelectingImageModal(word: wordType) {
+    if (isPackOfTheCurrentUser) {
+      selectedWord.value = word;
+      showSelectingImageModal.value = true;
+    }
   }
 </script>
