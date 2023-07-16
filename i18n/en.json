@@ -73,5 +73,8 @@
   "update": "Update",
   "delete": "Delete",
   "add word": "Add word",
-  "add": "Add"
+  "add": "Add",
+  "select image for word": "Select image for word",
+  "select": "Select",
+  "no images found": "No images found"
 }

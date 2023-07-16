@@ -2,7 +2,7 @@ import { quizQuestion } from '~/repository/modules/quiz/types';
 import { word } from '~/repository/modules/types';
 
 export type packType = {
-  id: string;
+  id: number;
   slug: string;
   user_id: number;
   is_private: number;

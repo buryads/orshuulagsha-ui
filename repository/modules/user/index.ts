@@ -210,6 +210,41 @@ class UserModule extends HttpFactory implements IUserModule {
       throw error;
     }
   }
+
+  async deleteAttachedWordFromPack(packId: number, wordId: number) {
+    try {
+      await this.call('DELETE', `${this.RESOURCE}/packs/${packId}/${wordId}`, {
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async attachImageToBurWord(packId: number, wordId: number, imageId: number) {
+    try {
+      await this.call(
+        'POST',
+        `${this.RESOURCE}/packs/${packId}/burwords/${wordId}`,
+        {
+          data: {
+            bur_word_image_id: imageId,
+          },
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
 }
 
 export default UserModule;

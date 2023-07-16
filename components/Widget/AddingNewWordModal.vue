@@ -1,5 +1,5 @@
 <template>
-  <UIModal :visible="visible" @close="visible = false" :title="$t('add word')">
+  <UIModal :visible="visible" @close="$emit('close')" :title="$t('add word')">
     <template #content>
       <div class="mt-2">
         <div class="relative">
