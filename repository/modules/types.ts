@@ -44,3 +44,11 @@ export type metaResponse = {
   per_page: number;
   total: number;
 };
+
+export type trainingPackQuiz = {
+  answers: {
+    data: word[];
+  };
+  correctAnswer: word;
+  yourAnswer?: number;
+};

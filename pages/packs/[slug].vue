@@ -103,6 +103,7 @@
   import { packType } from '~/repository/modules/user/types';
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import { word as wordType } from '~/repository/modules/types';
+  import getWordImage from '~/utils/getWordImage';
 
   const user = useUserStore().user;
   const { t } = useI18n();
@@ -138,16 +139,6 @@
       },
     ],
   });
-
-  function getWordImage(word: wordType) {
-    if (word.pivot.bur_word_image_id) {
-      return word.images.find(
-        (image) => image.id === word.pivot.bur_word_image_id,
-      )?.url;
-    }
-
-    return word.images[0]?.url;
-  }
 
   async function getPack() {
     showAddingWordModal.value = false;
