@@ -4,7 +4,7 @@
 
     <h1 class="title mt-4">{{ $t('training') }}</h1>
 
-    <Quiz
+    <TrainingPacks
       :questions="questions"
       :is-loading="isLoading"
       :show-new-quiz-button="false"
@@ -18,6 +18,7 @@
   import { useUserStore } from '~/store/user';
   import { quizQuestion } from '~/repository/modules/quiz/types';
   import { packType } from '~/repository/modules/user/types';
+  import TrainingPacks from '~/components/TrainingPacks.vue';
 
   const user = useUserStore().user;
   const { t } = useI18n();

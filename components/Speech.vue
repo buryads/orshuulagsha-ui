@@ -25,8 +25,18 @@
     audio.value.onended = pause;
   }
 
+  function playWithoutPause() {
+    audio.value = new Audio(props.speech.url);
+    audio.value.play();
+    audio.value.onended = pause;
+  }
+
   function pause() {
     isPlaying.value = false;
     audio.value.pause();
   }
+
+  defineExpose({
+    playWithoutPause,
+  });
 </script>
