@@ -81,15 +81,6 @@
               <div class="p-3">
                 <UIDropdownItem>
                   <NuxtLink
-                    :to="localePath('/profile')"
-                    class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
-                    @click="close"
-                  >
-                    {{ $t('profile') }}
-                  </NuxtLink>
-                </UIDropdownItem>
-                <UIDropdownItem>
-                  <NuxtLink
                     :to="localePath('/packs')"
                     class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
                     @click="close"

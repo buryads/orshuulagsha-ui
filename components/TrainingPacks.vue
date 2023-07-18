@@ -59,7 +59,10 @@
             :disabled="disabled"
             :title="word.translations.map((t) => t.name).join(', ')"
           >
-            {{ word.translations.map((t) => t.name).join(', ') }}
+            {{
+              word.ru_words?.[0]?.name ||
+              word.translations.map((t) => t.name).join(', ')
+            }}
           </button>
         </div>
       </div>

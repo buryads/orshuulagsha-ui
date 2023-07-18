@@ -49,8 +49,13 @@
 
 <script setup lang="ts">
   import { Ref } from 'vue';
-  import { packType } from '~/repository/modules/packs/types';
   import { useI18n } from 'vue-i18n';
+  import { packType } from '~/repository/modules/user/types';
+  import { definePageMeta } from '#imports';
+
+  definePageMeta({
+    middleware: 'auth',
+  });
 
   const { t } = useI18n();
   useHead({

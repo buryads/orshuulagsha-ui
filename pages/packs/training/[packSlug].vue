@@ -16,25 +16,34 @@
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
   import { useUserStore } from '~/store/user';
-  import { quizQuestion } from '~/repository/modules/quiz/types';
   import { packType } from '~/repository/modules/user/types';
   import TrainingPacks from '~/components/TrainingPacks.vue';
+  import { trainingPackQuiz } from '~/repository/modules/types';
+  import { definePageMeta } from '#imports';
+
+  definePageMeta({
+    middleware: 'auth',
+  });
 
   const user = useUserStore().user;
   const { t } = useI18n();
   const localePath = useLocalePath();
   const { $api } = useNuxtApp();
-  const pack: Ref<Partial<packType>> = ref({});
-  const questions: Ref<quizQuestion[]> = ref([]);
+  const pack: Ref<packType | undefined> = ref(undefined);
+  const questions: Ref<trainingPackQuiz[]> = ref([]);
   const isLoading = ref(true);
   const route = useRoute();
 
+  /*[pack.value] = await Promise.all([
+    $api.user.getPack(route.params.packSlug.toString()),
+    loadQuestions(),
+  ]);*/
   pack.value = await $api.user.getPack(route.params.packSlug.toString());
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     {
-      name: pack.value.name,
-      to: localePath(`/packs/${pack.value.slug}`),
+      name: pack.value?.name,
+      to: localePath(`/packs/${pack.value?.slug}`),
       current: false,
     },
     {
@@ -43,7 +52,7 @@
     },
   ];
 
-  const title = `${t('pack')} ${pack.value.name} - ${t('training')}`;
+  const title = `${t('pack')} ${pack.value?.name} - ${t('training')}`;
 
   useHead({
     title,
@@ -65,7 +74,7 @@
     try {
       isLoading.value = true;
       questions.value = await $api.user.getPackQuizQuestionsBySlug(
-        pack.value.slug || '',
+        route.params.packSlug.toString() || '',
       );
     } catch (e) {
       console.error(e);
