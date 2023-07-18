@@ -1,5 +1,4 @@
-import { quizQuestion } from '~/repository/modules/quiz/types';
-import { word } from '~/repository/modules/types';
+import { trainingPackQuiz, word } from '~/repository/modules/types';
 
 export type packType = {
   id: number;
@@ -31,9 +30,7 @@ export interface IUserModule {
   getUser: (id: number) => Promise<IUser>;
   getPacks: () => Promise<packType[] | undefined>;
   getPack: (slug: string) => Promise<packType | undefined>;
-  getPackQuizQuestionsBySlug: (
-    packSlug: string,
-  ) => Promise<quizQuestion[] | undefined>;
+  getPackQuizQuestionsBySlug: (packSlug: string) => Promise<trainingPackQuiz[]>;
 }
 
 export type foundWord = {

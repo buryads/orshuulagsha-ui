@@ -32,6 +32,11 @@
 
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
+  import { definePageMeta } from '#imports';
+
+  definePageMeta({
+    middleware: 'auth',
+  });
 
   const { t } = useI18n();
   const { $api } = useNuxtApp();

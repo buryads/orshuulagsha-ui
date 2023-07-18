@@ -23,7 +23,7 @@
       const store = useUserStore();
 
       if (store.user) {
-        return navigateTo('/profile');
+        return navigateTo('/packs');
       }
     },
   });

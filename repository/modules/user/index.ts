@@ -6,9 +6,9 @@ import {
   packType,
 } from '~/repository/modules/user/types';
 import { useUserStore } from '~/store/user';
-import { quizQuestion } from '~/repository/modules/quiz/types';
 // @todo don't use axios here
 import { AxiosError } from 'axios';
+import { trainingPackQuiz } from '~/repository/modules/types';
 
 class UserModule extends HttpFactory implements IUserModule {
   public RESOURCE = '/api/jwt/user';
@@ -150,7 +150,7 @@ class UserModule extends HttpFactory implements IUserModule {
     try {
       const {
         data: { data },
-      }: { data: { data: quizQuestion[] } } = await this.call(
+      }: { data: { data: trainingPackQuiz[] } } = await this.call(
         'GET',
         `/api/jwt/user/packs/${packSlug}/by-slug/questions`,
         {

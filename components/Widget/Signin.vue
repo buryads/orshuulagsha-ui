@@ -105,7 +105,7 @@
       await $api.auth.login(email.value, password.value);
       await $api.user.getUser();
 
-      navigateTo('/profile');
+      navigateTo('/packs');
     } catch (e) {
       console.error(e);
       errors.value = e.response.data.message;

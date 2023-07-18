@@ -104,6 +104,11 @@
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import { word as wordType } from '~/repository/modules/types';
   import getWordImage from '~/utils/getWordImage';
+  import { definePageMeta } from '#imports';
+
+  definePageMeta({
+    middleware: 'auth',
+  });
 
   const user = useUserStore().user;
   const { t } = useI18n();

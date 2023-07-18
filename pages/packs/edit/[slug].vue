@@ -44,6 +44,11 @@
   import { Ref } from 'vue';
   import { packType } from '~/repository/modules/user/types';
   import { useUserStore } from '~/store/user';
+  import { definePageMeta } from '#imports';
+
+  definePageMeta({
+    middleware: 'auth',
+  });
 
   const { t } = useI18n();
   const user = useUserStore().user;
