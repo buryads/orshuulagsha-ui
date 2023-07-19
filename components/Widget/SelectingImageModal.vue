@@ -45,11 +45,11 @@
         {{ $t('no images found') }}
       </div>
 
-      <UIFile
+      <!--      <UIFile
         class="mt-6"
         accept="image/png, image/jpeg"
         @change="uploadImage"
-      />
+      />-->
 
       <div class="text-right">
         <UIButton
