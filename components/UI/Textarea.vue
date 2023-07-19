@@ -10,8 +10,6 @@
 </template>
 
 <script setup lang="ts">
-  import Input from '~/components/UI/Input.vue';
-
   interface Props {
     name?: string;
     placeholder?: string;

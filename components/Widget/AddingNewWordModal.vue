@@ -78,6 +78,7 @@
       isAttaching.value = true;
       isLoading.value = true;
       await $api.user.attachWordToPack(props.packId, wordId);
+      input.value = '';
       emit('attached', wordId);
     } catch (error) {
       console.error(error);

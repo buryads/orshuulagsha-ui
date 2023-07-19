@@ -43,7 +43,8 @@
           <div
             @click="openSelectingImageModal(word)"
             :title="isPackOfTheCurrentUser && 'Edit image'"
-            class="h-12 w-12 flex-none cursor-pointer rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
+            class="h-12 w-12 flex-none rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
+            :class="isPackOfTheCurrentUser && 'cursor-pointer'"
             :style="{
               backgroundImage: `url(${getWordImage(word)})`,
             }"

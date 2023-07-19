@@ -1,6 +1,6 @@
 <template>
   <nav class="flex" aria-label="Breadcrumb">
-    <ol role="list" class="mx-auto flex w-full max-w-screen-xl space-x-4">
+    <ol role="list" class="flex w-full max-w-screen-xl space-x-4">
       <li class="flex">
         <div class="flex items-center">
           <NuxtLink to="/" class="text-gray-400 hover:text-gray-500">

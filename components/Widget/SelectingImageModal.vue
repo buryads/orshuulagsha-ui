@@ -37,9 +37,6 @@
               @click="resetSelectedImage(image.id)"
               class="hidden"
             />
-            <p>
-              {{ image.id }}
-            </p>
           </label>
         </div>
       </div>
@@ -47,6 +44,12 @@
       <div v-if="!word?.images.length" class="mt-2">
         {{ $t('no images found') }}
       </div>
+
+      <UIFile
+        class="mt-6"
+        accept="image/png, image/jpeg"
+        @change="uploadImage"
+      />
 
       <div class="text-right">
         <UIButton
@@ -97,6 +100,14 @@
       );
       emit('close');
       emit('attached');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function uploadImage(e) {
+    try {
+      await $api.image.uploadImageForBurword(props.word.id, e.target.files[0]);
     } catch (error) {
       console.error(error);
     }
