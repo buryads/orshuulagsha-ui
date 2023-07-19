@@ -1,7 +1,7 @@
 import HttpFactory from '~/repository/factory';
 
 class ImageModule extends HttpFactory {
-  public readonly RESOURCE = 'api/images/jwt/burwords';
+  public readonly RESOURCE = 'api/jwt/images/burwords';
 
   async uploadImageForBurword(wordId: number, image) {
     try {
@@ -12,6 +12,9 @@ class ImageModule extends HttpFactory {
         data: { data },
       } = await this.call('POST', `${this.RESOURCE}/${wordId}`, {
         data: formData,
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
       });
 
       return data;
