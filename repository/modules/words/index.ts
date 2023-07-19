@@ -15,7 +15,7 @@ class WordsModule extends HttpFactory implements IWordsModule {
       const { data }: { data: wordsApiResponse } = await this.call(
         'GET',
         `${this.RESOURCE_BUR}`,
-        { query: { page, per_page: perPage } },
+        { params: { page, per_page: perPage } },
       );
 
       return data;
