@@ -15,7 +15,10 @@
 
         <Speech
           ref="audio"
-          v-if="questions?.[currentQuestionIndex]?.correctAnswer?.speechs"
+          v-if="
+            questions?.[currentQuestionIndex]?.correctAnswer?.speechs?.length >
+            0
+          "
           :speech="questions[currentQuestionIndex].correctAnswer.speechs[0]"
         />
       </div>
