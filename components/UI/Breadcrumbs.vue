@@ -1,6 +1,6 @@
 <template>
   <nav class="flex" aria-label="Breadcrumb">
-    <ol role="list" class="flex w-full max-w-screen-xl space-x-4">
+    <ol role="list" class="flex w-full max-w-screen-xl flex-wrap gap-4">
       <li class="flex">
         <div class="flex items-center">
           <NuxtLink to="/" class="text-gray-400 hover:text-gray-500">
@@ -12,7 +12,7 @@
       <li v-for="page in pages" :key="page.name" class="flex">
         <div class="flex items-center">
           <svg
-            class="h-full w-6 flex-shrink-0 text-gray-200"
+            class="h-6 w-3 flex-shrink-0 text-gray-300 md:h-full md:w-6 md:text-gray-200"
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
