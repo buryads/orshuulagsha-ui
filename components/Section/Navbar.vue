@@ -53,7 +53,7 @@
             <UINavbarLink
               v-if="!user"
               :to="localePath('/signin')"
-              class="ml-auto pr-0"
+              class="ml-auto whitespace-nowrap pr-0"
             >
               {{ $t('login') }}
             </UINavbarLink>
@@ -105,6 +105,14 @@
               </div>
             </template>
           </UIDropdown>
+        </div>
+        <div
+          v-else
+          class="absolute inset-y-0 right-0 flex items-center pr-2 sm:hidden"
+        >
+          <UINavbarLink :to="localePath('/signin')" class="ml-auto pr-0">
+            {{ $t('login') }}
+          </UINavbarLink>
         </div>
       </div>
     </div>

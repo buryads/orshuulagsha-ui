@@ -10,7 +10,7 @@
           </h1>
           <NuxtLink
             v-if="isPackOfTheCurrentUser"
-            :to="`/packs/edit/${pack.slug}`"
+            :to="localePath(`/packs/edit/${pack.slug}`)"
             class="text-blue-500 hover:underline"
           >
             ( {{ $t('edit') }} )
@@ -66,7 +66,7 @@
 
         <TrashIcon
           v-if="isPackOfTheCurrentUser"
-          class="ml-auto h-4 w-4 cursor-pointer"
+          class="ml-auto h-4 w-4 shrink-0 cursor-pointer"
           @click="deleteWord(word.id)"
         />
         <Speech v-if="word.speechs?.length > 0" :speech="word.speechs[0]" />
