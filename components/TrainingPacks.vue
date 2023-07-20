@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 rounded-lg bg-white p-3 sm:p-6">
+  <div class="mt-6 rounded-lg bg-white p-6 pb-10">
     <div
       v-if="isLoading"
       class="text-center font-bold text-gray-900 sm:text-xl"
@@ -30,7 +30,7 @@
           v-if="
             questions?.[currentQuestionIndex]?.correctAnswer?.images?.[0]?.url
           "
-          class="h-72 w-72 overflow-hidden rounded"
+          class="h-60 w-60 overflow-hidden rounded sm:h-72 sm:w-72"
         >
           <div
             class="h-full w-full bg-cover bg-center"
@@ -43,7 +43,7 @@
           />
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex w-full flex-col gap-2 md:w-auto md:px-0">
           <button
             v-for="word in questions?.[currentQuestionIndex]?.answers?.data"
             :key="word"
@@ -57,7 +57,7 @@
                 selectedAnswer === word.id &&
                 '!bg-red-500 !text-white',
             ]"
-            class="w-96 truncate rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 md:text-base"
+            class="w-full rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 md:w-96 md:truncate md:text-base"
             @click="handleAnswer(word.id)"
             :disabled="disabled"
             :title="word.translations.map((t) => t.name).join(', ')"
