@@ -19,6 +19,7 @@
   const audio = ref();
 
   function play() {
+    pause();
     isPlaying.value = true;
     audio.value = new Audio(props.speech.url);
     audio.value.play();
@@ -26,6 +27,7 @@
   }
 
   function playWithoutPause() {
+    pause();
     audio.value = new Audio(props.speech.url);
     audio.value.play();
     audio.value.onended = pause;
@@ -33,7 +35,10 @@
 
   function pause() {
     isPlaying.value = false;
-    audio.value.pause();
+    if (audio.value) {
+      audio.value.pause();
+      audio.value.currentTime = 0;
+    }
   }
 
   defineExpose({
