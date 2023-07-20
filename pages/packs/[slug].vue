@@ -42,13 +42,19 @@
         <div class="flex gap-x-4">
           <div
             @click="openSelectingImageModal(word)"
-            :title="isPackOfTheCurrentUser && 'Edit image'"
-            class="h-12 w-12 flex-none rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
+            :title="isPackOfTheCurrentUser && 'Select image'"
+            class="group h-12 w-12 flex-none overflow-hidden rounded-full bg-gray-50 bg-cover bg-center bg-no-repeat"
             :class="isPackOfTheCurrentUser && 'cursor-pointer'"
             :style="{
               backgroundImage: `url(${getWordImage(word)})`,
             }"
-          />
+          >
+            <div
+              class="flex h-full w-full bg-black/70 opacity-0 transition-opacity group-hover:opacity-100"
+            >
+              <CameraIcon class="m-auto h-8 w-8 fill-white" />
+            </div>
+          </div>
           <div class="min-w-0 flex-auto">
             <p class="text-sm font-semibold leading-6 text-gray-900">
               {{ word.name }}
@@ -102,7 +108,7 @@
   import { Ref } from 'vue';
   import { useUserStore } from '~/store/user';
   import { packType } from '~/repository/modules/user/types';
-  import { TrashIcon } from '@heroicons/vue/24/outline';
+  import { TrashIcon, CameraIcon } from '@heroicons/vue/24/outline';
   import { word as wordType } from '~/repository/modules/types';
   import getWordImage from '~/utils/getWordImage';
   import { definePageMeta } from '#imports';
