@@ -1,14 +1,14 @@
-FROM node:14.17.4-buster as builder
+FROM node:18.17-buster as builder
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm ci
 
 RUN npm run build
 
-FROM node:14.17.4-buster
+FROM node:18.17-buster
 
 ENV APP_PORT 3000
 ENV APP_HOST 0.0.0.0
