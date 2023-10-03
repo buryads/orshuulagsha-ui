@@ -88,6 +88,7 @@
 </template>
 
 <script setup lang="ts">
+  const { gtag } = useGtag();
   const localePath = useLocalePath();
   const { $api } = useNuxtApp();
   const isLoading = ref(false);
@@ -102,6 +103,8 @@
       isLoading.value = true;
       await $api.auth.register(name.value, email.value, password.value);
       await $api.user.getUser();
+
+      gtag('event', 'sign_up');
 
       navigateTo('/packs');
     } catch (e) {
