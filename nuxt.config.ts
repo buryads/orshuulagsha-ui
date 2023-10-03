@@ -17,7 +17,10 @@ export default defineNuxtConfig({
     '/words/**': { prerender: true },
   },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxtjs/i18n', '@pinia/nuxt'],
+  modules: ['@nuxtjs/i18n', '@pinia/nuxt', 'nuxt-gtag'],
+  gtag: {
+    id: process.env.GTAG,
+  },
   i18n: {
     locales: [
       { code: 'en', file: 'en.json', name: 'English' },
