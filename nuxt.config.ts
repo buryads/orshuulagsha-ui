@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   modules: ['@nuxtjs/i18n', '@pinia/nuxt', 'nuxt-gtag'],
   gtag: {
-    id: process.env.GTAG,
+    id: 'G-WNB3T9B0XR',
   },
   i18n: {
     locales: [
