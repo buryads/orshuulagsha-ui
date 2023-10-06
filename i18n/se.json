@@ -48,5 +48,12 @@
   "supportOurProject": "Stöd vårt projekt",
   "or": "eller",
   "on": "på",
-  "chromeExtension": "Vi har även mobilappar och ett tillägg för webbläsaren Google Chrome"
+  "chromeExtension": "Vi har även mobilappar och ett tillägg för webbläsaren Google Chrome",
+  "signIn": "Sign in to your account",
+  "createAccount": "Create your account",
+  "noAccount": "Don't you have an account?",
+  "haveAccount": "Do you have an account already?",
+  "register": "Sign up",
+  "name": "Name",
+  "password": "Password"
 }
