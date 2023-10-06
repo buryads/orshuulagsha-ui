@@ -1,6 +1,6 @@
-import { trainingPackQuiz, word } from '~/repository/modules/types';
+import { trainingPackQuiz, Word } from '~/repository/modules/types';
 
-export type packType = {
+export interface Pack {
   id: number;
   slug: string;
   user_id: number;
@@ -8,8 +8,8 @@ export type packType = {
   name: string;
   description: string;
   is_attached: false;
-  burWords: word[];
-};
+  burWords: Word[];
+}
 
 export interface IRole {
   id: number;
@@ -28,12 +28,12 @@ export interface IUser {
 
 export interface IUserModule {
   getUser: (id: number) => Promise<IUser>;
-  getPacks: () => Promise<packType[] | undefined>;
-  getPack: (slug: string) => Promise<packType | undefined>;
+  getPacks: () => Promise<Pack[] | undefined>;
+  getPack: (slug: string) => Promise<Pack | undefined>;
   getPackQuizQuestionsBySlug: (packSlug: string) => Promise<trainingPackQuiz[]>;
 }
 
-export type foundWord = {
+export type FoundWord = {
   id: number;
   name: string;
 };

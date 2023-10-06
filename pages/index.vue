@@ -76,6 +76,31 @@
         />
       </div>
 
+      <div class="mt-8">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h3 class="text-base font-medium text-gray-700 md:text-xl">
+            {{ $t('trainingWordsSet') }}
+          </h3>
+
+          <NuxtLink
+            :to="localePath('/packs')"
+            class="flex items-center gap-1 border-b border-transparent text-sm font-medium text-gray-500 transition hover:border-gray-500"
+          >
+            <span>{{ $t('moreWordSets') }}</span>
+            <ArrowUpRightIcon class="h-4 w-4 fill-gray-500" />
+          </NuxtLink>
+        </div>
+
+        <ul
+          role="list"
+          class="mt-6 grid gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8"
+        >
+          <li v-for="pack in packs" :key="pack.id" class="relative">
+            <UIPack :pack="pack" :pack-url="`/public-packs/${pack.slug}`" />
+          </li>
+        </ul>
+      </div>
+
       <SectionDiscord class="my-5" />
 
       <DailyTranslationsAmount class="mt-auto text-center" />
@@ -89,9 +114,11 @@
   import type { Ref } from 'vue';
   import type { translationType } from '~/repository/modules/translate/types';
   import { useI18n } from 'vue-i18n';
+  import { ArrowUpRightIcon } from '@heroicons/vue/20/solid';
 
   const { $api } = useNuxtApp();
   const { t } = useI18n();
+  const localePath = useLocalePath();
 
   useHead({
     title: t('appName'),
@@ -113,10 +140,13 @@
   );
   const isLoading = ref(false);
   const showKeyboard = ref(false);
+  const packs = ref();
 
   const toggleLanguage = () => {
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
   };
+
+  packs.value = await $api.user.getPublicPacks({ per_page: 4 });
 
   const translate = async () => {
     if (inputValue.value.trim() === '') return;

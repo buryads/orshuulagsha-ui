@@ -76,5 +76,14 @@
   "add": "Add",
   "select image for word": "Select image for word",
   "select": "Select",
-  "no images found": "No images found"
+  "no images found": "No images found",
+  "signIn": "Sign in to your account",
+  "createAccount": "Create your account",
+  "noAccount": "Don't you have an account?",
+  "haveAccount": "Do you have an account already?",
+  "register": "Sign up",
+  "name": "Name",
+  "password": "Password",
+  "trainingWordsSet": "Set of training words",
+  "moreWordSets": "More sets"
 }

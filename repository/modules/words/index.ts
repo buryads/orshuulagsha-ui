@@ -4,7 +4,7 @@ import {
   oneWordApiResponse,
   wordsApiResponse,
 } from '~/repository/modules/words/types';
-import { word } from '~/repository/modules/types';
+import { Word } from '~/repository/modules/types';
 
 class WordsModule extends HttpFactory implements IWordsModule {
   public readonly RESOURCE = '/api/words';

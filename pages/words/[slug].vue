@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-  import { word as wordType } from '~/repository/modules/types';
+  import { Word as wordType } from '~/repository/modules/types';
 
   const route = useRoute();
   const { $api } = useNuxtApp();
