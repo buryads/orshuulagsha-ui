@@ -23,7 +23,7 @@ type ruWord = {
   name: string;
 };
 
-export type word = {
+export interface Word {
   id: number;
   slug: string | null;
   name: string;
@@ -36,7 +36,7 @@ export type word = {
     burword_id: number;
     pack_id: number;
   };
-};
+}
 
 export type metaResponse = {
   current_page: number;
@@ -47,8 +47,8 @@ export type metaResponse = {
 
 export type trainingPackQuiz = {
   answers: {
-    data: word[];
+    data: Word[];
   };
-  correctAnswer: word;
+  correctAnswer: Word;
   yourAnswer?: number;
 };

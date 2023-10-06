@@ -1,9 +1,9 @@
 import HttpFactory from '~/repository/factory';
 import {
-  foundWord,
+  FoundWord,
   IUser,
   IUserModule,
-  packType,
+  Pack,
 } from '~/repository/modules/user/types';
 import { useUserStore } from '~/store/user';
 // @todo don't use axios here
@@ -12,6 +12,7 @@ import { trainingPackQuiz } from '~/repository/modules/types';
 
 class UserModule extends HttpFactory implements IUserModule {
   public RESOURCE = '/api/jwt/user';
+  public PUBLIC_RESOURCE = '/api/user';
 
   async getUser() {
     try {
@@ -94,13 +95,68 @@ class UserModule extends HttpFactory implements IUserModule {
     }
   }
 
+  async getPublicPacks({ per_page = 4 }: { per_page?: number } = {}) {
+    try {
+      const {
+        data: { data },
+      }: { data: { data: Pack[] } } = await this.call(
+        'GET',
+        `${this.PUBLIC_RESOURCE}/packs`,
+        {
+          params: {
+            per_page,
+          },
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError && error?.response?.status === 401) {
+        navigateTo('/signin');
+        return;
+      }
+      console.error(error);
+
+      throw error;
+    }
+  }
+
   async getPacks() {
     try {
       const {
         data: { data },
-      }: { data: { data: packType[] } } = await this.call(
+      }: { data: { data: Pack[] } } = await this.call(
         'GET',
         `${this.RESOURCE}/packs`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError && error?.response?.status === 401) {
+        navigateTo('/signin');
+        return;
+      }
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async getPublicPack(slug: string) {
+    try {
+      const {
+        data: { data },
+      }: { data: { data: Pack } } = await this.call(
+        'GET',
+        `${this.PUBLIC_RESOURCE}/packs/${slug}/by-slug`,
         {
           headers: {
             Authorization: 'Bearer ' + useCookie('token').value,
@@ -124,7 +180,7 @@ class UserModule extends HttpFactory implements IUserModule {
     try {
       const {
         data: { data },
-      }: { data: { data: packType } } = await this.call(
+      }: { data: { data: Pack } } = await this.call(
         'GET',
         `${this.RESOURCE}/packs/${slug}/by-slug`,
         {
@@ -179,7 +235,7 @@ class UserModule extends HttpFactory implements IUserModule {
         : `${this.RESOURCE}/words-matcher/bur/ru`;
 
     try {
-      const { data }: { data: foundWord[] } = await this.call('GET', url, {
+      const { data }: { data: FoundWord[] } = await this.call('GET', url, {
         params: {
           word: str,
           limit: 1000,

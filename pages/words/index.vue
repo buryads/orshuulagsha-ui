@@ -51,7 +51,7 @@
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
-  import type { metaResponse, word } from '~/repository/modules/types';
+  import type { metaResponse, Word } from '~/repository/modules/types';
 
   const PER_PAGE = 51;
   const { t } = useI18n();
@@ -79,7 +79,7 @@
     ],
   });
 
-  const words: Ref<word[]> = ref([]);
+  const words: Ref<Word[]> = ref([]);
   const meta: Ref<Partial<metaResponse>> = ref({});
   const isLoading = ref(false);
 

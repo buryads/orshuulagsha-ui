@@ -75,5 +75,14 @@
   "add": "Добавить",
   "select image for word": "Выберите изображение для слова",
   "select": "Выбрать",
-  "no images found": "Изобржений не найдено"
+  "no images found": "Изобржений не найдено",
+  "signIn": "Войти в аккаунт",
+  "createAccount": "Создать аккаунт",
+  "name": "Имя",
+  "password": "Пароль",
+  "noAccount": "Нет аккаунта?",
+  "haveAccount": "Уже зарегистрированы?",
+  "register": "Зарегестрироваться",
+  "trainingWordsSet": "Наборы слов для тренировки",
+  "moreWordSets": "Больше наборов"
 }

@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
   import { Ref } from 'vue';
-  import { foundWord } from '~/repository/modules/user/types';
+  import { FoundWord } from '~/repository/modules/user/types';
   import { PlusIcon } from '@heroicons/vue/20/solid';
 
   interface Props {
@@ -50,7 +50,7 @@
   const { $api } = useNuxtApp();
 
   const input = ref('');
-  const foundWords: Ref<foundWord[]> = ref([]);
+  const foundWords: Ref<FoundWord[]> = ref([]);
   const isLoading = ref(false);
   const isAttaching = ref(false);
 

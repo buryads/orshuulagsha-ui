@@ -1,12 +1,12 @@
-import { metaResponse, word } from '~/repository/modules/types';
+import { metaResponse, Word } from '~/repository/modules/types';
 
 export type wordsApiResponse = {
-  data: word[];
+  data: Word[];
   meta: metaResponse;
 };
 
 export type oneWordApiResponse = {
-  data: word;
+  data: Word;
 };
 
 export interface IWordsModule {
@@ -15,5 +15,5 @@ export interface IWordsModule {
     perPage: number;
   }) => Promise<wordsApiResponse>;
 
-  getOneBurWord: (slug: string) => Promise<word>;
+  getOneBurWord: (slug: string) => Promise<Word>;
 }

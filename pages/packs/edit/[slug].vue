@@ -42,7 +42,7 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
-  import { packType } from '~/repository/modules/user/types';
+  import { Pack } from '~/repository/modules/user/types';
   import { useUserStore } from '~/store/user';
   import { definePageMeta } from '#imports';
 
@@ -60,7 +60,7 @@
     { name: t('editing a pack'), to: '', current: true },
   ];
 
-  const pack: Ref<Partial<packType>> = ref({});
+  const pack: Ref<Partial<Pack>> = ref({});
   const route = useRoute();
 
   pack.value = await $api.user.getPack(route.params.slug.toString());

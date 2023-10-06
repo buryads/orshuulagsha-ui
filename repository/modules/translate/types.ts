@@ -1,16 +1,16 @@
-import { word } from '~/repository/modules/types';
+import { Word } from '~/repository/modules/types';
 
 export type translationType = {
-  exactTranslations: word[];
-  occurrences: word[];
-  possibleTranslations: word[];
+  exactTranslations: Word[];
+  occurrences: Word[];
+  possibleTranslations: Word[];
 };
 
 export type translationApiResponse = {
   data: {
-    result: word[];
-    include: word[];
-    fuzzy: word[];
+    result: Word[];
+    include: Word[];
+    fuzzy: Word[];
   };
 };
 
