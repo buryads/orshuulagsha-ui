@@ -26,9 +26,9 @@ export default defineNuxtConfig({
       { code: 'en', file: 'en.json', name: 'English' },
       { code: 'bur', file: 'bur.json', name: 'Буряад' },
       { code: 'ru', file: 'ru.json', name: 'Русский' },
-      { code: 'ua', file: 'ua.json', name: 'Українська' },
+      /*      { code: 'ua', file: 'ua.json', name: 'Українська' },
       { code: 'se', file: 'se.json', name: 'Svenska' },
-      { code: 'kr', file: 'kr.json', name: '한국어' },
+      { code: 'kr', file: 'kr.json', name: '한국어' },*/
     ],
     defaultLocale: 'ru',
     langDir: 'i18n',

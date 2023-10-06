@@ -16,7 +16,7 @@
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
   import { useUserStore } from '~/store/user';
-  import { packType } from '~/repository/modules/user/types';
+  import { Pack } from '~/repository/modules/user/types';
   import TrainingPacks from '~/components/TrainingPacks.vue';
   import { trainingPackQuiz } from '~/repository/modules/types';
   import { definePageMeta } from '#imports';
@@ -29,7 +29,7 @@
   const { t } = useI18n();
   const localePath = useLocalePath();
   const { $api } = useNuxtApp();
-  const pack: Ref<packType | undefined> = ref(undefined);
+  const pack: Ref<Pack | undefined> = ref(undefined);
   const questions: Ref<trainingPackQuiz[]> = ref([]);
   const isLoading = ref(true);
   const route = useRoute();

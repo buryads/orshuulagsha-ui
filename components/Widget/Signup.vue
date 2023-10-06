@@ -13,7 +13,7 @@
           <h2
             class="text-2xl font-bold leading-none tracking-tight text-gray-900"
           >
-            Create your account
+            {{ $t('createAccount') }}
           </h2>
         </div>
 
@@ -21,7 +21,7 @@
           <div>
             <form @submit.prevent="register" class="space-y-6">
               <UILabel>
-                <span>Name</span>
+                <span>{{ $t('name') }}</span>
 
                 <UIInput type="text" v-model="name" required />
               </UILabel>
@@ -33,7 +33,7 @@
               </UILabel>
 
               <UILabel>
-                <span>Password</span>
+                <span>{{ $t('password') }}</span>
 
                 <UIInput type="password" v-model="password" required />
               </UILabel>
@@ -50,7 +50,7 @@
                 class="w-full bg-bur-blue text-white hover:opacity-80"
               >
                 <span class="relative">
-                  {{ $t('Sign up') }}
+                  {{ $t('register') }}
                   <span class="absolute left-full top-1/2 -translate-y-1/2">
                     <IconsSpinner
                       v-if="isLoading"
@@ -65,14 +65,14 @@
           <!--          <WidgetSocialMediaAuth class="mt-10" />-->
 
           <div class="mt-6 border-t pt-4 text-center">
-            <span>Do you have an account already?</span>
+            <span>{{ $t('haveAccount') }}</span>
 
             <NuxtLink
               :to="localePath('/signin')"
               to="/signup"
-              class="font-semibold text-bur-blue hover:text-indigo-600"
+              class="ml-1.5 font-semibold text-bur-blue hover:text-indigo-600"
             >
-              Sign in
+              {{ $t('signIn') }}
             </NuxtLink>
           </div>
         </div>

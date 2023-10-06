@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-  import { word } from '~/repository/modules/translate/types';
+  import { Word } from '~/repository/modules/translate/types';
 
   interface Props {
     items: word[] | [];
