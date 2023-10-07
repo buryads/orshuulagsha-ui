@@ -95,7 +95,10 @@ class UserModule extends HttpFactory implements IUserModule {
     }
   }
 
-  async getPublicPacks({ per_page = 4 }: { per_page?: number } = {}) {
+  async getPublicPacks({
+    per_page = 4,
+    rand,
+  }: { per_page?: number; rand?: number } = {}) {
     try {
       const {
         data: { data },
@@ -105,6 +108,7 @@ class UserModule extends HttpFactory implements IUserModule {
         {
           params: {
             per_page,
+            rand,
           },
           headers: {
             Authorization: 'Bearer ' + useCookie('token').value,

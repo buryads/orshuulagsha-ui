@@ -146,7 +146,7 @@
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
   };
 
-  packs.value = await $api.user.getPublicPacks({ per_page: 4 });
+  packs.value = await $api.user.getPublicPacks({ per_page: 4, rand: 1 });
 
   const translate = async () => {
     if (inputValue.value.trim() === '') return;
