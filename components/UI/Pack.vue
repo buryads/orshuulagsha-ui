@@ -40,9 +40,9 @@
   const props = defineProps<Props>();
 
   function getPackImage(pack: PackInterface) {
-    const burWordImageId = pack.burWords[0].pivot.bur_word_image_id;
+    const burWordImageId = pack.burWords?.[0]?.pivot.bur_word_image_id;
 
-    const image = pack.burWords[0].images.find(
+    const image = pack.burWords?.[0]?.images?.find(
       (image) => image.id === burWordImageId,
     );
 
