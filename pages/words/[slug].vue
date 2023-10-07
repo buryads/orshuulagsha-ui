@@ -24,14 +24,17 @@
 
 <script setup lang="ts">
   import { Word as wordType } from '~/repository/modules/types';
+  import { useAsyncData } from '#app';
 
   const route = useRoute();
   const { $api } = useNuxtApp();
   const { t } = useI18n();
 
-  const word: wordType = await $api.words.getOneBurWord(
-    route.params.slug.toString(),
+  const { data } = await useAsyncData('word', () =>
+    $api.words.getOneBurWord(route.params.slug.toString()),
   );
+
+  const word = data.value as wordType;
   const title = t('singleWordPageTitle', { word: word.name });
 
   useHead({

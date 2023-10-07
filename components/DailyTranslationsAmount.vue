@@ -1,11 +1,15 @@
 <template>
   <div class="font-medium text-neutral-600">
-    {{ $t('todayTranslated') }}: {{ count }}
+    {{ $t('todayTranslated') }}: {{ data }}
   </div>
 </template>
 
 <script setup lang="ts">
+  import { useAsyncData } from '#app';
+
   const { $api } = useNuxtApp();
 
-  const count = await $api.statistic.getTranslationsAmount();
+  const { data } = await useAsyncData('count', () =>
+    $api.statistic.getTranslationsAmount(),
+  );
 </script>
