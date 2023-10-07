@@ -79,6 +79,7 @@
   import getWordImage from '~/utils/getWordImage';
   import { definePageMeta } from '#imports';
   import PackWord from '~/components/UI/PackWord.vue';
+  import { useAsyncData } from '#app';
 
   definePageMeta({
     middleware: 'auth',
@@ -94,7 +95,10 @@
   const showSelectingImageModal = ref(false);
   const selectedWord = ref();
 
-  pack.value = await $api.user.getPack(route.params.slug.toString());
+  const { data } = await useAsyncData('pack', () =>
+    $api.user.getPack(route.params.slug.toString()),
+  );
+  pack.value = data.value;
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     { name: pack.value.name, to: '', current: true },

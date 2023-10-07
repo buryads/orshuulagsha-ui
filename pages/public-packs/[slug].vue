@@ -35,6 +35,7 @@
   import { Ref } from 'vue';
   import { Pack } from '~/repository/modules/user/types';
   import PackWord from '~/components/UI/PackWord.vue';
+  import { useAsyncData } from '#app';
 
   const { t } = useI18n();
   const localePath = useLocalePath();
@@ -42,7 +43,10 @@
   const pack: Ref<Partial<Pack>> = ref({});
   const route = useRoute();
 
-  pack.value = await $api.user.getPublicPack(route.params.slug.toString());
+  const { data } = await useAsyncData('public-packs', () =>
+    $api.user.getPublicPack(route.params.slug.toString()),
+  );
+  pack.value = data.value;
 
   const title = `${t('pack')} ${pack.value.name}`;
 

@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+  import { useAsyncData } from '#app';
+
   useHead({
     titleTemplate: '%s - buryads.com',
     bodyAttrs: {
@@ -20,6 +22,6 @@
   if (useCookie('token').value) {
     const { $api } = useNuxtApp();
 
-    await $api.user.getUser();
+    await useAsyncData('user', () => $api.user.getUser());
   }
 </script>

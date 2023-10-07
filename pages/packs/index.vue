@@ -29,6 +29,7 @@
   import { useI18n } from 'vue-i18n';
   import { Pack } from '~/repository/modules/user/types';
   import { definePageMeta } from '#imports';
+  import { useAsyncData } from '#app';
 
   definePageMeta({
     middleware: 'auth',
@@ -55,5 +56,7 @@
   const { $api } = useNuxtApp();
   const packs: Ref<Pack[]> = ref([]);
 
-  packs.value = await $api.user.getPacks();
+  const { data } = await useAsyncData('packs', () => $api.user.getPacks());
+
+  packs.value = data.value;
 </script>

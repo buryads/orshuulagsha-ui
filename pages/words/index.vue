@@ -52,6 +52,7 @@
   import { useI18n } from 'vue-i18n';
   import { Ref } from 'vue';
   import type { metaResponse, Word } from '~/repository/modules/types';
+  import { useAsyncData } from '#app';
 
   const PER_PAGE = 51;
   const { t } = useI18n();
@@ -83,12 +84,15 @@
   const meta: Ref<Partial<metaResponse>> = ref({});
   const isLoading = ref(false);
 
-  const { data, meta: newMeta } = await $api.words.getBurWords({
-    page: route.query.page ? +route.query.page : 1,
-    perPage: PER_PAGE,
-  });
-  words.value = data;
-  meta.value = newMeta;
+  const { data } = useAsyncData('words', () =>
+    $api.words.getBurWords({
+      page: route.query.page ? +route.query.page : 1,
+      perPage: PER_PAGE,
+    }),
+  );
+
+  words.value = data.value?.data;
+  meta.value = data.value?.meta;
 
   async function changePage(page: number) {
     try {
