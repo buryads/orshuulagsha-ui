@@ -45,6 +45,7 @@
   import { Pack } from '~/repository/modules/user/types';
   import { useUserStore } from '~/store/user';
   import { definePageMeta } from '#imports';
+  import { useAsyncData } from '#app';
 
   definePageMeta({
     middleware: 'auth',
@@ -63,7 +64,10 @@
   const pack: Ref<Partial<Pack>> = ref({});
   const route = useRoute();
 
-  pack.value = await $api.user.getPack(route.params.slug.toString());
+  const { data } = await useAsyncData('pack', () =>
+    $api.user.getPack(route.params.slug.toString()),
+  );
+  pack.value = data.value;
 
   if (pack.value.user_id !== user?.id) {
     throw createError({

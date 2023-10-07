@@ -20,6 +20,7 @@
   import TrainingPacks from '~/components/TrainingPacks.vue';
   import { trainingPackQuiz } from '~/repository/modules/types';
   import { definePageMeta } from '#imports';
+  import { useAsyncData } from '#app';
 
   definePageMeta({
     middleware: 'auth',
@@ -38,7 +39,10 @@
     $api.user.getPack(route.params.packSlug.toString()),
     loadQuestions(),
   ]);*/
-  pack.value = await $api.user.getPack(route.params.packSlug.toString());
+  const { data } = await useAsyncData('packs', () =>
+    $api.user.getPack(route.params.packSlug.toString()),
+  );
+  pack.value = data.value;
   const pages = [
     { name: t('packsTitle'), to: localePath('/packs'), current: false },
     {
