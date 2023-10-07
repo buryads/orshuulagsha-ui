@@ -50,6 +50,6 @@
       return image.url;
     }
 
-    return pack.burWords[0].images[0].url || '/images/stub-image.jpg';
+    return pack.burWords?.[0]?.images?.[0]?.url || '/images/stub-image.jpg';
   }
 </script>
