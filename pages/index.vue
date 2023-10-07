@@ -147,7 +147,7 @@
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
   };
 
-  const { data } = await useAsyncData('count', () =>
+  const { data } = await useAsyncData('public-packs', () =>
     $api.user.getPublicPacks({ per_page: 4, rand: 1 }),
   );
 
