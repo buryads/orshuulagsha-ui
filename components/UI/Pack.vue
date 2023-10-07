@@ -6,9 +6,7 @@
     <div
       class="h-48 w-full bg-cover bg-center bg-no-repeat group-hover:opacity-80"
       :style="{
-        backgroundImage: `url(${
-          props.pack.burWords[0]?.images[0]?.url || '/images/stub-image.jpg'
-        })`,
+        backgroundImage: `url(${getPackImage(pack)})`,
       }"
     />
     <button type="button" class="absolute inset-0 focus:outline-none">
@@ -35,4 +33,18 @@
 
   const localePath = useLocalePath();
   const props = defineProps<Props>();
+
+  function getPackImage(pack: PackInterface) {
+    const burWordImageId = pack.burWords[0].pivot.bur_word_image_id;
+
+    const image = pack.burWords[0].images.find(
+      (image) => image.id === burWordImageId,
+    );
+
+    if (image) {
+      return image.url;
+    }
+
+    return pack.burWords[0].images[0].url || '/images/stub-image.jpg';
+  }
 </script>
