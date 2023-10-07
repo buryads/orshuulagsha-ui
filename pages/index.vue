@@ -115,6 +115,7 @@
   import type { translationType } from '~/repository/modules/translate/types';
   import { useI18n } from 'vue-i18n';
   import { ArrowUpRightIcon } from '@heroicons/vue/20/solid';
+  import { useAsyncData } from '#app';
 
   const { $api } = useNuxtApp();
   const { t } = useI18n();
@@ -146,7 +147,11 @@
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
   };
 
-  packs.value = await $api.user.getPublicPacks({ per_page: 4, rand: 1 });
+  const { data } = await useAsyncData('count', () =>
+    $api.user.getPublicPacks({ per_page: 4, rand: 1 }),
+  );
+
+  packs.value = data.value;
 
   const translate = async () => {
     if (inputValue.value.trim() === '') return;
