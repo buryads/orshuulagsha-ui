@@ -36,14 +36,14 @@
             :placeholder="$t('inputText')"
             class="mt-2"
             :show-buryad-letters="sourceLanguage === 'bur'"
-            @change="translate"
+            @change="onTranslate"
           />
         </UILabel>
 
         <UIButton
           class="bg-bur-yellow text-white transition-opacity hover:opacity-90"
           :disabled="isLoading"
-          @click="translate"
+          @click="onTranslate"
         >
           <span class="relative">
             {{ $t('translate') }}
@@ -115,11 +115,15 @@
   import type { translationType } from '~/repository/modules/translate/types';
   import { useI18n } from 'vue-i18n';
   import { ArrowUpRightIcon } from '@heroicons/vue/20/solid';
-  import { useAsyncData } from '#app';
+  import { useAsyncData, useRoute, useRouter } from '#app';
+  import { queryParams, translationLanguage } from '~/types/types';
 
   const { $api } = useNuxtApp();
   const { t } = useI18n();
   const localePath = useLocalePath();
+  const route = useRoute();
+  const router = useRouter();
+  const initialQuery = route.query as queryParams;
 
   useHead({
     title: t('appName'),
@@ -132,9 +136,10 @@
     ],
   });
 
-  type translationLanguage = 'bur' | 'ru';
-  const sourceLanguage: Ref<translationLanguage> = ref('ru');
-  const inputValue = ref('');
+  const sourceLanguage: Ref<translationLanguage> = ref(
+    initialQuery.source || 'ru',
+  );
+  const inputValue = ref(initialQuery.q || '');
   const result: Ref<Partial<translationType>> = ref({});
   const translationType = computed(() =>
     sourceLanguage.value === 'ru' ? 'ru2bur' : 'bur2ru',
@@ -168,4 +173,36 @@
       isLoading.value = false;
     }
   };
+
+  const onTranslate = async () => {
+    await translate();
+    const query: queryParams = {
+      q: inputValue.value,
+    };
+    if (sourceLanguage.value === 'bur') {
+      query.source = 'bur';
+    }
+
+    router.push({ query });
+  };
+
+  watch(route, async () => {
+    const query = route.query as queryParams;
+
+    if (query.q) {
+      inputValue.value = query.q;
+    }
+
+    if (query.source) {
+      sourceLanguage.value = query.source;
+    }
+
+    await translate();
+  });
+
+  onMounted(async () => {
+    if (initialQuery.q?.trim() !== '') {
+      await translate();
+    }
+  });
 </script>
