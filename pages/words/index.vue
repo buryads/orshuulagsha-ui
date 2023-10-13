@@ -84,7 +84,7 @@
   const meta: Ref<Partial<metaResponse>> = ref({});
   const isLoading = ref(false);
 
-  const { data } = useAsyncData('words', () =>
+  const { data } = await useAsyncData('words', () =>
     $api.words.getBurWords({
       page: route.query.page ? +route.query.page : 1,
       perPage: PER_PAGE,
