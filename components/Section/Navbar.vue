@@ -65,7 +65,7 @@
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <!-- Profile dropdown -->
-          <UIDropdown dropdown-class="mt-0.5 w-32" class="flex h-full">
+          <UIDropdown dropdown-class="mt-0.5 w-44" class="flex h-full">
             <template #toggle>
               <div class="flex items-center gap-1.5">
                 <UserIcon class="h-5 w-5" />
