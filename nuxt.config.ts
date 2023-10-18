@@ -17,9 +17,17 @@ export default defineNuxtConfig({
     '/words/**': { prerender: true },
   },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxtjs/i18n', '@pinia/nuxt', 'nuxt-gtag'],
+  modules: [
+    '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    'nuxt-gtag',
+    '@artmizu/yandex-metrika-nuxt',
+  ],
   gtag: {
     id: 'G-WNB3T9B0XR',
+  },
+  yandexMetrika: {
+    id: '95297205',
   },
   i18n: {
     locales: [
