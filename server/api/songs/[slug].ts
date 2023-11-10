@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
       srt,
       parsedSrt,
       webm: files.find((file) => file.includes('.webm')),
+      mp3: files.find((file) => file.includes('.mp3')),
     };
   }
 });

@@ -17,6 +17,30 @@
 </template>
 
 <script setup lang="ts">
+  import { useI18n } from 'vue-i18n';
+
   const localePath = useLocalePath();
   const { data: songs } = await useFetch(`/api/songs`);
+  const { t } = useI18n();
+
+  useHead({
+    title: t('buryadSongs'),
+    meta: [
+      {
+        property: 'og:title',
+        name: 'title',
+        content: t('buryadSongs'),
+      },
+      {
+        property: 'title',
+        name: 'title',
+        content: t('buryadSongs'),
+      },
+      {
+        property: 'og:description',
+        name: 'description',
+        content: t('buryadSongs'),
+      },
+    ],
+  });
 </script>
