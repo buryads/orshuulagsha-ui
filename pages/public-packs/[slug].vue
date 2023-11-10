@@ -46,6 +46,12 @@
   const { data } = await useAsyncData('public-packs', () =>
     $api.user.getPublicPack(route.params.slug.toString()),
   );
+  if (!data.value) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Page Not Found',
+    });
+  }
   pack.value = data.value;
 
   const title = `${t('pack')} ${pack.value.name}`;
