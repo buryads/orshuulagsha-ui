@@ -85,5 +85,6 @@
   "name": "Name",
   "password": "Password",
   "trainingWordsSet": "Set of training words",
-  "moreWordSets": "More sets"
+  "moreWordSets": "More sets",
+  "buryadSongs": "Buryad songs"
 }
