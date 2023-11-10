@@ -1,7 +1,8 @@
 <template>
   <div class="container my-6 flex flex-col items-center">
-    <audio v-if="data.srt" ref="audioElement" controls>
+    <audio v-if="data.srt" ref="audioElement" preload="auto" controls>
       <source :src="`/songs/${slug}/${data.webm}`" type="audio/webm" />
+      <source :src="`/songs/${slug}/${data.mp3}`" type="audio/mp3" />
     </audio>
 
     <div
