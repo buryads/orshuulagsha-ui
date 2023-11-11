@@ -13,7 +13,7 @@
         v-for="(item, i) in data.parsedSrt"
         :key="i"
         @click="handleSubtitleClick(item.data.start)"
-        class="my-2 cursor-pointer hover:text-gray-600"
+        class="desktop:hover:text-gray-600 my-2 cursor-pointer"
         :class="item.data.start === activeLine && 'text-gray-700'"
       >
         {{ item.data.text }}
@@ -40,9 +40,11 @@
   const audioElement = ref(null);
   const subtitles = data.value.parsedSrt || [];
   const activeLine = ref(null);
+  const metaDataReady = ref(false);
 
   const handleSubtitleClick = (startTime) => {
-    if (!audioElement.value) return;
+    console.log(metaDataReady.value);
+    if (!audioElement.value || !metaDataReady.value) return;
 
     const subtitleIndex = subtitles.findIndex(
       (subtitle) => subtitle.data.start === startTime,
@@ -67,11 +69,17 @@
     activeLine.value = currentSubtitle?.data?.start || null;
   };
 
+  const onMetaDataReady = () => {
+    metaDataReady.value = true;
+  };
+
   onMounted(() => {
     audioElement.value.addEventListener('timeupdate', updateSubtitles);
+    audioElement.value.addEventListener('loadedmetadata', onMetaDataReady);
   });
 
   onUnmounted(() => {
     audioElement.value.removeEventListener('timeupdate', updateSubtitles);
+    audioElement.value.removeEventListener('loadedmetadata', onMetaDataReady);
   });
 </script>
