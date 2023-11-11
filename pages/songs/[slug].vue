@@ -1,19 +1,19 @@
 <template>
   <div class="container my-6 flex flex-col items-center">
-    <audio v-if="data.srt" ref="audioElement" preload="auto" controls>
+    <audio ref="audioElement" preload="auto" autoplay controls>
       <source :src="`/songs/${slug}/${data.webm}`" type="audio/webm" />
       <source :src="`/songs/${slug}/${data.mp3}`" type="audio/mp3" />
     </audio>
 
     <div
-      class="whitespace-pre-wrap text-xl font-medium text-gray-400 transition"
+      class="tiny-scrollbar h-96 overflow-y-auto whitespace-pre-wrap pr-4 text-xl font-medium text-gray-400 transition"
       v-if="Array.isArray(data.parsedSrt)"
     >
       <div
         v-for="(item, i) in data.parsedSrt"
         :key="i"
         @click="handleSubtitleClick(item.data.start)"
-        class="desktop:hover:text-gray-600 my-2 cursor-pointer"
+        class="my-2 cursor-pointer md:hover:text-gray-600"
         :class="item.data.start === activeLine && 'text-gray-700'"
       >
         {{ item.data.text }}
@@ -44,7 +44,7 @@
 
   const handleSubtitleClick = (startTime) => {
     console.log(metaDataReady.value);
-    if (!audioElement.value || !metaDataReady.value) return;
+    if (!audioElement.value) return;
 
     const subtitleIndex = subtitles.findIndex(
       (subtitle) => subtitle.data.start === startTime,
