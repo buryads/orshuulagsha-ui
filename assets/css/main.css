@@ -17,3 +17,19 @@
     @apply text-xl font-bold text-gray-900 md:text-3xl;
   }
 }
+
+.tiny-scrollbar::-webkit-scrollbar {
+  @apply h-1 w-1 rounded-lg;
+}
+
+.tiny-scrollbar::-webkit-scrollbar-track {
+  @apply rounded-lg bg-neutral-100;
+}
+
+.tiny-scrollbar::-webkit-scrollbar-thumb {
+  @apply rounded-lg bg-neutral-400;
+}
+
+.tiny-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-500;
+}
