@@ -7,6 +7,7 @@ import AuthModule from '~/repository/modules/auth';
 import axios, { AxiosRequestConfig } from 'axios';
 import UserModule from '~/repository/modules/user';
 import ImageModule from '~/repository/modules/image';
+import AdminModule from '~/repository/modules/admin';
 
 export interface IApiInstance {
   translate: TranslateModule;
@@ -16,6 +17,7 @@ export interface IApiInstance {
   auth: AuthModule;
   user: UserModule;
   image: ImageModule;
+  admin: AdminModule;
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -34,6 +36,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     auth: new AuthModule(apiFetcher),
     user: new UserModule(apiFetcher),
     image: new ImageModule(apiFetcher),
+    admin: new AdminModule(apiFetcher),
   };
 
   return {

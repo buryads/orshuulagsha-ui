@@ -30,11 +30,11 @@
           <template v-if="isAdmin">
             <UIDropdownItem>
               <NuxtLink
-                :to="localePath('/packs')"
+                :to="localePath('/admin/logs')"
                 class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
                 @click="close"
               >
-                Bur>Ru
+                Logs
               </NuxtLink>
             </UIDropdownItem>
           </template>

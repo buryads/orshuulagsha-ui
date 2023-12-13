@@ -60,7 +60,9 @@
           </div>
         </div>
 
+        <!--  Dropdown for logged in user   -->
         <WidgetUserDropdown v-if="user" />
+
         <div
           v-else
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:hidden"
