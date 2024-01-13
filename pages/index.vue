@@ -33,7 +33,9 @@
           <UIBuryadInput
             id="input-word"
             v-model="inputValue"
-            :placeholder="$t('inputText')"
+            :placeholder="
+              $t(sourceLanguage === 'bur' ? 'inputBurText' : 'inputRuText')
+            "
             class="mt-2"
             :show-buryad-letters="sourceLanguage === 'bur'"
             @change="onTranslate"
