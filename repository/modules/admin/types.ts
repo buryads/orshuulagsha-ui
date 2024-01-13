@@ -7,7 +7,7 @@ export interface TranslationLog {
   results_count: number;
   created_at: string;
   updated_at: string;
-  ignore: number;
+  ignore: 1 | 0;
   location_name: string;
   user_agent: string;
 }

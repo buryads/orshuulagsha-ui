@@ -28,6 +28,26 @@ class AdminModule extends HttpFactory {
     }
   }
 
+  async ignoreTranslationLog(id: number) {
+    try {
+      const { data }: { data: TranslationLog[] } = await this.call(
+        'PUT',
+        `${this.RESOURCE}/translations-logs/${id}/ignore`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
   async getTranslationsCount(type?: 'ru2bur' | 'bur2ru') {
     const method =
       type === 'ru2bur'
