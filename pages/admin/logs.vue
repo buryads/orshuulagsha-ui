@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-6">
-    <div class="sm:flex sm:items-center">
+    <div class="flex flex-col gap-3 sm:flex-row">
       <div class="text-gray-700 sm:flex-auto">
         <h1 class="title">Translation logs</h1>
         <p class="mt-2 text-sm">List of attempts to translate.</p>
@@ -18,10 +18,21 @@
           </li>
         </ul>
       </div>
+
+      <div class="text-sm text-gray-700">
+        <button
+          @click="showFiltersModal = true"
+          type="button"
+          class="flex items-center gap-1 rounded border border-neutral-200 bg-neutral-100 px-3 py-1.5"
+        >
+          <AdjustmentsHorizontalIcon class="h-5 w-5" />
+          Filter
+        </button>
+      </div>
     </div>
 
     <div class="mt-8 flow-root overflow-x-auto">
-      <table class="min-w-full border-separate border-spacing-0" v-if="logs">
+      <table class="min-w-full border-separate border-spacing-0">
         <thead>
           <tr>
             <th
@@ -57,7 +68,7 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody v-if="logs">
           <tr
             v-for="(item, index) in logs"
             :key="item.id"
@@ -130,6 +141,13 @@
         </tbody>
       </table>
 
+      <div
+        v-if="!logs"
+        class="mt-5 text-center text-sm font-medium text-gray-900"
+      >
+        No data
+      </div>
+
       <UIPagination
         v-if="allTranslationsNumber / PER_PAGE"
         class="mt-6"
@@ -140,6 +158,74 @@
       />
     </div>
   </div>
+
+  <UIModal
+    :visible="showFiltersModal"
+    @close="showFiltersModal = false"
+    modal-class="!overflow-auto"
+  >
+    <template #content>
+      <UIRadioGroup
+        label="Translation type"
+        :options="[
+          {
+            id: 1,
+            title: 'all',
+            value: null,
+          },
+          {
+            id: 2,
+            title: 'bur -> ru',
+            value: 'bur2ru',
+          },
+          {
+            id: 3,
+            title: 'ru -> bur',
+            value: 'ru2bur',
+          },
+        ]"
+        v-model="filters.translationType"
+      />
+
+      <UIRadioGroup
+        class="mt-3"
+        label="Status"
+        :options="[
+          {
+            id: 1,
+            title: 'all',
+            value: null,
+          },
+          {
+            id: 2,
+            title: 'successful',
+            value: 1,
+          },
+          {
+            id: 3,
+            title: 'failed',
+            value: 0,
+          },
+        ]"
+        v-model="filters.status"
+      />
+
+      <UILabel class="inline-block">
+        <UICheckbox
+          v-model="filters.ignored"
+          label-class="mt-4 flex items-center text-sm font-medium leading-6 text-gray-900"
+        >
+          show ignored
+        </UICheckbox>
+      </UILabel>
+    </template>
+
+    <template #footer>
+      <div class="flex justify-end">
+        <UIButton class="bg-bur-yellow px-6 text-white">Apply</UIButton>
+      </div>
+    </template>
+  </UIModal>
 </template>
 
 <script lang="ts" setup>
@@ -149,15 +235,17 @@
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import detectDevice from '../../utils/detectDevice';
   import dateFormat from 'dateformat/lib/dateformat';
-  import type { metaResponse } from '~/repository/modules/types';
+  import { AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
+
+  type Filter = {
+    translationType?: 'all' | 'bur2ru' | 'ru2bur';
+    status?: 'all' | 1 | 0;
+    ignored?: 1 | null;
+  };
 
   useHead({
     title: 'Logs',
   });
-
-  let allTranslationsNumber = 0;
-  let ru2burTranslationsNumber = 0;
-  let bur2ruTranslationsNumber = 0;
 
   const { $api } = useNuxtApp();
   const route = useRoute();
@@ -165,6 +253,12 @@
   const isLoading = ref(false);
   const currentPage = ref(Number(route.query.page) || 1);
   const PER_PAGE = 100;
+  const showFiltersModal = ref(false);
+  const filters = reactive({
+    translationType: 'all',
+    status: 'all',
+    ignored: null,
+  } as Filter);
 
   const { data } = await useAsyncData('admin-logs', () =>
     Promise.all([
@@ -175,9 +269,9 @@
     ]),
   );
   logs.value = data.value?.[0] || null;
-  allTranslationsNumber = data.value?.[1] || 0;
-  ru2burTranslationsNumber = data.value?.[2] || 0;
-  bur2ruTranslationsNumber = data.value?.[3] || 0;
+  const allTranslationsNumber = data.value?.[1] || 0;
+  const ru2burTranslationsNumber = data.value?.[2] || 0;
+  const bur2ruTranslationsNumber = data.value?.[3] || 0;
 
   const lastPage = Math.ceil(allTranslationsNumber / PER_PAGE);
 
