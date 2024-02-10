@@ -48,13 +48,33 @@ class AdminModule extends HttpFactory {
     }
   }
 
-  async getTranslationsCount(type?: 'ru2bur' | 'bur2ru') {
+  async getTranslationsCount(type?: 'ru2bur' | 'bur2ru'): Promise<number> {
     const method =
       type === 'ru2bur'
-        ? 'App\\Services\\BurToRuTranslateService'
+        ? 'App\\Services\\RuToBurTranslateService'
         : type === 'bur2ru'
         ? 'App\\Services\\BurToRuTranslateService'
         : null;
+
+    try {
+      const {
+        // @ts-ignore
+        data: { count },
+      } = await this.call('GET', `${this.RESOURCE}/translations-logs/count`, {
+        params: {
+          method,
+        },
+        headers: {
+          Authorization: 'Bearer ' + useCookie('token').value,
+        },
+      });
+
+      return count;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
   }
 }
 
