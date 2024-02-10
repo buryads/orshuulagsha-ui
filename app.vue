@@ -5,6 +5,7 @@
     <NuxtLayout>
       <NuxtLoadingIndicator />
       <NuxtPage />
+      <footer class="mt-8"></footer>
     </NuxtLayout>
   </div>
 </template>
