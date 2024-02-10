@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black bg-opacity-25" />
+        <div class="fixed inset-0 bg-gray-200/75" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -39,7 +39,9 @@
 
               <slot name="content" />
 
-              <slot name="footer" />
+              <footer class="mt-4">
+                <slot name="footer" />
+              </footer>
             </DialogPanel>
           </TransitionChild>
         </div>
