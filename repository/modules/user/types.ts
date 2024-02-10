@@ -23,7 +23,7 @@ export interface IUser {
   id: number;
   email: string;
   name: string;
-  role: IRole[];
+  roles: IRole[];
 }
 
 export interface IUserModule {
