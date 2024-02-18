@@ -60,8 +60,8 @@
 
 <script setup lang="ts">
   import { UserIcon } from '@heroicons/vue/24/solid';
-  import { Ref } from 'vue';
-  import { IUser } from '~/repository/modules/user/types';
+  import type { Ref } from 'vue';
+  import type { IUser } from '~/repository/modules/user/types';
   import { useUserStore } from '~/store/user';
 
   const localePath = useLocalePath();

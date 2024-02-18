@@ -15,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-  import { Word } from '~/repository/modules/translate/types';
+  import type { Word } from '~/repository/modules/types';
 
   interface Props {
-    items: word[] | [];
+    items: Word[] | [];
     title: string;
   }
 
