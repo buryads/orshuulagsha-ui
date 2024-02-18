@@ -1,4 +1,4 @@
-import { trainingPackQuiz, Word } from '~/repository/modules/types';
+import type { trainingPackQuiz, Word } from '~/repository/modules/types';
 
 export interface Pack {
   id: number;

@@ -118,7 +118,7 @@
   import { useI18n } from 'vue-i18n';
   import { ArrowUpRightIcon } from '@heroicons/vue/20/solid';
   import { useAsyncData, useRoute, useRouter } from '#app';
-  import { queryParams, translationLanguage } from '~/types/types';
+  import type { queryParams, translationLanguage } from '~/types/types';
 
   const { $api } = useNuxtApp();
   const { t } = useI18n();
