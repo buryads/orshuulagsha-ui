@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-  import { wordVoiceActing } from '~/repository/modules/types';
+  import type { wordVoiceActing } from '~/repository/modules/types';
   import { PlayIcon, PauseIcon } from '@heroicons/vue/24/outline';
 
   interface Props {

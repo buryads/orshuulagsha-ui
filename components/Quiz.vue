@@ -120,8 +120,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Ref } from 'vue';
-  import { quizQuestion } from '~/repository/modules/quiz/types';
+  import type { Ref } from 'vue';
+  import type { quizQuestion } from '~/repository/modules/quiz/types';
 
   interface Props {
     questions: quizQuestion[];

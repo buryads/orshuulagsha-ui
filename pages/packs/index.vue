@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-  import { Ref } from 'vue';
+  import type { Ref } from 'vue';
+  import type { Pack } from '~/repository/modules/user/types';
   import { useI18n } from 'vue-i18n';
-  import { Pack } from '~/repository/modules/user/types';
   import { definePageMeta } from '#imports';
   import { useAsyncData } from '#app';
 

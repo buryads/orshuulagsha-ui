@@ -1,4 +1,4 @@
-import { metaResponse, Word } from '~/repository/modules/types';
+import type { metaResponse, Word } from '~/repository/modules/types';
 
 export type wordsApiResponse = {
   data: Word[];
