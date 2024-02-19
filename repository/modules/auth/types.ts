@@ -1,7 +1,7 @@
 export type tokenType = {
   token_type: string;
   token: string;
-  expired_at: Date;
+  expires_at: Date;
 };
 
 export interface IAuthModule {
