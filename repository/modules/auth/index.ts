@@ -20,10 +20,8 @@ class AuthModule extends HttpFactory implements IAuthModule {
         },
       );
 
-      console.log(data.token);
-
       useCookie('token', {
-        expires: new Date(data.expired_at),
+        expires: new Date(data.expires_at),
       }).value = data.token;
     } catch (error) {
       console.error(error);
@@ -49,7 +47,7 @@ class AuthModule extends HttpFactory implements IAuthModule {
       );
 
       useCookie('token', {
-        expires: new Date(data.expired_at),
+        expires: new Date(data.expires_at),
       }).value = data.token;
     } catch (error) {
       console.error(error);
