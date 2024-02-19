@@ -106,7 +106,7 @@
 
       gtag('event', 'sign_up');
 
-      navigateTo('/packs');
+      navigateTo(localePath('/packs'));
     } catch (e) {
       console.error(e);
       errors.value = e.response.data.message;
