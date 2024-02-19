@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-  import { Word as wordType } from '~/repository/modules/types';
+  import type { Word as wordType } from '~/repository/modules/types';
   import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/20/solid';
 
   interface Props {
