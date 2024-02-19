@@ -26,9 +26,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-gtag',
     '@artmizu/yandex-metrika-nuxt',
-//    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt'
   ],
-/*  pwa: {
+  pwa: {
     strategies: sw ? 'injectManifest' : 'generateSW',
     srcDir: sw ? 'service-worker' : undefined,
     filename: sw ? 'sw.ts' : undefined,
@@ -71,10 +71,10 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      globPatterns: ['**!/!*.{js,css,html,png,svg,ico}'],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     injectManifest: {
-      globPatterns: ['**!/!*.{js,css,html,png,svg,ico}'],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     devOptions: {
       enabled: true,
@@ -83,7 +83,7 @@ export default defineNuxtConfig({
       navigateFallbackAllowlist: [/^\/$/],
       type: 'module',
     },
-  },*/
+  },
   gtag: {
     id: 'G-WNB3T9B0XR',
   },
