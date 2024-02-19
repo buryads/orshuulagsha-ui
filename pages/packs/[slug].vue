@@ -71,11 +71,11 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { Ref } from 'vue';
+  import type { Ref } from 'vue';
+  import type { Pack } from '~/repository/modules/user/types';
+  import type { Word as wordType } from '~/repository/modules/types';
   import { useUserStore } from '~/store/user';
-  import { Pack } from '~/repository/modules/user/types';
   import { TrashIcon, CameraIcon } from '@heroicons/vue/24/outline';
-  import { Word as wordType } from '~/repository/modules/types';
   import getWordImage from '~/utils/getWordImage';
   import { definePageMeta } from '#imports';
   import PackWord from '~/components/UI/PackWord.vue';
