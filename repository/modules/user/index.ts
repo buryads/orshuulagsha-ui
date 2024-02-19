@@ -7,7 +7,7 @@ import type {
 } from '~/repository/modules/user/types';
 import { useUserStore } from '~/store/user';
 // @todo don't use axios here
-import type { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import type { trainingPackQuiz } from '~/repository/modules/types';
 
 class UserModule extends HttpFactory implements IUserModule {

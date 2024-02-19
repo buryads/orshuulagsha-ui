@@ -20,6 +20,8 @@ class AuthModule extends HttpFactory implements IAuthModule {
         },
       );
 
+      console.log(data.token);
+
       useCookie('token', {
         expires: new Date(data.expired_at),
       }).value = data.token;
