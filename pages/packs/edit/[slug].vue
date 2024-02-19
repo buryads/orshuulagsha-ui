@@ -97,7 +97,7 @@
     try {
       if (pack.value.id) {
         await $api.user.deletePack(+pack.value.id);
-        navigateTo('/packs');
+        navigateTo(localePath('/packs'));
       }
     } catch (e) {
       console.error(e);

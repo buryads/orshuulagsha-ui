@@ -73,6 +73,6 @@
     useUserStore().$patch({
       user: null,
     });
-    navigateTo('/');
+    navigateTo((localePath('/')));
   }
 </script>
