@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import {
+import type {
   ITranslateModule,
   translationType,
   translationApiResponse,

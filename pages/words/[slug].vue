@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-  import { Word as wordType } from '~/repository/modules/types';
+  import type { Word as wordType } from '~/repository/modules/types';
   import { useAsyncData } from '#app';
 
   const route = useRoute();

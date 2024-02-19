@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import { IAuthModule, tokenType } from '~/repository/modules/auth/types';
+import type { IAuthModule, tokenType } from '~/repository/modules/auth/types';
 
 class AuthModule extends HttpFactory implements IAuthModule {
   public RESOURCE_LOGIN = '/api/jwt/login';

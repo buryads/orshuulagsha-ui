@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import {
+import type {
   IStatistic,
   translationsAmountApiResponse,
 } from '~/repository/modules/statistic/types';

@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-  import { Ref } from 'vue';
-  import { FoundWord } from '~/repository/modules/user/types';
+  import type { Ref } from 'vue';
+  import type { FoundWord } from '~/repository/modules/user/types';
   import { PlusIcon } from '@heroicons/vue/20/solid';
 
   interface Props {

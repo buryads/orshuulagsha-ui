@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import {
+import type {
   FoundWord,
   IUser,
   IUserModule,
@@ -7,8 +7,8 @@ import {
 } from '~/repository/modules/user/types';
 import { useUserStore } from '~/store/user';
 // @todo don't use axios here
-import { AxiosError } from 'axios';
-import { trainingPackQuiz } from '~/repository/modules/types';
+import type { AxiosError } from 'axios';
+import type { trainingPackQuiz } from '~/repository/modules/types';
 
 class UserModule extends HttpFactory implements IUserModule {
   public RESOURCE = '/api/jwt/user';
