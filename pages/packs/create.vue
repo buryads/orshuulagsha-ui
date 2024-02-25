@@ -56,7 +56,7 @@
   async function createPack() {
     try {
       await $api.user.createPack(form);
-      await navigateTo('/packs');
+      await navigateTo(localePath('/packs'));
     } catch (e) {
       console.error(e);
     }

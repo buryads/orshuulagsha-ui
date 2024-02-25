@@ -1,4 +1,4 @@
-import { Word } from '~/repository/modules/types';
+import type { Word } from '~/repository/modules/types';
 
 export type translationType = {
   exactTranslations: Word[];

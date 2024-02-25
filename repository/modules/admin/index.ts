@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import { TranslationLog } from '~/repository/modules/admin/types';
+import type { TranslationLog } from '~/repository/modules/admin/types';
 
 class AdminModule extends HttpFactory {
   public RESOURCE = '/api/jwt/admin';

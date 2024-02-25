@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-  import { Ref } from 'vue';
-  import { quizQuestion } from '~/repository/modules/quiz/types';
+  import type { Ref } from 'vue';
+  import type { quizQuestion } from '~/repository/modules/quiz/types';
   import { useI18n } from 'vue-i18n';
 
   const { t } = useI18n();

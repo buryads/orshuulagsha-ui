@@ -1,5 +1,5 @@
 import HttpFactory from '~/repository/factory';
-import { IAuthModule, tokenType } from '~/repository/modules/auth/types';
+import type { IAuthModule, tokenType } from '~/repository/modules/auth/types';
 
 class AuthModule extends HttpFactory implements IAuthModule {
   public RESOURCE_LOGIN = '/api/jwt/login';
@@ -21,7 +21,7 @@ class AuthModule extends HttpFactory implements IAuthModule {
       );
 
       useCookie('token', {
-        expires: new Date(data.expired_at),
+        expires: new Date(data.expires_at),
       }).value = data.token;
     } catch (error) {
       console.error(error);
@@ -47,7 +47,7 @@ class AuthModule extends HttpFactory implements IAuthModule {
       );
 
       useCookie('token', {
-        expires: new Date(data.expired_at),
+        expires: new Date(data.expires_at),
       }).value = data.token;
     } catch (error) {
       console.error(error);

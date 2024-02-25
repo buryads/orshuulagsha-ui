@@ -17,13 +17,14 @@
 
 <script setup lang="ts">
   import { useUserStore } from '~/store/user';
+  const localePath = useLocalePath();
 
   definePageMeta({
     middleware() {
       const store = useUserStore();
 
       if (store.user) {
-        return navigateTo('/packs');
+        return navigateTo(localePath('/packs'));
       }
     },
   });

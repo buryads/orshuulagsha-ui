@@ -1,5 +1,6 @@
 <template>
   <div class="font-sans">
+    <NuxtPwaManifest />
     <SectionNavbar />
 
     <NuxtLayout>

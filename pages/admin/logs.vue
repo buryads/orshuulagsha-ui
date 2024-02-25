@@ -230,8 +230,8 @@
 
 <script lang="ts" setup>
   import { useAsyncData } from '#app';
-  import { Ref } from 'vue';
-  import { TranslationLog } from '~/repository/modules/admin/types';
+  import type { Ref } from 'vue';
+  import type { TranslationLog } from '~/repository/modules/admin/types';
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import detectDevice from '../../utils/detectDevice';
   import dateFormat from 'dateformat/lib/dateformat';
