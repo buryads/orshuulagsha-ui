@@ -214,6 +214,7 @@
         <UICheckbox
           v-model="filters.ignored"
           label-class="mt-4 flex items-center text-sm font-medium leading-6 text-gray-900"
+          checkbox-class="checked:bg-bur-navy hover:checked:!bg-bur-navy focus:checked:!bg-bur-navy focus:ring-bur-navy"
         >
           show ignored
         </UICheckbox>
