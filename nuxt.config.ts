@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
+
+const sw = process.env.SW === 'true'
 
 export default defineNuxtConfig({
   // @ts-ignore if you install typescript as a dev dependency, this will help
@@ -9,6 +12,7 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap',
         },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ],
     },
     /* page transition doesn't work https://github.com/nuxt/nuxt/issues/13350 */
@@ -22,7 +26,64 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-gtag',
     '@artmizu/yandex-metrika-nuxt',
+    '@vite-pwa/nuxt'
   ],
+  pwa: {
+    strategies: sw ? 'injectManifest' : 'generateSW',
+    srcDir: sw ? 'service-worker' : undefined,
+    filename: sw ? 'sw.ts' : undefined,
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Buryad Orod Toli',
+      short_name: 'Buryad Toli',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: '/icons/48.png',
+          sizes: '48x48',
+          type: 'image/png',
+        },
+        {
+          src: '/icons/72.png',
+          sizes: '72x72',
+          type: 'image/png',
+        },
+        {
+          src: '/icons/96.png',
+          sizes: '96x96',
+          type: 'image/png',
+        },
+        {
+          src: '/icons/192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: '/icons/256.png',
+          sizes: '256x256',
+          type: 'image/png',
+        },
+        {
+          src: '/icons/512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+      navigateFallbackAllowlist: [/^\/$/],
+      type: 'module',
+    },
+  },
   gtag: {
     id: 'G-WNB3T9B0XR',
   },

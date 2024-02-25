@@ -53,7 +53,7 @@
 <script setup lang="ts">
   import getWordImage from '~/utils/getWordImage';
   import { CameraIcon, TrashIcon } from '@heroicons/vue/24/outline';
-  import { Word } from '~/repository/modules/types';
+  import type { Word } from '~/repository/modules/types';
 
   interface Props {
     showDeleteButton?: boolean;

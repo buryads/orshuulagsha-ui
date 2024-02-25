@@ -162,8 +162,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Ref } from 'vue';
-  import { trainingPackQuiz } from '~/repository/modules/types';
+  import type { Ref } from 'vue';
+  import type { trainingPackQuiz } from '~/repository/modules/types';
   import getWordImage from '~/utils/getWordImage';
 
   interface Props {

@@ -13,12 +13,12 @@
 </template>
 
 <script setup lang="ts">
+  import type { Ref } from 'vue';
+  import type { Pack } from '~/repository/modules/user/types';
+  import type { trainingPackQuiz } from '~/repository/modules/types';
   import { useI18n } from 'vue-i18n';
-  import { Ref } from 'vue';
   import { useUserStore } from '~/store/user';
-  import { Pack } from '~/repository/modules/user/types';
   import TrainingPacks from '~/components/TrainingPacks.vue';
-  import { trainingPackQuiz } from '~/repository/modules/types';
   import { definePageMeta } from '#imports';
   import { useAsyncData } from '#app';
 

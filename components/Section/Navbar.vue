@@ -149,8 +149,8 @@
   import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
   import { UserIcon } from '@heroicons/vue/24/solid';
   import { useUserStore } from '~/store/user';
-  import { IUser } from '~/repository/modules/user/types';
-  import { Ref } from 'vue';
+  import type { IUser } from '~/repository/modules/user/types';
+  import type { Ref } from 'vue';
 
   const localePath = useLocalePath();
   const user: Ref<IUser | null> = ref(useUserStore().user);

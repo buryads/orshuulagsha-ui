@@ -32,8 +32,8 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { Ref } from 'vue';
-  import { Pack } from '~/repository/modules/user/types';
+  import type { Ref } from 'vue';
+  import type { Pack } from '~/repository/modules/user/types';
   import PackWord from '~/components/UI/PackWord.vue';
   import { useAsyncData } from '#app';
 

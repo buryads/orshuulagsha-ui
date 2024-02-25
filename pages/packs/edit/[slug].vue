@@ -41,8 +41,8 @@
 
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
-  import { Ref } from 'vue';
-  import { Pack } from '~/repository/modules/user/types';
+  import type { Ref } from 'vue';
+  import type { Pack } from '~/repository/modules/user/types';
   import { useUserStore } from '~/store/user';
   import { definePageMeta } from '#imports';
   import { useAsyncData } from '#app';
@@ -97,7 +97,7 @@
     try {
       if (pack.value.id) {
         await $api.user.deletePack(+pack.value.id);
-        navigateTo('/packs');
+        navigateTo(localePath('/packs'));
       }
     } catch (e) {
       console.error(e);
