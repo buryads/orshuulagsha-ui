@@ -4,12 +4,13 @@ import type {
   translationType,
   translationApiResponse,
 } from '~/repository/modules/translate/types';
+import type { TranslationType } from '~/types/types';
 
 class TranslateModule extends HttpFactory implements ITranslateModule {
   public readonly RESOURCE = '/api/translate';
 
   async translateWord(
-    translationType: 'bur2ru' | 'ru2bur' = 'bur2ru',
+    translationType: TranslationType = 'bur2ru',
     value: string,
   ): Promise<translationType> {
     try {
