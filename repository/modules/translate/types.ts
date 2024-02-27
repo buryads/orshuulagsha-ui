@@ -1,4 +1,5 @@
 import type { Word } from '~/repository/modules/types';
+import type { TranslationType } from '~/types/types';
 
 export type translationType = {
   exactTranslations: Word[];
@@ -16,7 +17,7 @@ export type translationApiResponse = {
 
 export interface ITranslateModule {
   translateWord(
-    translationType: 'bur2ru' | 'ru2bur',
+    translationType: TranslationType,
     value: string,
   ): Promise<translationType>;
 }

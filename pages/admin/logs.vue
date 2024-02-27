@@ -129,7 +129,7 @@
               ]"
             >
               <button
-                v-if="!item.ignore"
+                v-if="item.results_count === 0 && !item.ignore"
                 type="button"
                 title="ignore"
                 @click="ignoreLogItem(item.id)"
@@ -150,11 +150,11 @@
 
       <UIPagination
         v-if="allTranslationsNumber / PER_PAGE"
-        class="mt-6"
+        class="mt-10"
         :page="currentPage"
         :per-page="PER_PAGE"
         :last-page="lastPage"
-        @changePage="changePage"
+        @changePage="(page) => (currentPage = page)"
       />
     </div>
   </div>
@@ -199,20 +199,22 @@
           {
             id: 2,
             title: 'successful',
-            value: 1,
+            value: '1',
           },
           {
             id: 3,
             title: 'failed',
-            value: 0,
+            value: '0',
           },
         ]"
         v-model="filters.status"
+        @update:model-value="filters.ignored = null"
       />
 
       <UILabel class="inline-block">
         <UICheckbox
           v-model="filters.ignored"
+          @update:model-value="filters.status = null"
           label-class="mt-4 flex items-center text-sm font-medium leading-6 text-gray-900"
           checkbox-class="checked:bg-bur-navy hover:checked:!bg-bur-navy focus:checked:!bg-bur-navy focus:ring-bur-navy"
         >
@@ -223,7 +225,9 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <UIButton class="bg-bur-yellow px-6 text-white">Apply</UIButton>
+        <UIButton class="bg-bur-yellow px-6 text-white" @click="applyFilters"
+          >Apply</UIButton
+        >
       </div>
     </template>
   </UIModal>
@@ -233,15 +237,16 @@
   import { useAsyncData } from '#app';
   import type { Ref } from 'vue';
   import type { TranslationLog } from '~/repository/modules/admin/types';
+  import type { TranslationType } from '~/types/types';
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import detectDevice from '../../utils/detectDevice';
   import dateFormat from 'dateformat/lib/dateformat';
   import { AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 
   type Filter = {
-    translationType?: 'all' | 'bur2ru' | 'ru2bur';
-    status?: 'all' | 1 | 0;
-    ignored?: 1 | null;
+    translationType: null | TranslationType;
+    status: null | '1' | '0';
+    ignored: '1' | null;
   };
 
   useHead({
@@ -256,14 +261,14 @@
   const PER_PAGE = 100;
   const showFiltersModal = ref(false);
   const filters = reactive({
-    translationType: 'all',
-    status: 'all',
-    ignored: null,
+    translationType: route.query.type || null,
+    status: route.query.status || null,
+    ignored: route.query.ignored || null,
   } as Filter);
 
   const { data } = await useAsyncData('admin-logs', () =>
     Promise.all([
-      $api.admin.getTranslationLogs(PER_PAGE),
+      $api.admin.getTranslationLogs({ limit: PER_PAGE }),
       $api.admin.getTranslationsCount(),
       $api.admin.getTranslationsCount('bur2ru'),
       $api.admin.getTranslationsCount('ru2bur'),
@@ -276,17 +281,44 @@
 
   const lastPage = Math.ceil(allTranslationsNumber / PER_PAGE);
 
-  async function changePage(page: number) {
+  watch([currentPage], () => {
+    applyFilters();
+  });
+
+  /**
+   * It calls when page or filters change
+   * */
+  async function applyFilters() {
     try {
+      showFiltersModal.value = false;
       isLoading.value = true;
-      history.replaceState(null, '', `?page=${page}`);
-      currentPage.value = page;
+
+      const params = createSearchParams(
+        {
+          status: filters.status,
+          ignored: filters.ignored,
+          type: filters.translationType,
+          page: currentPage.value,
+        },
+        [
+          currentPage.value === 1 && 'page',
+          filters.translationType === null && 'type',
+          filters.status === null && 'status',
+        ],
+      );
+
+      console.log(params);
+
+      history.replaceState(null, '', params);
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      logs.value = await $api.admin.getTranslationLogs(
-        PER_PAGE,
-        page * PER_PAGE - PER_PAGE,
-      );
+      logs.value = await $api.admin.getTranslationLogs({
+        limit: PER_PAGE,
+        offset: currentPage.value * PER_PAGE - PER_PAGE,
+        ignored: filters.ignored ? '1' : null,
+        status: filters.status,
+        type: filters.translationType,
+      });
     } catch (e) {
       console.error(e);
     } finally {

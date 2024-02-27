@@ -7,7 +7,7 @@ services:
       - app
     restart: "${RESTART_TYPE}"
     volumes:
-      - "${APP_DIR}:/var/www/html:ro"
+      - "${APP_DIR}:/var/www/html:ro"∑∑
       - "${NGINX_CONF_DIR}:/etc/nginx/conf.d"
     environment:
       - VIRTUAL_HOST=${DOMAINS}
