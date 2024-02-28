@@ -1,19 +1,21 @@
 import HttpFactory from '~/repository/factory';
-import type { TranslationLog } from '~/repository/modules/admin/types';
+import type {
+  AdminModuleInterface,
+  TranslationLog,
+  TranslationLogParams,
+} from '~/repository/modules/admin/types';
+import type { TranslationType } from '~/types/types';
 
-class AdminModule extends HttpFactory {
+class AdminModule extends HttpFactory implements AdminModuleInterface {
   public RESOURCE = '/api/jwt/admin';
 
-  async getTranslationLogs(limit = 100, offset = 0) {
+  async getTranslationLogs(params?: TranslationLogParams) {
     try {
       const { data }: { data: TranslationLog[] } = await this.call(
         'GET',
         `${this.RESOURCE}/translations-logs`,
         {
-          params: {
-            limit,
-            offset,
-          },
+          params,
           headers: {
             Authorization: 'Bearer ' + useCookie('token').value,
           },
@@ -48,7 +50,7 @@ class AdminModule extends HttpFactory {
     }
   }
 
-  async getTranslationsCount(type?: 'ru2bur' | 'bur2ru'): Promise<number> {
+  async getTranslationsCount(type?: TranslationType): Promise<number> {
     const method =
       type === 'ru2bur'
         ? 'App\\Services\\RuToBurTranslateService'

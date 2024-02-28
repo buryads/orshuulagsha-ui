@@ -22,6 +22,7 @@ module.exports = {
       colors: {
         'bur-blue': '#0036a7',
         'bur-yellow': '#f1b742',
+        'bur-navy': '#49a2dc',
       },
     },
   },
