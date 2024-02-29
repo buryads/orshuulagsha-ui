@@ -143,7 +143,7 @@ class UserModule extends HttpFactory implements IUserModule {
 
       return data;
     } catch (error) {
-/*      if (error instanceof AxiosError && error?.response?.status === 401) {
+      /*      if (error instanceof AxiosError && error?.response?.status === 401) {
         return 401;
       }*/
       console.error(error);
@@ -168,7 +168,7 @@ class UserModule extends HttpFactory implements IUserModule {
 
       return data;
     } catch (error) {
-/*      if (error instanceof AxiosError && error?.response?.status === 401) {
+      /*      if (error instanceof AxiosError && error?.response?.status === 401) {
         navigateTo('/signin');
         return;
       }*/
@@ -194,7 +194,7 @@ class UserModule extends HttpFactory implements IUserModule {
 
       return data;
     } catch (error) {
-/*      if (error instanceof AxiosError && error?.response?.status === 401) {
+      /*      if (error instanceof AxiosError && error?.response?.status === 401) {
         navigateTo('/signin');
         return;
       }*/
@@ -220,7 +220,7 @@ class UserModule extends HttpFactory implements IUserModule {
 
       return data;
     } catch (error) {
-/*      if (error instanceof AxiosError && error?.response?.status) {
+      /*      if (error instanceof AxiosError && error?.response?.status) {
         navigateTo('/signin');
         return;
       }*/

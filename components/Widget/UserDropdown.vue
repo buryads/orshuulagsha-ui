@@ -18,30 +18,30 @@
 
       <template #content="{ close }">
         <div class="p-3">
-          <UIDropdownItem>
+          <UIDropdownItem class-name="!p-0">
             <NuxtLink
               :to="localePath('/packs')"
-              class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+              class="my-2 flex items-center gap-2 px-4 py-2 first:mt-0 last:mb-0"
               @click="close"
             >
               {{ $t('packs') }}
             </NuxtLink>
           </UIDropdownItem>
           <template v-if="isAdmin">
-            <UIDropdownItem>
+            <UIDropdownItem class-name="!p-0">
               <NuxtLink
                 :to="localePath('/admin/logs')"
-                class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+                class="my-2 flex items-center gap-2 px-4 py-2 first:mt-0 last:mb-0"
                 @click="close"
               >
                 Logs
               </NuxtLink>
             </UIDropdownItem>
           </template>
-          <UIDropdownItem>
+          <UIDropdownItem class-name="!p-0">
             <a
               href="#"
-              class="my-2 flex items-center gap-2 first:mt-0 last:mb-0"
+              class="my-2 flex items-center gap-2 px-4 py-2 first:mt-0 last:mb-0"
               @click.prevent="
                 () => {
                   logout();
