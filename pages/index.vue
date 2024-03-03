@@ -118,22 +118,37 @@
   import { useI18n } from 'vue-i18n';
   import { ArrowUpRightIcon } from '@heroicons/vue/20/solid';
   import { useAsyncData, useRoute, useRouter } from '#app';
-  import type { queryParams, translationLanguage } from '~/types/types';
+  import type {
+    Locales,
+    queryParams,
+    translationLanguage,
+  } from '~/types/types';
+  import { meta } from '~/constants/meta';
 
   const { $api } = useNuxtApp();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const localePath = useLocalePath();
   const route = useRoute();
   const router = useRouter();
   const initialQuery = route.query as queryParams;
 
   useHead({
-    title: t('appName'),
+    title: meta.mainTitle[locale.value as Locales],
     meta: [
+      {
+        property: 'og:title',
+        name: 'title',
+        content: meta.mainTitle[locale.value as Locales],
+      },
       {
         property: 'description',
         name: 'description',
-        content: t('appName'),
+        content: meta.mainDescription[locale.value as Locales],
+      },
+      {
+        property: 'og:description',
+        name: 'og:description',
+        content: meta.mainDescription[locale.value as Locales],
       },
     ],
   });
