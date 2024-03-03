@@ -23,7 +23,8 @@
         <button
           @click="showFiltersModal = true"
           type="button"
-          class="flex items-center gap-1 rounded border border-neutral-200 bg-neutral-100 px-3 py-1.5"
+          class="flex items-center gap-1 rounded border-2 border-neutral-200 bg-neutral-100 px-3 py-1.5"
+          :class="Object.values(filters).some(Boolean) && 'border-neutral-500'"
         >
           <AdjustmentsHorizontalIcon class="h-5 w-5" />
           Filter
@@ -265,10 +266,17 @@
     status: route.query.status || null,
     ignored: route.query.ignored || null,
   } as Filter);
+  const translationLogParams = computed(() => ({
+    limit: PER_PAGE,
+    offset: currentPage.value * PER_PAGE - PER_PAGE,
+    ignored: filters.ignored ? ('1' as const) : null,
+    status: filters.status,
+    type: filters.translationType,
+  }));
 
   const { data } = await useAsyncData('admin-logs', () =>
     Promise.all([
-      $api.admin.getTranslationLogs({ limit: PER_PAGE }),
+      $api.admin.getTranslationLogs(translationLogParams.value),
       $api.admin.getTranslationsCount(),
       $api.admin.getTranslationsCount('bur2ru'),
       $api.admin.getTranslationsCount('ru2bur'),
@@ -307,18 +315,12 @@
         ],
       );
 
-      console.log(params);
-
       history.replaceState(null, '', params);
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      logs.value = await $api.admin.getTranslationLogs({
-        limit: PER_PAGE,
-        offset: currentPage.value * PER_PAGE - PER_PAGE,
-        ignored: filters.ignored ? '1' : null,
-        status: filters.status,
-        type: filters.translationType,
-      });
+      logs.value = await $api.admin.getTranslationLogs(
+        translationLogParams.value,
+      );
     } catch (e) {
       console.error(e);
     } finally {
@@ -333,6 +335,8 @@
 
     activeRequestsForIgnoring.add(id);
     await $api.admin.ignoreTranslationLog(id);
-    logs.value = await $api.admin.getTranslationLogs();
+    logs.value = await $api.admin.getTranslationLogs(
+      translationLogParams.value,
+    );
   }
 </script>
