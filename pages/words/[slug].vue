@@ -46,9 +46,12 @@
         content: title,
       },
       {
-        property: 'title',
-        name: 'title',
-        content: title,
+        property: 'description',
+        name: 'description',
+        content: t('singleWordPageDescription', {
+          word: word.name,
+          lang: t('ru'),
+        }),
       },
       {
         property: 'og:description',
