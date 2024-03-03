@@ -65,8 +65,13 @@
         content: title,
       },
       {
-        property: 'title',
+        property: 'og:description',
         name: 'title',
+        content: title,
+      },
+      {
+        property: 'description',
+        name: 'description',
         content: title,
       },
     ],

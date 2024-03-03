@@ -46,11 +46,6 @@
         content: t('games'),
       },
       {
-        property: 'title',
-        name: 'title',
-        content: t('games'),
-      },
-      {
         property: 'og:description',
         name: 'description',
         content: t('localizedForBuryadLanguageGames'),
