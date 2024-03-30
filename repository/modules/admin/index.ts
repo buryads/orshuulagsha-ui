@@ -6,6 +6,7 @@ import type {
 } from '~/repository/modules/admin/types';
 import type { TranslationLanguage, TranslationType } from '~/types/types';
 import type { Signal } from 'human-signals';
+import type { Word } from '~/repository/modules/types';
 
 class AdminModule extends HttpFactory implements AdminModuleInterface {
   public RESOURCE = '/api/jwt/admin';
@@ -104,6 +105,31 @@ class AdminModule extends HttpFactory implements AdminModuleInterface {
     }
   }
 
+  async getWord(
+    wordId: number,
+    source: TranslationLanguage,
+    destination: TranslationLanguage,
+  ) {
+    try {
+      // @ts-ignore @todo describe types
+      const { data } = await this.call(
+        'GET',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}/${wordId}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
   async getWords(
     word: string,
     source: TranslationLanguage,
@@ -162,19 +188,19 @@ class AdminModule extends HttpFactory implements AdminModuleInterface {
     }
   }
 
-  async attachWord(
-    word: string,
+  async syncWord(
+    word: Word,
     source: TranslationLanguage,
     destination: TranslationLanguage,
   ) {
     try {
       // @ts-ignore @todo describe types
       const { data } = await this.call(
-        'POST',
-        `${this.RESOURCE}/words-matcher/${source}/${destination}`,
+        'PUT',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}/${word.id}/sync`,
         {
           params: {
-            word,
+            ...word,
           },
           headers: {
             Authorization: 'Bearer ' + useCookie('token').value,
