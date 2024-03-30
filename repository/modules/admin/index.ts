@@ -4,7 +4,8 @@ import type {
   TranslationLog,
   TranslationLogParams,
 } from '~/repository/modules/admin/types';
-import type { TranslationType } from '~/types/types';
+import type { TranslationLanguage, TranslationType } from '~/types/types';
+import type { Signal } from 'human-signals';
 
 class AdminModule extends HttpFactory implements AdminModuleInterface {
   public RESOURCE = '/api/jwt/admin';
@@ -72,6 +73,116 @@ class AdminModule extends HttpFactory implements AdminModuleInterface {
       });
 
       return count;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async getRandomRelationshipLessWord(
+    source: TranslationLanguage,
+    destination: TranslationLanguage,
+  ) {
+    try {
+      // @ts-ignore @todo describe types
+      const { data } = await this.call(
+        'GET',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}/random`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async getWords(
+    word: string,
+    source: TranslationLanguage,
+    destination: TranslationLanguage,
+    signal?: AbortSignal,
+  ) {
+    try {
+      // @ts-ignore @todo describe types
+      const { data } = await this.call(
+        'GET',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}`,
+        {
+          signal,
+          params: {
+            word,
+          },
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async addNewWordToDatabase(
+    word: string,
+    source: TranslationLanguage,
+    destination: TranslationLanguage, // add either ru or bur word
+  ) {
+    try {
+      // @ts-ignore @todo describe types
+      const { data } = await this.call(
+        'POST',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}`,
+        {
+          params: {
+            name: word,
+          },
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+  }
+
+  async attachWord(
+    word: string,
+    source: TranslationLanguage,
+    destination: TranslationLanguage,
+  ) {
+    try {
+      // @ts-ignore @todo describe types
+      const { data } = await this.call(
+        'POST',
+        `${this.RESOURCE}/words-matcher/${source}/${destination}`,
+        {
+          params: {
+            word,
+          },
+          headers: {
+            Authorization: 'Bearer ' + useCookie('token').value,
+          },
+        },
+      );
+
+      return data;
     } catch (error) {
       console.error(error);
 

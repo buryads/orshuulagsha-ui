@@ -121,7 +121,7 @@
   import type {
     Locales,
     queryParams,
-    translationLanguage,
+    TranslationLanguage,
   } from '~/types/types';
   import { meta } from '~/constants/meta';
 
@@ -153,7 +153,7 @@
     ],
   });
 
-  const sourceLanguage: Ref<translationLanguage> = ref(
+  const sourceLanguage: Ref<TranslationLanguage> = ref(
     initialQuery.source || 'ru',
   );
   const inputValue = ref(initialQuery.q || '');
