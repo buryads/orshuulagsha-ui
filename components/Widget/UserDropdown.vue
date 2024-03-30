@@ -38,6 +38,17 @@
               </NuxtLink>
             </UIDropdownItem>
           </template>
+          <template v-if="isAdmin">
+            <UIDropdownItem class-name="!p-0">
+              <NuxtLink
+                :to="localePath('/admin/words-matcher')"
+                class="my-2 flex items-center gap-2 px-4 py-2 first:mt-0 last:mb-0"
+                @click="close"
+              >
+                Words matcher
+              </NuxtLink>
+            </UIDropdownItem>
+          </template>
           <UIDropdownItem class-name="!p-0">
             <a
               href="#"
@@ -73,6 +84,6 @@
     useUserStore().$patch({
       user: null,
     });
-    navigateTo((localePath('/')));
+    navigateTo(localePath('/'));
   }
 </script>
