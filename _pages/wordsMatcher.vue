@@ -9,7 +9,7 @@
             <div>
               <div class="flex items-center">
                 <h1
-                  class="inline-block text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-3xl"
+                  class="inline-block text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-200"
                 >
                   {{ title }}
                 </h1>
@@ -18,7 +18,7 @@
           </header>
           <div class="relative mt-10">
             <h2
-              class="text-1xl inline-block font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-2xl"
+              class="text-1xl inline-block font-extrabold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-200"
             >
               Языки:
             </h2>
