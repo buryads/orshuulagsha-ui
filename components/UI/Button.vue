@@ -2,7 +2,7 @@
   <NuxtLink
     v-if="to"
     :to="to"
-    :class="{ '!bg-gray-300': disabled }"
+    :class="{ 'cursor-auto !bg-gray-300': disabled }"
     class="rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
   >
     <slot />
@@ -11,7 +11,7 @@
   <button
     v-else
     type="button"
-    :class="{ '!bg-gray-300': disabled }"
+    :class="{ 'cursor-auto !bg-gray-300': disabled }"
     class="rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
   >
     <slot />
