@@ -31,17 +31,35 @@
         <div class="relative justify-self-end">
           <UIButton
             @click="loadAnotherWord"
-            class="mr-3 bg-bur-navy px-4 text-white transition-opacity hover:opacity-90"
+            class="mr-3 w-36 bg-bur-navy text-white transition-opacity hover:opacity-90"
           >
-            Another word
+            <span class="relative">
+              Another word
+
+              <span class="absolute left-full top-1/2 -translate-y-1/2">
+                <IconsSpinner
+                  v-if="isLoadingAnotherWord"
+                  class="ml-1.5 h-3.5 w-3.5 animate-spin"
+                />
+              </span>
+            </span>
           </UIButton>
 
           <UIButton
             @click="syncWord"
-            class="bg-bur-yellow px-4 text-white transition-opacity hover:opacity-90"
+            class="w-36 bg-bur-yellow text-white transition-opacity hover:opacity-90"
             :disabled="!thereAreUnsavedChanges"
           >
-            Save
+            <span class="relative">
+              Save
+
+              <span class="absolute left-full top-1/2 -translate-y-1/2">
+                <IconsSpinner
+                  v-if="isSavingWord"
+                  class="ml-1.5 h-3.5 w-3.5 animate-spin"
+                />
+              </span>
+            </span>
 
             <span
               class="absolute bottom-[105%] right-0 text-right text-xs text-gray-400"
@@ -162,6 +180,8 @@
   const foundWordsByInput = ref([]);
   const selectedWords = ref<Word[]>([]);
   const isSearchingWord = ref(false);
+  const isLoadingAnotherWord = ref(false);
+  const isSavingWord = ref(false);
   const showEmptyState = computed(
     () =>
       !foundWordsByInput.value.length &&
@@ -248,8 +268,15 @@
   }
 
   async function syncWord() {
+    if (
+      isSavingWord.value ||
+      !wordWithoutTranslation.value ||
+      !thereAreUnsavedChanges.value
+    )
+      return;
+
     try {
-      if (!wordWithoutTranslation.value) return;
+      isSavingWord.value = true;
 
       wordWithoutTranslation.value.ru_words = [...selectedWords.value];
 
@@ -257,20 +284,52 @@
       $toast.success('Successfully saved!');
     } catch (e) {
       console.error(e);
+    } finally {
+      isSavingWord.value = false;
     }
   }
 
   async function loadAnotherWord() {
-    foundWordsByInput.value = [];
-    selectedWords.value = [];
-    inputWord.value = '';
-    wordWithoutTranslation.value =
-      (await $api.admin.getRandomRelationshipLessWord('bur', 'ru')) as Word;
+    if (isLoadingAnotherWord.value) return;
 
-    await router.replace({
-      query: {
-        id: wordWithoutTranslation.value.id,
-      },
-    });
+    try {
+      isLoadingAnotherWord.value = true;
+      foundWordsByInput.value = [];
+      selectedWords.value = [];
+      inputWord.value = '';
+      wordWithoutTranslation.value =
+        (await $api.admin.getRandomRelationshipLessWord('bur', 'ru')) as Word;
+
+      await router.replace({
+        query: {
+          id: wordWithoutTranslation.value.id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoadingAnotherWord.value = false;
+    }
   }
+
+  async function handleSaveShortcut(event: KeyboardEvent) {
+    // saving
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      await syncWord();
+    }
+
+    if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
+      event.preventDefault();
+      await loadAnotherWord();
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleSaveShortcut);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('keydown', handleSaveShortcut);
+  });
 </script>
