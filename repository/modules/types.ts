@@ -20,6 +20,7 @@ export type translation = {
 };
 
 type ruWord = {
+  id: number;
   name: string;
 };
 
