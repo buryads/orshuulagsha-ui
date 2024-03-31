@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import process from 'node:process'
+import process from 'node:process';
 
-const sw = process.env.SW === 'true'
+const sw = process.env.SW === 'true';
 
 export default defineNuxtConfig({
   // @ts-ignore if you install typescript as a dev dependency, this will help
@@ -12,7 +12,7 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap',
         },
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
     },
     /* page transition doesn't work https://github.com/nuxt/nuxt/issues/13350 */
@@ -20,13 +20,16 @@ export default defineNuxtConfig({
   routeRules: {
     '/words/**': { prerender: true },
   },
-  css: ['~/assets/css/main.css'],
+  css: [
+    '~/assets/css/main.css',
+    '~/node_modules/vue-toast-notification/dist/theme-default.css',
+  ],
   modules: [
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     'nuxt-gtag',
     '@artmizu/yandex-metrika-nuxt',
-    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt',
   ],
   pwa: {
     strategies: sw ? 'injectManifest' : 'generateSW',

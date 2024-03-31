@@ -28,20 +28,44 @@
           </p>
         </div>
 
-        <div class="justify-self-end">
+        <div class="relative justify-self-end">
           <UIButton
-            @click="skip"
-            class="mr-3 bg-bur-navy px-4 text-white transition-opacity hover:opacity-90"
+            @click="loadAnotherWord"
+            class="mr-3 w-36 bg-bur-navy text-white transition-opacity hover:opacity-90"
           >
-            Skip
+            <span class="relative">
+              Another word
+
+              <span class="absolute left-full top-1/2 -translate-y-1/2">
+                <IconsSpinner
+                  v-if="isLoadingAnotherWord"
+                  class="ml-1.5 h-3.5 w-3.5 animate-spin"
+                />
+              </span>
+            </span>
           </UIButton>
 
           <UIButton
             @click="syncWord"
-            class="bg-bur-yellow px-4 text-white transition-opacity hover:opacity-90"
-            :disabled="selectedWords.length === 0"
+            class="w-36 bg-bur-yellow text-white transition-opacity hover:opacity-90"
+            :disabled="!thereAreUnsavedChanges"
           >
-            Save
+            <span class="relative">
+              Save
+
+              <span class="absolute left-full top-1/2 -translate-y-1/2">
+                <IconsSpinner
+                  v-if="isSavingWord"
+                  class="ml-1.5 h-3.5 w-3.5 animate-spin"
+                />
+              </span>
+            </span>
+
+            <span
+              class="absolute bottom-[105%] right-0 text-right text-xs text-gray-400"
+            >
+              {{ thereAreUnsavedChanges ? `save it 👇` : 'all saved' }}
+            </span>
           </UIButton>
         </div>
       </div>
@@ -64,12 +88,9 @@
           />
 
           <!-- Empty state -->
-          <div
-            v-if="!foundWordsByInput.length && inputWord && !isSearchingWord"
-            class="mt-6 flex flex-col items-center"
-          >
+          <div v-if="showEmptyState" class="mt-6 flex flex-col items-center">
             <p class="font-medium text-gray-500">
-              There is not such word in the database
+              There is no such word in the database
             </p>
 
             <UIButton
@@ -102,6 +123,21 @@
               />
             </li>
           </ul>
+
+          <UIButton
+            v-if="
+              !!inputWord &&
+              !showEmptyState &&
+              !isSearchingWord &&
+              !foundWordsByInput
+                .flatMap((w) => w.name)
+                .some((w) => w === inputWord)
+            "
+            @click="addNewWord"
+            class="mt-2 bg-bur-navy px-4 text-white transition-opacity hover:opacity-90"
+          >
+            add the word to database
+          </UIButton>
         </div>
 
         <div class="mt-6 md:mt-0 md:pl-6">
@@ -136,7 +172,7 @@
     title: 'Words matcher',
   });
 
-  const { $api } = useNuxtApp();
+  const { $api, $toast } = useNuxtApp();
   const route = useRoute();
   const router = useRouter();
   const wordWithoutTranslation = ref<Word | null>(null);
@@ -144,9 +180,22 @@
   const foundWordsByInput = ref([]);
   const selectedWords = ref<Word[]>([]);
   const isSearchingWord = ref(false);
-
+  const isLoadingAnotherWord = ref(false);
+  const isSavingWord = ref(false);
+  const showEmptyState = computed(
+    () =>
+      !foundWordsByInput.value.length &&
+      inputWord.value &&
+      !isSearchingWord.value,
+  );
   const selectedWordIds = computed(
     () => selectedWords.value.flatMap((word) => word.id) || [],
+  );
+  const thereAreUnsavedChanges = computed(
+    () =>
+      wordWithoutTranslation.value?.ru_words
+        ?.flatMap((word) => word.id)
+        .join(',') !== selectedWordIds.value.join(','),
   );
 
   const { data } = await useAsyncData('words-matcher', async () => {
@@ -158,7 +207,7 @@
   });
 
   wordWithoutTranslation.value = data.value;
-  selectedWords.value = data.value.ru_words;
+  selectedWords.value = [...data.value.ru_words];
   router.replace({
     query: {
       id: data.value.id,
@@ -219,21 +268,68 @@
   }
 
   async function syncWord() {
-    if (!wordWithoutTranslation.value) return;
+    if (
+      isSavingWord.value ||
+      !wordWithoutTranslation.value ||
+      !thereAreUnsavedChanges.value
+    )
+      return;
 
-    wordWithoutTranslation.value!.ru_words =
-      wordWithoutTranslation.value!.ru_words.concat(selectedWords.value);
-    await $api.admin.syncWord(wordWithoutTranslation.value, 'bur', 'ru');
+    try {
+      isSavingWord.value = true;
+
+      wordWithoutTranslation.value.ru_words = [...selectedWords.value];
+
+      await $api.admin.syncWord(wordWithoutTranslation.value, 'bur', 'ru');
+      $toast.success('Successfully saved!');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isSavingWord.value = false;
+    }
   }
 
-  async function skip() {
-    wordWithoutTranslation.value =
-      (await $api.admin.getRandomRelationshipLessWord('bur', 'ru')) as Word;
+  async function loadAnotherWord() {
+    if (isLoadingAnotherWord.value) return;
 
-    await router.replace({
-      query: {
-        id: wordWithoutTranslation.value.id,
-      },
-    });
+    try {
+      isLoadingAnotherWord.value = true;
+      foundWordsByInput.value = [];
+      selectedWords.value = [];
+      inputWord.value = '';
+      wordWithoutTranslation.value =
+        (await $api.admin.getRandomRelationshipLessWord('bur', 'ru')) as Word;
+
+      await router.replace({
+        query: {
+          id: wordWithoutTranslation.value.id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoadingAnotherWord.value = false;
+    }
   }
+
+  async function handleSaveShortcut(event: KeyboardEvent) {
+    // saving
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      await syncWord();
+    }
+
+    if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
+      event.preventDefault();
+      await loadAnotherWord();
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleSaveShortcut);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('keydown', handleSaveShortcut);
+  });
 </script>
