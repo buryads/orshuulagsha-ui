@@ -263,8 +263,13 @@
   }
 
   async function addNewWord() {
-    await $api.admin.addNewWordToDatabase(inputWord.value, 'bur', 'ru');
+    const word = await $api.admin.addNewWordToDatabase(
+      inputWord.value.toLowerCase(),
+      'bur',
+      'ru',
+    );
     await searchWord(inputWord.value);
+    addSuggestedWord(word);
   }
 
   async function syncWord() {
@@ -312,24 +317,24 @@
     }
   }
 
-  async function handleSaveShortcut(event: KeyboardEvent) {
+  async function handleShortcuts(event: KeyboardEvent) {
     // saving
     if ((event.ctrlKey || event.metaKey) && event.key === 's') {
       event.preventDefault();
       await syncWord();
     }
 
-    if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'm') {
       event.preventDefault();
       await loadAnotherWord();
     }
   }
 
   onMounted(() => {
-    window.addEventListener('keydown', handleSaveShortcut);
+    document.addEventListener('keydown', handleShortcuts);
   });
 
   onUnmounted(() => {
-    window.removeEventListener('keydown', handleSaveShortcut);
+    document.removeEventListener('keydown', handleShortcuts);
   });
 </script>
