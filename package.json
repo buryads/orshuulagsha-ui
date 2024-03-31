@@ -35,7 +35,8 @@
     "device-detector-js": "^3.0.3",
     "ohmyfetch": "^0.4.21",
     "pinia": "^2.1.4",
-    "subtitle": "^4.2.1"
+    "subtitle": "^4.2.1",
+    "vue-toast-notification": "^3.1.2"
   },
   "overrides": {
     "vue": "latest"
