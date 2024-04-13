@@ -141,7 +141,7 @@
         </div>
 
         <div class="mt-6 md:mt-0 md:pl-6">
-          <ul class="flex flex-wrap gap-3">
+          <TransitionGroup name="list" tag="ul" class="flex flex-wrap gap-3">
             <li v-for="selectedWord in selectedWords" :key="selectedWord.id">
               <button
                 @click="removeSelectedWord(selectedWord.id)"
@@ -155,7 +155,7 @@
                 />
               </button>
             </li>
-          </ul>
+          </TransitionGroup>
         </div>
       </div>
     </section>
