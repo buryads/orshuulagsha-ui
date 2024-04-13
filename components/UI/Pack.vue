@@ -5,7 +5,7 @@
   >
     <img
       :src="getPackImage(pack)"
-      class="h-56 w-full object-cover xl:h-60"
+      class="h-56 w-full bg-neutral-50 object-cover xl:h-60"
       :alt="pack.name"
     />
     <!--    <div
