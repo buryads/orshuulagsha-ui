@@ -62,6 +62,27 @@
       </div>
 
       <div class="mt-3">
+        <Transition mode="out-in">
+          <div
+            v-if="translationNumberOnOtherLanguage > 0"
+            class="text-gray-600"
+          >
+            {{ $t('foundWordsInOppositeLanuage') }}
+            {{ translationNumberOnOtherLanguage }}
+
+            <div>
+              {{ $t('youDidntSetCorrectLanguage') }}
+            </div>
+
+            <UIButton
+              @click="switchWrongLanguage"
+              class="mt-2 bg-bur-yellow text-white transition-opacity hover:opacity-90"
+            >
+              {{ $t('switchLanguage') }}
+            </UIButton>
+          </div>
+        </Transition>
+
         <TranslationsList
           :title="$t('translates')"
           :items="result.exactTranslations || []"
@@ -124,6 +145,7 @@
     TranslationLanguage,
   } from '~/types/types';
   import { meta } from '~/constants/meta';
+  import type { Word } from '~/repository/modules/types';
 
   const { $api } = useNuxtApp();
   const { t, locale } = useI18n();
@@ -164,6 +186,7 @@
   const isLoading = ref(false);
   const showKeyboard = ref(false);
   const packs = ref();
+  const translationNumberOnOtherLanguage = ref();
 
   const toggleLanguage = () => {
     sourceLanguage.value = sourceLanguage.value === 'bur' ? 'ru' : 'bur';
@@ -188,6 +211,25 @@
       console.error(e);
     } finally {
       isLoading.value = false;
+    }
+
+    try {
+      const successTranslationNumber = result.value.exactTranslations?.filter(
+        (word) => word.id !== 0 && word?.translations[0]?.id !== 0,
+      ).length;
+
+      if (successTranslationNumber === 0) {
+        const res = await $api.translate.translateWord(
+          sourceLanguage.value === 'ru' ? 'bur2ru' : 'ru2bur',
+          inputValue.value,
+        );
+
+        translationNumberOnOtherLanguage.value = countSuccessTranslationsNumber(
+          res.exactTranslations,
+        );
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -222,4 +264,18 @@
       await translate();
     }
   });
+
+  function countSuccessTranslationsNumber(exactTranslations: Word[]) {
+    return (
+      exactTranslations?.filter(
+        (word) => word.id !== 0 && word?.translations[0]?.id !== 0,
+      )?.length || 0
+    );
+  }
+
+  function switchWrongLanguage() {
+    translationNumberOnOtherLanguage.value = 0;
+    toggleLanguage();
+    onTranslate();
+  }
 </script>
