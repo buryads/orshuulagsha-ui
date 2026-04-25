@@ -1,0 +1,342 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Buryad Portal — Design Tokens ===== */
+:root {
+  /* Buryad flag palette
+     синий #0066B3 (небо/вечность) · жёлтый #FFD200 (солнце/буддизм) · белый #FFFFFF (чистота)
+     плюс акценты для UI-нужд (red/green) — ультра-сдержанно */
+  --primary: #0066B3;          /* флаг — синий */
+  --primary-soft: #4A8FCF;
+  --primary-50:  #E5F0F9;
+  --primary-100: #C7DEF1;
+  --primary-200: #8FBCE0;
+  --primary-700: #004B85;
+  --primary-900: #002E54;
+
+  --secondary: #C7DEF1;
+  --tertiary: #E84545;         /* красный — для уведомлений/ошибок */
+  --tertiary-soft: #FBDADA;
+  --tertiary-700: #B82F2F;
+
+  --accent-warm: #FFD200;      /* флаг — жёлтый */
+  --accent-warm-soft: #FFF4B8;
+  --accent-green: #2D8659;     /* приглушённый, для success */
+  --accent-green-soft: #D4ECD9;
+
+  --neutral-1000: #0E1013;
+  --neutral-900: #1A1C1E;
+  --neutral-800: #2A2D31;
+  --neutral-700: #3D4147;
+  --neutral-500: #6E747D;
+  --neutral-400: #9AA1AB;
+  --neutral-300: #C7CCD3;
+  --neutral-200: #E2E5EA;
+  --neutral-100: #EFF1F4;
+  --neutral-50:  #F6F7F9;
+  --neutral-0:   #FFFFFF;
+
+  /* Surfaces (light) */
+  --bg: #F5F8FB;
+  --bg-soft: #E8EEF5;
+  --surface: #FFFFFF;
+  --surface-2: #F4F8FC;
+  --surface-elev: #FFFFFF;
+  --border: #DDE5EE;
+  --border-strong: #C0CCDA;
+
+  --text: #1A1C1E;
+  --text-muted: #5C6470;
+  --text-soft: #8B93A0;
+  --text-inv: #FFFFFF;
+
+  /* Shadows — soft, layered */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15,23,42,0.04);
+  --shadow-md: 0 8px 24px -8px rgba(15, 23, 42, 0.10), 0 2px 6px rgba(15,23,42,0.04);
+  --shadow-lg: 0 24px 48px -16px rgba(15, 23, 42, 0.18), 0 4px 10px rgba(15,23,42,0.05);
+  --shadow-glow: 0 8px 32px -8px rgba(0, 102, 179, 0.4);
+
+  /* Radii */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Type — bound to next/font CSS variables (with safe fallbacks) */
+  --font-display: var(--font-jakarta), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-body: var(--font-manrope), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-mono-jb), "JetBrains Mono", ui-monospace, monospace;
+  --font-bur: var(--font-jakarta), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Fraunces", "Cormorant Garamond", "Source Serif 4", Georgia, serif;
+  --font-cond: "Bebas Neue", "Oswald", var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --primary: #4A9FE0;
+  --primary-soft: #7EB6FF;
+  --primary-50: #0F2540;
+  --primary-100: #163355;
+  --primary-200: #1F4A7A;
+  --primary-700: #2C7DC2;
+  --primary-900: #5BA8E8;
+  --accent-warm: #FFD200;
+  --accent-warm-soft: #3D3210;
+
+  --bg: #0E1013;
+  --bg-soft: #14171C;
+  --surface: #181B20;
+  --surface-2: #1E222A;
+  --surface-elev: #20242C;
+  --border: #2A2F38;
+  --border-strong: #3A4150;
+
+  --text: #ECEEF2;
+  --text-muted: #A4ACBA;
+  --text-soft: #6F7785;
+  --text-inv: #0E1013;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 24px -8px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-lg: 0 24px 48px -16px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4);
+  --shadow-glow: 0 8px 32px -8px rgba(74, 159, 224, 0.5);
+
+  --tertiary-soft: #4A2A2A;
+  --accent-warm-soft: #3D2E15;
+  --accent-green-soft: #1F3D2F;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; color: inherit; }
+
+/* Soyombo-inspired pattern (subtle) */
+.soyombo-bg {
+  background-image:
+    radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.steppe-gradient {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, var(--primary-100) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, var(--accent-warm-soft) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, var(--tertiary-soft) 0%, transparent 50%);
+}
+
+/* Scrollbar (slim) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-soft); background-clip: padding-box; border: 2px solid transparent; }
+
+/* Reusable atoms */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 18px; border-radius: var(--r-pill);
+  font-weight: 600; font-size: 14px; line-height: 1;
+  transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn-primary {
+  background: var(--primary); color: var(--text-inv);
+  box-shadow: var(--shadow-glow);
+}
+.btn-primary:hover { background: var(--primary-700); }
+.btn-secondary {
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface); border-color: var(--border-strong); }
+.btn-ghost { color: var(--text-muted); padding: 10px 14px; }
+.btn-ghost:hover { color: var(--text); background: var(--surface-2); }
+.btn-icon {
+  width: 36px; height: 36px; padding: 0; border-radius: 50%;
+  background: var(--surface-2); color: var(--text-muted);
+}
+.btn-icon:hover { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 600;
+  background: var(--surface-2); color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.chip-primary { background: var(--primary-50); color: var(--primary-700); border-color: transparent; }
+.chip-warm    { background: var(--accent-warm-soft); color: #8C5A1F; border-color: transparent; }
+.chip-green   { background: var(--accent-green-soft); color: #2D6448; border-color: transparent; }
+.chip-rose    { background: var(--tertiary-soft); color: var(--tertiary-700); border-color: transparent; }
+
+:root[data-theme="dark"] .chip-warm { color: #F4B860; }
+:root[data-theme="dark"] .chip-green { color: #7DCFA0; }
+:root[data-theme="dark"] .chip-rose { color: #FF8A8A; }
+
+/* Headings */
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; letter-spacing: -0.02em; }
+h1 { font-weight: 700; }
+h2 { font-weight: 700; }
+
+/* Focus */
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.85; }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+.fade-up { animation: fadeUp 0.4s ease both; }
+
+/* ============================================ */
+/* ===== Responsive system ===== */
+/* ============================================ */
+
+/* Container — fluid с разумными отступами */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: clamp(16px, 4vw, 28px);
+  padding-right: clamp(16px, 4vw, 28px);
+}
+
+/* Grid 2 columns -> 1 на узких */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Word page: main + sidebar -> stack под планшетом */
+.word-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 24px;
+}
+@media (max-width: 960px) {
+  .word-grid { grid-template-columns: 1fr; }
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+/* Translator: две колонки -> стэк */
+.tr-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 220px;
+}
+.tr-cols > div:first-child {
+  border-right: 1px solid var(--border);
+}
+
+/* Tabs/header bars allow wrap */
+.tr-langbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  border-bottom: 1px solid var(--border);
+  gap: 4px;
+}
+
+/* Phrases row — 2 col text + meta */
+.phrase-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Context layout */
+.ctx-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
+}
+
+/* Hide on small */
+.hide-sm { display: initial; }
+
+/* ===== Tablet (≤960px) ===== */
+@media (max-width: 960px) {
+  .ctx-grid { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  h1 { font-size: clamp(48px, 9vw, 84px) !important; line-height: 0.98 !important; }
+}
+
+/* ===== Mobile (≤720px) ===== */
+@media (max-width: 720px) {
+  .nav-desktop { display: none !important; }
+  .nav-mobile { display: inline-block !important; }
+
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+
+  .tr-cols { grid-template-columns: 1fr; }
+  .tr-cols > div:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tr-langbar {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+  .tr-langbar > div { justify-content: flex-start !important; flex-wrap: wrap; padding: 6px !important; }
+  .tr-langbar > button { justify-self: center; transform: rotate(90deg); }
+
+  .phrase-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 14px 14px !important;
+  }
+  .phrase-row > div:nth-child(3) { justify-content: flex-start !important; }
+
+  .hide-sm { display: none !important; }
+
+  .card { padding: 16px !important; }
+
+  h1 { font-size: clamp(38px, 11vw, 64px) !important; letter-spacing: -0.035em !important; }
+}
+
+/* ===== Tiny (≤420px) ===== */
+@media (max-width: 420px) {
+  h1 { font-size: clamp(32px, 12vw, 48px) !important; }
+}
