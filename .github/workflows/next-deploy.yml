@@ -1,0 +1,139 @@
+name: Build and Deploy buryads-ui-next to K8s
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+-next'
+
+env:
+  IMAGE_NAME: acrossoffwest/buryads-ui-next
+  API_BASE_URL: https://tt.buryads.com
+
+jobs:
+  build:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Get commit list
+        run: |
+          CURRENT_TAG="${{ env.TAG_NAME }}"
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-next$' | grep -v "^${CURRENT_TAG}$" | head -n 1)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%an)" -10 -- next/)
+          else
+            COMMITS=$(git log "${PREVIOUS_TAG}..${CURRENT_TAG}" --pretty=format:"- %s (%an)" -- next/)
+          fi
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./next
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ env.API_BASE_URL }}
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}
+            ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Send build failure notification
+        if: failure()
+        run: |
+          curl -X POST https://notifications.aow.space/ \
+            -H "Content-Type: application/json" \
+            -d '{
+              "message": "buryads-ui-next build failed!\nVersion: ${{ env.TAG_NAME }}\nTime: '"$(date)"'\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nLogs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "receivers": [-1001837078387]
+            }'
+
+  deploy:
+    needs: [build]
+    if: success()
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Get commit list
+        run: |
+          CURRENT_TAG="${{ env.TAG_NAME }}"
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-next$' | grep -v "^${CURRENT_TAG}$" | head -n 1)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%an)" -10 -- next/)
+          else
+            COMMITS=$(git log "${PREVIOUS_TAG}..${CURRENT_TAG}" --pretty=format:"- %s (%an)" -- next/)
+          fi
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Update deployment file
+        run: sed -i 's|<IMAGE>|${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}|' $GITHUB_WORKSPACE/next/config/deployment.yml
+
+      - name: Setup kubeconfig
+        run: rm -rf ~/.kube && mkdir ~/.kube && echo "${{ secrets.HETZNER_CLUSTER_CONFIG }}" > ~/.kube/config
+
+      - name: Create Docker Hub secret
+        continue-on-error: true
+        run: kubectl create secret docker-registry dockerhub-secret -n applications --docker-server=https://index.docker.io/v1/ --docker-username=${{ secrets.DOCKERHUB_USERNAME }} --docker-password=${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/next/config/deployment.yml
+
+      - name: Verify deployment
+        run: kubectl rollout status -n applications deployment/buryads-ui-next
+
+      - name: Cleanup kubeconfig
+        if: always()
+        run: rm -rf ~/.kube
+
+      - name: Send success notification
+        if: success()
+        run: |
+          COMMITS_ESCAPED=$(echo "${{ env.COMMITS }}" | sed 's/"/\\"/g')
+          curl -X POST https://notifications.aow.space/ \
+            -H "Content-Type: application/json" \
+            -d '{
+              "message": "buryads-ui-next deployed!\nVersion: ${{ env.TAG_NAME }}\nTime: '"$(date)"'\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\n\nCommits:\n'"$COMMITS_ESCAPED"'",
+              "receivers": [-1001837078387]
+            }'
+
+      - name: Send failure notification
+        if: failure()
+        run: |
+          COMMITS_ESCAPED=$(echo "${{ env.COMMITS }}" | sed 's/"/\\"/g')
+          curl -X POST https://notifications.aow.space/ \
+            -H "Content-Type: application/json" \
+            -d '{
+              "message": "buryads-ui-next deploy failed!\nVersion: ${{ env.TAG_NAME }}\nTime: '"$(date)"'\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nCommits:\n'"$COMMITS_ESCAPED"'\nLogs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "receivers": [-1001837078387]
+            }'
