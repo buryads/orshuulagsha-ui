@@ -176,6 +176,8 @@ input, textarea { font-family: inherit; color: inherit; }
 .btn-icon {
   width: 36px; height: 36px; padding: 0; border-radius: 50%;
   background: var(--surface-2); color: var(--text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 0;
 }
 .btn-icon:hover { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 
@@ -271,9 +273,11 @@ h2 { font-weight: 700; }
 /* Tabs/header bars allow wrap */
 .tr-langbar {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr;
+  align-items: center;
   border-bottom: 1px solid var(--border);
-  gap: 4px;
+  gap: 8px;
+  padding: 8px 0;
 }
 
 /* Phrases row — 2 col text + meta */
@@ -294,17 +298,76 @@ h2 { font-weight: 700; }
 /* Hide on small */
 .hide-sm { display: initial; }
 
+/* Quiz answers grid: 4 across on desktop, 2 on tablet, 1 on narrow */
+.quiz-answers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (max-width: 960px) { .quiz-answers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .quiz-answers { grid-template-columns: 1fr; } }
+
+/* Mobile-only floating swap button between translator panes */
+.tr-swap-mobile { display: none; }
+
+/* Explore words grid — capped at 4 columns on desktop, scales down on
+   smaller viewports. */
+.word-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 960px) { .word-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .word-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .word-grid { grid-template-columns: 1fr; } }
+
+/* Word detail page: main content + right sidebar. Stacks on tablet/mobile. */
+.word-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 960px) { .word-detail-grid { grid-template-columns: 1fr; } }
+
+/* Discord CTA — stack vertically on narrow screens */
+@media (max-width: 720px) {
+  .discord-cta {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+  .discord-cta a { justify-self: center; }
+}
+
+/* Footer responsive grid */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, 1fr);
+  gap: 32px;
+}
+
+/* Drawer hamburger — shown only when nav-desktop is hidden */
+.nav-toggle { display: none !important; }
+.nav-drawer { display: none; }
+/* hide-md keeps the element's natural display above 960px; only the
+   media-query overrides flip it off. show-md is the inverse — hidden by
+   default, surfaced on tablet/mobile. */
+.show-md { display: none !important; }
+
 /* ===== Tablet (≤960px) ===== */
 @media (max-width: 960px) {
   .ctx-grid { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr 1fr; }
   h1 { font-size: clamp(48px, 9vw, 84px) !important; line-height: 0.98 !important; }
+
+  .nav-desktop { display: none !important; }
+  .nav-toggle { display: inline-flex !important; }
+  .nav-drawer { display: flex !important; }
+  .hide-md { display: none !important; }
+  .show-md { display: inline-flex !important; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
 }
 
 /* ===== Mobile (≤720px) ===== */
 @media (max-width: 720px) {
-  .nav-desktop { display: none !important; }
-  .nav-mobile { display: inline-block !important; }
 
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
@@ -317,10 +380,40 @@ h2 { font-weight: 700; }
 
   .tr-langbar {
     grid-template-columns: 1fr;
-    padding: 8px;
+    padding: 6px 10px;
+    gap: 4px;
   }
-  .tr-langbar > div { justify-content: flex-start !important; flex-wrap: wrap; padding: 6px !important; }
-  .tr-langbar > button { justify-self: center; transform: rotate(90deg); }
+  .tr-langbar > div:first-child {
+    justify-content: center !important;
+    padding: 6px !important;
+  }
+  .tr-langbar > div:last-child {
+    justify-content: center !important;
+    flex-wrap: wrap;
+    padding: 6px !important;
+  }
+  /* topbar swap button hidden on mobile — surfaced as a floating button
+     between the stacked src/tgt panes via .tr-swap-mobile */
+  .tr-langbar > button { display: none !important; }
+
+  .tr-swap-mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--surface);
+    z-index: 2;
+    cursor: pointer;
+  }
 
   .phrase-row {
     grid-template-columns: 1fr;
@@ -334,6 +427,9 @@ h2 { font-weight: 700; }
   .card { padding: 16px !important; }
 
   h1 { font-size: clamp(38px, 11vw, 64px) !important; letter-spacing: -0.035em !important; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { justify-content: center !important; text-align: center; }
 }
 
 /* ===== Tiny (≤420px) ===== */

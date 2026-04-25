@@ -26,7 +26,7 @@ export default async function ExplorePage({
   setRequestLocale(params.locale);
   const rawPage = Number(searchParams.page ?? 1);
   const page = Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
-  const perPage = 24;
+  const perPage = 12;
 
   const data: PaginatedResponse<BurWord> | null = await getBurWords({
     page,
@@ -38,7 +38,7 @@ export default async function ExplorePage({
   const lastPage = data?.meta?.last_page ?? 1;
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <ExploreHead totalCount={total} />
       <Suspense fallback={null}>
         <SearchBar />

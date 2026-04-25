@@ -115,7 +115,7 @@ export function LogsTable() {
   const hasFilters = Boolean(filters.type || filters.status || filters.ignored);
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <header
         style={{
           display: 'flex',

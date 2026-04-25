@@ -3,8 +3,8 @@
     "home": "Үндэһэн",
     "dictionary": "Толи",
     "names": "Нэрэнүүд",
-    "learn": "hургалга",
-    "community": "Бүлгэм",
+    "packs": "Карточкэ",
+    "quiz": "Викторинэ",
     "search": "Бэдэрэлгэ",
     "theme": "Темэ hэлгэхэ",
     "notifications": "Мэдээсэлнүүд",
@@ -54,11 +54,21 @@
   },
   "home": {
     "hero": {
-      "statusChip": "Нээмэл лексикографи · 8 диалект",
-      "titleBur": "Буряад хэлэн.",
-      "titleForAll": "Бүгэдэндэ.",
-      "titleForever": "Үүрид.",
-      "subtitle": "Оршуулга, hургалга, аудио — нэгэ порталда."
+      "statusChip": "Толи ба оршуулагша",
+      "titleBur": "Үзэгты",
+      "titleForAll": "буряад хэлэ.",
+      "titleForever": "",
+      "subtitle": "Толи · AI-оршуулга · жэшээнүүд."
+    },
+    "publicPacks": {
+      "title": "Бэлэдхэлэй карточкэнүүд",
+      "more": "Бусад карточкэнүүд",
+      "empty": "Нээмэл карточкэнүүд үгы"
+    },
+    "discord": {
+      "title": "Хэрэгтэй үгэ оршуулагдаагүй гү?",
+      "body": "Хэрбэе таниие хэрэгтэй үгэ манай мэдээлэлэй санда олдоогүй һаа, манай Discord-серверто хандажа болоно.",
+      "cta": "Buryads Discord-серверые нээхэ"
     },
     "categories": {
       "title": "Хубинуудаар hура",
@@ -74,45 +84,29 @@
   },
   "footer": {
     "description": "Буряад хэлэнэй нээмэл платформа — толи, оршуулагша ба бүлгэм.",
-    "copyright": "© 2026 Buryad Portal · Сүлөөтэ цифровой лексикографи",
-    "madeWith": "Улаан-Үдэдэ ♥-тэйгээр хэгдэбэ",
+    "copyright": "© 2026 buryads.com · Сүлөөтэ цифровой лексикографи",
+    "madeWith": "♥-тэйгээр хэгдэбэ",
+    "disclaimer": "Оршуулганууд буруу байжа болохо, 100% зүб байха гэжэ найдамжатай үгы.",
     "sections": {
+      "navigation": "Навигаци",
+      "resources": "Бусад толинууд",
+      "tools": "Хэрэгсэлнүүд",
+      "support": "Прожектые дэмжэхэ"
+    },
+    "navigation": {
+      "home": "Үндэһэн",
       "dictionary": "Толи",
-      "learn": "hургалга",
-      "community": "Бүлгэм",
-      "about": "Прожект тухай"
+      "names": "Нэрэнүүд",
+      "packs": "Карточкэ"
     },
-    "links": {
-      "dictionary": {
-        "search": "Үгэнүүдэй бэдэрэлгэ",
-        "wordOfDay": "Үдэрэй үгэ",
-        "names": "Нэрэнүүд",
-        "etymology": "Этимологи"
-      },
-      "learn": {
-        "lessons": "Хэшээлнүүд",
-        "flashcards": "Флэш-карта",
-        "quizzes": "Викторинэ",
-        "games": "Нааданууд"
-      },
-      "community": {
-        "suggest": "Үгэ дурадхаха",
-        "forum": "Форум",
-        "contributors": "Хабаадагшад",
-        "news": "Мэдээсэл"
-      },
-      "about": {
-        "about": "Бидэн тухай",
-        "team": "Команда",
-        "partners": "Хамтаралагшад",
-        "contacts": "Холбоо барилга"
-      }
+    "tools": {
+      "keyboard": "Клавиатурын зохилдоо (GitHub)",
+      "chrome": "Chrome дэлгэлгэ",
+      "appstore": "App Store",
+      "playstore": "Google Play"
     },
-    "aria": {
-      "site": "Сайт",
-      "share": "Хубаалдаха",
-      "community": "Бүлгэм"
-    }
+    "supportText": "Прожектые Boosty дээрэ али Patreon дээрэ дэмжэгты.",
+    "todayTranslated": "Мүнѳѳдэр оршуулагдаа"
   },
   "common": {
     "loading": "Ачаалжа байна",
@@ -225,5 +219,40 @@
     "trainingWordsSet": "Бэлтгэл үгын набор",
     "moreWordSets": "Нэмэлтэ набор",
     "buryadSongs": "Буряад дуунууд"
+  },
+  "wordPage": {
+    "similar": "Адли үгэнүүд"
+  },
+  "names": {
+    "searchPlaceholder": "Нэрэ али удха бэдэрэлгэ…",
+    "empty": "Юуш үгы"
+  },
+  "packCard": {
+    "private": "Хубиин",
+    "public": "Нээмэл",
+    "train": "Бэлэдхэл",
+    "edit": "Заһабарилха",
+    "delete": "Усадхаха",
+    "wordsOne": "үгэ",
+    "wordsFew": "үгэ",
+    "wordsMany": "үгэ",
+    "deleteConfirm": "«{name}» карточкэ усадхаха?",
+    "deleteFailed": "Карточкэ усадхагдаагүй"
+  },
+  "quiz": {
+    "title": "Бэлэдхэл",
+    "subtitle": "",
+    "translateWord": "Үгые оршуулагты",
+    "loading": "Ачаалжа байна",
+    "loadError": "Викторинэ ачаалагдаагүй",
+    "retry": "Дахяа оролдохо",
+    "progress": "{total} соогоо {current}-дахи асуудал",
+    "correctSoFar": "Зүб: {count}",
+    "newGame": "Шэнэ наадан",
+    "results": "Дүн",
+    "correctTotal": "Зүб: {count}",
+    "wrongTotal": "Буруу: {count}",
+    "yourAnswer": "Танай харюу",
+    "correctAnswer": "Зүб харюу"
   }
 }

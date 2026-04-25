@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
-import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { Logo } from '@/components/brand/logo';
 import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
@@ -11,7 +11,7 @@ import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'learn' | 'community';
+  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
   href: string;
 };
 
@@ -19,8 +19,8 @@ const NAV_ITEMS: readonly NavItem[] = [
   { id: 'home', href: '/' },
   { id: 'dictionary', href: '/explore' },
   { id: 'names', href: '/names' },
-  { id: 'learn', href: '/learn' },
-  { id: 'community', href: '/community' },
+  { id: 'packs', href: '/packs' },
+  { id: 'quiz', href: '/quiz' },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -32,11 +32,17 @@ export function Header() {
   const t = useTranslations('nav');
   const tAuth = useTranslations('auth');
   const pathname = usePathname() ?? '/';
-  const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const [initials, setInitials] = useState('У');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close drawer when route changes — otherwise tapping a link leaves the
+  // drawer hanging open over the new page.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     setMounted(true);
@@ -65,13 +71,6 @@ export function Header() {
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
-  const handleMobileNav = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.push(e.target.value);
-  };
-
-  const currentHref =
-    NAV_ITEMS.find((item) => isActive(pathname, item.href))?.href ?? '/';
-
   return (
     <header
       style={{
@@ -89,7 +88,8 @@ export function Header() {
           padding: '14px clamp(16px, 4vw, 28px) 14px',
           display: 'flex',
           alignItems: 'center',
-          gap: 24,
+          gap: 12,
+          position: 'relative',
         }}
       >
         <Link href="/" style={{ padding: 0, display: 'inline-flex' }} aria-label={t('home')}>
@@ -98,7 +98,7 @@ export function Header() {
 
         <nav
           className="nav-desktop"
-          style={{ display: 'flex', gap: 4, marginLeft: 20 }}
+          style={{ display: 'flex', gap: 2, marginLeft: 8 }}
         >
           {NAV_ITEMS.map((item) => {
             const active = isActive(pathname, item.href);
@@ -111,9 +111,10 @@ export function Header() {
                   background: active ? 'var(--primary-50)' : 'transparent',
                   color: active ? 'var(--primary-700)' : 'var(--text-muted)',
                   fontWeight: active ? 700 : 500,
-                  padding: '8px 14px',
-                  fontSize: 14,
+                  padding: '6px 10px',
+                  fontSize: 13,
                   textDecoration: 'none',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {t(item.id)}
@@ -122,42 +123,20 @@ export function Header() {
           })}
         </nav>
 
-        <select
-          className="nav-mobile"
-          value={currentHref}
-          onChange={handleMobileNav}
+        <button
+          type="button"
+          className="nav-toggle btn-icon"
+          onClick={() => setMenuOpen((v) => !v)}
           aria-label={t('menu')}
-          style={{
-            display: 'none',
-            marginLeft: 12,
-            padding: '8px 12px',
-            background: 'var(--surface-2)',
-            border: '1px solid var(--border)',
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 600,
-            color: 'var(--text)',
-          }}
+          aria-expanded={menuOpen}
+          style={{ width: 38, height: 38 }}
         >
-          {NAV_ITEMS.map((item) => (
-            <option key={item.id} value={item.href}>
-              {t(item.id)}
-            </option>
-          ))}
-        </select>
+          <Icon name={menuOpen ? 'x' : 'menu'} size={18} />
+        </button>
 
         <div style={{ flex: 1 }} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button
-            type="button"
-            className="btn-icon"
-            title={t('search')}
-            aria-label={t('search')}
-            style={{ width: 38, height: 38 }}
-          >
-            <Icon name="search" size={18} />
-          </button>
           <button
             type="button"
             className="btn-icon"
@@ -173,28 +152,32 @@ export function Header() {
               <Icon name="moon" size={18} />
             )}
           </button>
-          <LocaleSwitcher />
-          <button
-            type="button"
-            className="btn-icon"
-            title={t('notifications')}
-            aria-label={t('notifications')}
-            style={{ width: 38, height: 38, position: 'relative' }}
-          >
-            <Icon name="bell" size={18} />
-            <span
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                width: 8,
-                height: 8,
-                background: 'var(--tertiary)',
-                borderRadius: '50%',
-                border: '2px solid var(--surface)',
-              }}
-            />
-          </button>
+          <span className="hide-md" style={{ display: 'inline-flex' }}>
+            <LocaleSwitcher />
+          </span>
+          {signedIn && (
+            <button
+              type="button"
+              className="btn-icon"
+              title={t('notifications')}
+              aria-label={t('notifications')}
+              style={{ width: 38, height: 38, position: 'relative' }}
+            >
+              <Icon name="bell" size={18} />
+              <span
+                style={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  width: 8,
+                  height: 8,
+                  background: 'var(--tertiary)',
+                  borderRadius: '50%',
+                  border: '2px solid var(--surface)',
+                }}
+              />
+            </button>
+          )}
 
           {signedIn ? (
             <Link
@@ -232,25 +215,81 @@ export function Header() {
               </div>
             </Link>
           ) : (
-            <>
-              <Link
-                href="/signin"
-                className="btn btn-secondary"
-                style={{ textDecoration: 'none' }}
-              >
-                {tAuth('login')}
-              </Link>
-              <Link
-                href="/signup"
-                className="btn btn-secondary"
-                style={{ textDecoration: 'none' }}
-              >
-                {tAuth('createAccountLink')}
-              </Link>
-            </>
+            <Link
+              href="/signin"
+              className="btn btn-secondary hide-md"
+              style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 13 }}
+            >
+              {tAuth('login')}
+            </Link>
           )}
         </div>
       </div>
+
+      {menuOpen && (
+        <div
+          className="nav-drawer"
+          style={{
+            borderTop: '1px solid var(--border)',
+            background: 'var(--surface)',
+            padding: '10px clamp(16px, 4vw, 28px) 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+          }}
+        >
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className="btn"
+                style={{
+                  background: active ? 'var(--primary-50)' : 'transparent',
+                  color: active ? 'var(--primary-700)' : 'var(--text)',
+                  fontWeight: active ? 700 : 500,
+                  padding: '10px 12px',
+                  fontSize: 15,
+                  textDecoration: 'none',
+                  textAlign: 'left',
+                  borderRadius: 10,
+                }}
+              >
+                {t(item.id)}
+              </Link>
+            );
+          })}
+
+          <div
+            style={{
+              marginTop: 6,
+              paddingTop: 10,
+              borderTop: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            <LocaleSwitcher />
+            {!signedIn && (
+              <Link
+                href="/signin"
+                className="btn btn-secondary"
+                style={{
+                  textDecoration: 'none',
+                  padding: '8px 14px',
+                  fontSize: 14,
+                  marginLeft: 'auto',
+                }}
+              >
+                {tAuth('login')}
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

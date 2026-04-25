@@ -61,6 +61,54 @@ export async function getPacks(): Promise<Pack[]> {
   return body.data;
 }
 
+export interface PacksPage {
+  data: Pack[];
+  page: number;
+  perPage: number;
+  total: number;
+  lastPage: number;
+}
+
+export interface PacksPageOptions {
+  page?: number;
+  perPage?: number;
+}
+
+interface PaginatedPacksResponse {
+  data: Pack[];
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+  pagination?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
+export async function getPacksPaginated(
+  opts: PacksPageOptions = {},
+): Promise<PacksPage> {
+  const { page = 1, perPage = 12 } = opts;
+  const body = await apiCall<PaginatedPacksResponse>('GET', `${RESOURCE}/packs`, {
+    params: { page, per_page: perPage },
+  });
+  // Backend returns both `meta` and `pagination` blocks; either works as the
+  // source of truth — fall back to `pagination` if `meta` is missing.
+  const m = body.meta ?? body.pagination;
+  return {
+    data: body.data,
+    page: m?.current_page ?? page,
+    perPage: m?.per_page ?? perPage,
+    total: m?.total ?? body.data.length,
+    lastPage: m?.last_page ?? 1,
+  };
+}
+
 export async function getPublicPack(slug: string): Promise<Pack> {
   const body = await apiCall<DataEnvelope<Pack>>(
     'GET',

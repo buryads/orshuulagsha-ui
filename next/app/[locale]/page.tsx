@@ -1,13 +1,9 @@
 import type { ReactElement } from 'react';
 import { setRequestLocale } from 'next-intl/server';
-import { Categories } from '@/components/home/categories';
-import { CulturalBanner } from '@/components/home/cultural-banner';
 import { Hero } from '@/components/home/hero';
-import { LiveFeed } from '@/components/home/live-feed';
-import { StreakCard } from '@/components/home/streak-card';
-import { TranslationResults } from '@/components/home/translation-results';
-import { Translator } from '@/components/home/translator';
-import { WordOfTheDay } from '@/components/home/word-of-the-day';
+import { TranslatorPanel } from '@/components/home/translator-panel';
+import { PublicPacks } from '@/components/home/public-packs';
+import { DiscordCta } from '@/components/home/discord-cta';
 
 interface HomePageProps {
   params: { locale: string };
@@ -19,26 +15,10 @@ export default async function HomePage({ params }: HomePageProps): Promise<React
   return (
     <div className="fade-up">
       <Hero>
-        <Translator />
-        <TranslationResults />
+        <TranslatorPanel />
       </Hero>
-
-      <section style={{ padding: '20px 28px 0' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 20,
-          }}
-        >
-          <WordOfTheDay />
-          <StreakCard />
-          <LiveFeed />
-        </div>
-      </section>
-
-      <Categories />
-      <CulturalBanner />
+      <PublicPacks />
+      <DiscordCta />
     </div>
   );
 }

@@ -195,7 +195,7 @@ export function WordsMatcher() {
     !!input.trim() && !searching && results.length === 0;
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <header style={{ marginBottom: 16 }}>
         <h1
           style={{

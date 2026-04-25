@@ -2,24 +2,18 @@
 'use client';
 
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactElement,
 } from 'react';
 import { Icon } from '@/components/ui/icon';
-import { translateWord } from '@/lib/api/translate';
-import type { TranslationType } from '@/lib/api/types';
+import { TranslationText } from './translation-text';
 
-type FromLang = 'ru' | 'en' | 'mn' | 'auto' | 'bur';
-type ToLang = 'bur' | 'ru';
+export type FromLang = 'ru' | 'en' | 'mn' | 'auto' | 'bur';
+export type ToLang = 'bur' | 'ru';
 
 const BUR_CHARS = ['Ү', 'ү', 'Ө', 'ө', 'Һ', 'һ', 'Ң', 'ң', 'Ё', 'ё'] as const;
-
-const INITIAL_DEMO_SRC = 'Здравствуйте, как дела?';
-const INITIAL_DEMO_TGT = 'Сайн байна, юу һонин бэ?';
 
 function speechLangFor(lang: FromLang | ToLang): string {
   // Browsers don't ship a Buryat voice — Mongolian is the closest match.
@@ -110,74 +104,41 @@ function langLabel(code: FromLang | ToLang): string {
   return labels[code] ?? code;
 }
 
-function pickTranslationType(from: FromLang, to: ToLang): TranslationType | null {
-  if (to === 'bur') {
-    if (from === 'ru' || from === 'auto') return 'ru2bur';
-    return null; // 'en' / 'mn' / 'bur' → 'bur' is unsupported
-  }
-  // to === 'ru'
-  if (from === 'bur' || from === 'auto') return 'bur2ru';
-  return null; // 'en' / 'mn' / 'ru' → 'ru' is unsupported
+export interface TranslatorProps {
+  from: FromLang;
+  to: ToLang;
+  setTo: (l: ToLang) => void;
+  src: string;
+  setSrc: (v: string) => void;
+  tgt: string;
+  loading: boolean;
+  onSwap: () => void;
+  onCommit?: () => void;
 }
 
-export function Translator(): ReactElement {
-  const [from, setFrom] = useState<FromLang>('ru');
-  const [to, setTo] = useState<ToLang>('bur');
-  const [src, setSrc] = useState<string>(INITIAL_DEMO_SRC);
-  const [tgt, setTgt] = useState<string>(INITIAL_DEMO_TGT);
+export function Translator({
+  from,
+  to,
+  setTo,
+  src,
+  setSrc,
+  tgt,
+  loading,
+  onSwap,
+  onCommit,
+}: TranslatorProps): ReactElement {
   const [showKb, setShowKb] = useState(false);
   const [recording, setRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Skip the very first auto-translate call when the textarea still holds the
-  // canned demo string — keeps curated `tgt` visible and avoids a wasted API hit.
-  const isInitial = useRef(true);
 
-  const swap = useCallback(() => {
-    // New target language is the opposite of current `from` (when `from` is
-    // a recognised primary lang). Default to flipping bur<->ru.
-    const newTo: ToLang = from === 'ru' ? 'bur' : 'ru';
-    // The new `from` is the current `to`. Both 'bur' and 'ru' are valid
-    // FromLang values, so the cast is sound after the type extension.
-    const newFrom: FromLang = to;
-    setFrom(newFrom);
-    setTo(newTo);
-    setSrc(tgt);
-    setTgt(src);
-  }, [from, to, src, tgt]);
-
-  const runTranslate = useCallback(
-    async (value: string) => {
-      const type = pickTranslationType(from, to);
-      if (!type || !value.trim()) return;
-      try {
-        const result = await translateWord(type, value);
-        const first = result.exactTranslations[0] ?? result.possibleTranslations[0];
-        if (first?.translations[0]?.name) {
-          setTgt(first.translations[0].name);
-        }
-      } catch {
-        // silent fail — keep prior translation visible
-      }
-    },
-    [from, to],
-  );
-
-  // Debounced translate on src change
+  // Auto-grow textarea to fit content so the card never needs a vertical
+  // scrollbar. Reset to auto first to allow shrinking when text is deleted.
   useEffect(() => {
-    if (isInitial.current && src === INITIAL_DEMO_SRC) {
-      isInitial.current = false;
-      return;
-    }
-    isInitial.current = false;
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      void runTranslate(src);
-    }, 400);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [src, runTranslate]);
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.max(el.scrollHeight, 150)}px`;
+  }, [src]);
 
   const insertChar = (c: string) => {
     const el = textareaRef.current;
@@ -215,13 +176,28 @@ export function Translator(): ReactElement {
     }
   };
 
-  const fromChip = (l: FromLang): CSSProperties => ({
-    background: from === l ? 'var(--primary-50)' : 'transparent',
-    color: from === l ? 'var(--primary-700)' : 'var(--text-muted)',
-    border: from === l ? '1px solid transparent' : '1px solid var(--border)',
-    fontWeight: from === l ? 700 : 600,
-    cursor: 'pointer',
-  });
+  const [shared, setShared] = useState(false);
+  const shareUrl = async () => {
+    if (typeof window === 'undefined') return;
+    const url = window.location.href;
+    // Prefer native share sheet on mobile; fall back to clipboard.
+    if (navigator.share) {
+      try {
+        await navigator.share({ url });
+        return;
+      } catch {
+        // user cancelled — fall through to clipboard so they still get the link
+      }
+    }
+    if (!navigator.clipboard) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShared(true);
+      setTimeout(() => setShared(false), 1500);
+    } catch {
+      // ignore
+    }
+  };
 
   return (
     <div
@@ -234,43 +210,18 @@ export function Translator(): ReactElement {
         position: 'relative',
       }}
     >
-      {/* lang switch bar */}
+      {/* lang switch bar — direction is already shown by per-pane labels;
+          this row only carries the swap button + TO chips */}
       <div className="tr-langbar">
-        <div style={{ padding: '14px 22px', display: 'flex', gap: 6 }}>
-          {(['ru', 'en', 'mn'] as const).map((l) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setFrom(l)}
-              className="chip"
-              style={fromChip(l)}
-            >
-              {langLabel(l)}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => setFrom('auto')}
-            className="chip"
-            style={{
-              border: '1px dashed var(--border-strong)',
-              color: from === 'auto' ? 'var(--primary-700)' : 'var(--text-soft)',
-              background: from === 'auto' ? 'var(--primary-50)' : 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            <Icon name="plus" size={12} /> Авто
-          </button>
-        </div>
         <button
           type="button"
-          onClick={swap}
+          onClick={onSwap}
           className="btn-icon"
           style={{
             width: 40,
             height: 40,
             alignSelf: 'center',
-            margin: '0 6px',
+            marginLeft: 14,
             background: 'var(--primary-50)',
             color: 'var(--primary)',
           }}
@@ -280,7 +231,7 @@ export function Translator(): ReactElement {
         </button>
         <div
           style={{
-            padding: '14px 22px',
+            padding: '0 14px',
             display: 'flex',
             gap: 6,
             justifyContent: 'flex-end',
@@ -318,18 +269,38 @@ export function Translator(): ReactElement {
       </div>
 
       {/* text areas */}
-      <div className="tr-cols">
+      <div className="tr-cols" style={{ position: 'relative' }}>
+        <button
+          type="button"
+          onClick={onSwap}
+          className="tr-swap-mobile"
+          aria-label="Поменять языки местами"
+        >
+          <Icon name="swap" size={18} />
+        </button>
         <div style={{ padding: 24, position: 'relative' }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--text-soft)',
+              marginBottom: 10,
+            }}
+          >
+            {langLabel(from)}
+          </div>
           <textarea
             ref={textareaRef}
             value={src}
             onChange={(e) => setSrc(e.target.value)}
-            onBlur={() => void runTranslate(src)}
+            onBlur={() => onCommit?.()}
             placeholder="Введите текст…"
             style={{
               width: '100%',
-              height: 150,
-              resize: 'none',
+              minHeight: 150,
+              resize: 'vertical',
               border: 'none',
               outline: 'none',
               background: 'transparent',
@@ -338,6 +309,7 @@ export function Translator(): ReactElement {
               fontFamily: 'var(--font-display)',
               fontWeight: 500,
               letterSpacing: '-0.01em',
+              overflowY: 'hidden',
             }}
           />
           <div
@@ -404,16 +376,30 @@ export function Translator(): ReactElement {
         >
           <div
             style={{
-              height: 150,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--text-soft)',
+              marginBottom: 10,
+            }}
+          >
+            {langLabel(to)}
+          </div>
+          <div
+            style={{
+              minHeight: 150,
               fontSize: 22,
               lineHeight: 1.4,
               fontFamily: 'var(--font-display)',
               fontWeight: 500,
               color: 'var(--text)',
               letterSpacing: '-0.01em',
+              opacity: loading ? 0.6 : 1,
+              transition: 'opacity 0.15s',
             }}
           >
-            {tgt}
+            <TranslationText text={tgt} />
             {recording && (
               <span
                 style={{
@@ -478,10 +464,16 @@ export function Translator(): ReactElement {
               <button
                 type="button"
                 className="btn-icon"
-                style={{ width: 34, height: 34 }}
-                aria-label="Поделиться"
+                onClick={() => void shareUrl()}
+                style={{
+                  width: 34,
+                  height: 34,
+                  color: shared ? 'var(--accent-green)' : undefined,
+                }}
+                aria-label="Скопировать ссылку"
+                title={shared ? 'Ссылка скопирована' : 'Скопировать ссылку'}
               >
-                <Icon name="share" size={16} />
+                <Icon name={shared ? 'check' : 'share'} size={16} />
               </button>
             </div>
             <button type="button" className="chip chip-primary" style={{ cursor: 'pointer' }}>
@@ -491,47 +483,6 @@ export function Translator(): ReactElement {
         </div>
       </div>
 
-      {/* AI suggest */}
-      <div
-        style={{
-          padding: '14px 22px',
-          borderTop: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          background:
-            'linear-gradient(90deg, var(--primary-50) 0%, transparent 70%)',
-          borderRadius: '0 0 28px 28px',
-        }}
-      >
-        <div
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 8,
-            background:
-              'linear-gradient(135deg, var(--primary) 0%, var(--accent-warm) 100%)',
-            display: 'grid',
-            placeItems: 'center',
-            color: 'white',
-          }}
-        >
-          <Icon name="sparkles" size={14} />
-        </div>
-        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-          AI-помощник нашёл{' '}
-          <b style={{ color: 'var(--text)' }}>3 диалектных варианта</b> и{' '}
-          <b style={{ color: 'var(--text)' }}>культурный контекст</b> для этого
-          приветствия.
-        </span>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          style={{ marginLeft: 'auto', padding: '6px 14px', fontSize: 12 }}
-        >
-          Показать
-        </button>
-      </div>
     </div>
   );
 }

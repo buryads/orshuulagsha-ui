@@ -32,7 +32,7 @@ export function PackEdit({ slug }: PackEditProps) {
   }, [slug]);
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <Breadcrumb
         items={[
           { label: 'Главная', href: '/' },

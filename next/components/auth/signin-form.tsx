@@ -6,10 +6,11 @@ import axios from 'axios';
 import { useTranslations } from 'next-intl';
 
 import * as auth from '@/lib/api/auth';
+import * as user from '@/lib/api/user';
 import { Logo } from '@/components/brand/logo';
 import { Soyombo } from '@/components/ui/soyombo';
 import { Icon } from '@/components/ui/icon';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 
 import { AuthCard } from './auth-card';
 import { AuthInput } from './auth-input';
@@ -27,10 +28,11 @@ function isSafeNext(next: string | null): next is string {
 
 export function SigninForm() {
   const t = useTranslations('auth');
-  const router = useRouter();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next');
-  const nextPath = isSafeNext(nextRaw) ? nextRaw : '/';
+  // Match the legacy Nuxt flow: when the user came from a guarded page we
+  // honour `?next=`, otherwise drop them on /packs (their personal space).
+  const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -83,8 +85,13 @@ export function SigninForm() {
     setSubmitting(true);
     try {
       await auth.login(email, password);
-      router.push(nextPath);
-      router.refresh();
+      // Warm the user cache before reload so the destination page can rely on
+      // having a logged-in session immediately, mirroring the old Nuxt flow.
+      await user.getUser().catch(() => undefined);
+      // Hard reload — the Header reads the auth cookie only on mount, so
+      // client-side router.push leaves it stuck on the "Войти" button. A full
+      // navigation re-mounts everything with the new auth state.
+      window.location.assign(nextPath);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {

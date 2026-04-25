@@ -125,6 +125,24 @@ export interface FoundWord {
 
 // --- Translate ---
 
+export interface TranslateBucketItem {
+  id: number;
+  slug: string | null;
+  name: string;
+  images: WordImage[];
+  speechs: WordVoiceActing[];
+  translations: Translation[];
+}
+
+export interface TranslateResponse {
+  result: TranslateBucketItem[];
+  include: TranslateBucketItem[];
+  match: TranslateBucketItem[];
+  fuzzy: TranslateBucketItem[];
+}
+
+// Legacy aliases retained for any historical consumers; new code should use
+// `TranslateResponse` / `TranslateBucketItem` directly.
 export interface TranslationApiPayload {
   result: Word[];
   include: Word[];

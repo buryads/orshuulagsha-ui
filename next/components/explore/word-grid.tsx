@@ -225,9 +225,9 @@ export function WordGrid({ words }: WordGridProps): ReactElement {
     <>
       <style dangerouslySetInnerHTML={{ __html: HOVER_CSS }} />
       <div
+        className="word-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: 14,
           marginBottom: 28,
         }}

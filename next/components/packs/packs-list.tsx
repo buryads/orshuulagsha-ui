@@ -1,35 +1,59 @@
-// TODO i18n: port hardcoded strings to t(...) using next-intl
 'use client';
 
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
-import { useEffect, useState } from 'react';
 import * as user from '@/lib/api/user';
 import type { Pack } from '@/lib/api/types';
 import { Icon } from '@/components/ui/icon';
 import { PackCard } from './pack-card';
+import { Pagination } from '@/components/explore/pagination';
 
-export function PacksList() {
-  const [packs, setPacks] = useState<Pack[] | null>(null);
+const PER_PAGE = 12;
+
+function parsePage(raw: string | null): number {
+  const n = Number(raw ?? 1);
+  return Number.isFinite(n) && n >= 1 ? Math.floor(n) : 1;
+}
+
+interface PageState {
+  packs: Pack[];
+  total: number;
+  lastPage: number;
+}
+
+function PacksListInner() {
+  const sp = useSearchParams();
+  const page = parsePage(sp.get('page'));
+
+  const [state, setState] = useState<PageState | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(null);
     user
-      .getPacks()
-      .then((data) => {
-        if (!cancelled) setPacks(data);
+      .getPacksPaginated({ page, perPage: PER_PAGE })
+      .then((res) => {
+        if (cancelled) return;
+        setState({ packs: res.data, total: res.total, lastPage: res.lastPage });
       })
       .catch((e) => {
         console.error(e);
         if (!cancelled) setError('Не удалось загрузить пакеты');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [page]);
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <div
         style={{
           display: 'flex',
@@ -58,7 +82,7 @@ export function PacksList() {
               fontSize: 15,
             }}
           >
-            Создавайте свои подборки слов для тренировки.
+            {state ? `Всего: ${state.total}` : 'Создавайте свои подборки слов для тренировки.'}
           </p>
         </div>
         <Link href="/packs/create" className="btn btn-primary">
@@ -79,7 +103,7 @@ export function PacksList() {
         >
           {error}
         </div>
-      ) : packs === null ? (
+      ) : state === null ? (
         <div
           className="card"
           style={{
@@ -90,7 +114,7 @@ export function PacksList() {
         >
           Загружаем...
         </div>
-      ) : packs.length === 0 ? (
+      ) : state.packs.length === 0 ? (
         <div
           className="card"
           style={{
@@ -111,19 +135,48 @@ export function PacksList() {
           </Link>
         </div>
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: 16,
-          }}
-        >
-          {packs.map((pack) => (
-            <PackCard key={pack.id} pack={pack} showEdit />
-          ))}
-        </div>
+        <>
+          <div
+            className="word-grid"
+            style={{
+              display: 'grid',
+              gap: 16,
+              opacity: loading ? 0.6 : 1,
+              transition: 'opacity 0.15s',
+            }}
+          >
+            {state.packs.map((pack) => (
+              <PackCard
+                key={pack.id}
+                pack={pack}
+                showEdit
+                onDeleted={(id) =>
+                  setState((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          packs: prev.packs.filter((p) => p.id !== id),
+                          total: Math.max(0, prev.total - 1),
+                        }
+                      : prev,
+                  )
+                }
+              />
+            ))}
+          </div>
+          <Pagination currentPage={page} totalPages={state.lastPage} />
+        </>
       )}
     </div>
+  );
+}
+
+export function PacksList() {
+  // useSearchParams must live under a Suspense boundary in the App Router so
+  // the page can be statically rendered up to the search-param read.
+  return (
+    <Suspense fallback={null}>
+      <PacksListInner />
+    </Suspense>
   );
 }
