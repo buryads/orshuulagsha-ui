@@ -28,7 +28,7 @@ spec:
               name: http
           env:
             - name: API_BASE_URL
-              value: "https://api.buryads.com"
+              value: "https://tt.buryads.com"
           startupProbe:
             httpGet:
               path: /
