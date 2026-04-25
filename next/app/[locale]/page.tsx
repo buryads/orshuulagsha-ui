@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { Suspense, type ReactElement } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { Hero } from '@/components/home/hero';
 import { TranslatorPanel } from '@/components/home/translator-panel';
@@ -15,7 +15,11 @@ export default async function HomePage({ params }: HomePageProps): Promise<React
   return (
     <div className="fade-up">
       <Hero>
-        <TranslatorPanel />
+        {/* TranslatorPanel reads useSearchParams; Suspense lets the page
+            statically pre-render the rest while the panel hydrates client-side. */}
+        <Suspense fallback={null}>
+          <TranslatorPanel />
+        </Suspense>
       </Hero>
       <PublicPacks />
       <DiscordCta />
