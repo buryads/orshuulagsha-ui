@@ -60,7 +60,7 @@ export function PackDetail({ slug, publicView = false }: PackDetailProps) {
 
   if (error) {
     return (
-      <div className="container" style={{ padding: '32px 0' }}>
+      <div className="container" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <div
           role="alert"
           className="card"
@@ -78,7 +78,7 @@ export function PackDetail({ slug, publicView = false }: PackDetailProps) {
 
   if (!pack) {
     return (
-      <div className="container" style={{ padding: '32px 0' }}>
+      <div className="container" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <div
           className="card"
           style={{
@@ -98,7 +98,7 @@ export function PackDetail({ slug, publicView = false }: PackDetailProps) {
   const wordsCount = pack.burWords?.length ?? 0;
 
   return (
-    <div className="container fade-up" style={{ padding: '32px 0' }}>
+    <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 32 }}>
       <Breadcrumb
         items={
           publicView

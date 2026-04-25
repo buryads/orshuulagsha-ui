@@ -3,8 +3,8 @@
     "home": "Главная",
     "dictionary": "Словарь",
     "names": "Имена",
-    "learn": "Обучение",
-    "community": "Сообщество",
+    "packs": "Карточки",
+    "quiz": "Квиз",
     "search": "Поиск",
     "theme": "Переключить тему",
     "notifications": "Уведомления",
@@ -54,11 +54,21 @@
   },
   "home": {
     "hero": {
-      "statusChip": "Открытая лексикография · 8 диалектов",
-      "titleBur": "Буряад хэлэн.",
-      "titleForAll": "Для всех.",
-      "titleForever": "Навсегда.",
-      "subtitle": "Перевод, обучение и аудио от носителей — всё в одном портале."
+      "statusChip": "Словарь и переводчик",
+      "titleBur": "Изучай",
+      "titleForAll": "бурятский.",
+      "titleForever": "",
+      "subtitle": "Словарь · AI-перевод · примеры."
+    },
+    "publicPacks": {
+      "title": "Наборы для тренировки",
+      "more": "Больше наборов",
+      "empty": "Пока нет публичных наборов"
+    },
+    "discord": {
+      "title": "Не удалось перевести то что нужно?",
+      "body": "Если вы хотели бы перевести что-то, но в нашей базе не оказалось нужного — обратитесь за помощью к нам в Discord-сервер.",
+      "cta": "Открыть Discord-сервер Buryads"
     },
     "categories": {
       "title": "Изучай по разделам",
@@ -74,45 +84,29 @@
   },
   "footer": {
     "description": "Открытая платформа бурятского языка — словарь, переводчик и сообщество носителей.",
-    "copyright": "© 2026 Buryad Portal · Свободная цифровая лексикография",
-    "madeWith": "Сделано с ♥ в Улан-Удэ",
+    "copyright": "© 2026 buryads.com · Свободная цифровая лексикография",
+    "madeWith": "Сделано с ♥",
+    "disclaimer": "Переводы могут быть неточными, 100% правильность не гарантируется.",
     "sections": {
+      "navigation": "Навигация",
+      "resources": "Другие словари",
+      "tools": "Инструменты",
+      "support": "Поддержать проект"
+    },
+    "navigation": {
+      "home": "Главная",
       "dictionary": "Словарь",
-      "learn": "Обучение",
-      "community": "Сообщество",
-      "about": "О проекте"
+      "names": "Имена",
+      "packs": "Карточки"
     },
-    "links": {
-      "dictionary": {
-        "search": "Поиск слов",
-        "wordOfDay": "Слово дня",
-        "names": "Имена",
-        "etymology": "Этимология"
-      },
-      "learn": {
-        "lessons": "Уроки",
-        "flashcards": "Флешкарты",
-        "quizzes": "Квизы",
-        "games": "Игры"
-      },
-      "community": {
-        "suggest": "Предложить слово",
-        "forum": "Форум",
-        "contributors": "Контрибьюторы",
-        "news": "Новости"
-      },
-      "about": {
-        "about": "О нас",
-        "team": "Команда",
-        "partners": "Партнёры",
-        "contacts": "Контакты"
-      }
+    "tools": {
+      "keyboard": "Раскладки клавиатуры (GitHub)",
+      "chrome": "Расширение для Chrome",
+      "appstore": "App Store",
+      "playstore": "Google Play"
     },
-    "aria": {
-      "site": "Сайт",
-      "share": "Поделиться",
-      "community": "Сообщество"
-    }
+    "supportText": "Поддержите проект на Boosty или Patreon.",
+    "todayTranslated": "Переводов за сегодня"
   },
   "common": {
     "loading": "Загрузка",
@@ -226,5 +220,40 @@
     "trainingWordsSet": "Наборы слов для тренировки",
     "moreWordSets": "Больше наборов",
     "buryadSongs": "Бурятские песни"
+  },
+  "wordPage": {
+    "similar": "Похожие слова"
+  },
+  "names": {
+    "searchPlaceholder": "Поиск по имени или значению…",
+    "empty": "Ничего не найдено"
+  },
+  "packCard": {
+    "private": "Приватный",
+    "public": "Публичный",
+    "train": "Тренировка",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "wordsOne": "слово",
+    "wordsFew": "слова",
+    "wordsMany": "слов",
+    "deleteConfirm": "Удалить пакет «{name}»?",
+    "deleteFailed": "Не удалось удалить пакет"
+  },
+  "quiz": {
+    "title": "Тренировка",
+    "subtitle": "",
+    "translateWord": "Переведите слово",
+    "loading": "Загружаю",
+    "loadError": "Не удалось загрузить квиз",
+    "retry": "Повторить",
+    "progress": "Вопрос {current} из {total}",
+    "correctSoFar": "Правильно: {count}",
+    "newGame": "Новая игра",
+    "results": "Результаты",
+    "correctTotal": "Правильно: {count}",
+    "wrongTotal": "Неправильно: {count}",
+    "yourAnswer": "Ваш ответ",
+    "correctAnswer": "Правильный ответ"
   }
 }

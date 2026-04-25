@@ -3,8 +3,8 @@
     "home": "Home",
     "dictionary": "Dictionary",
     "names": "Names",
-    "learn": "Learn",
-    "community": "Community",
+    "packs": "Flashcards",
+    "quiz": "Quiz",
     "search": "Search",
     "theme": "Toggle theme",
     "notifications": "Notifications",
@@ -54,11 +54,21 @@
   },
   "home": {
     "hero": {
-      "statusChip": "Open lexicography · 8 dialects",
-      "titleBur": "Buryad language.",
-      "titleForAll": "For everyone.",
-      "titleForever": "Forever.",
-      "subtitle": "Translation, learning and audio from native speakers — all in one portal."
+      "statusChip": "Dictionary & translator",
+      "titleBur": "Learn",
+      "titleForAll": "Buryad.",
+      "titleForever": "",
+      "subtitle": "Dictionary · AI translation · examples."
+    },
+    "publicPacks": {
+      "title": "Training flashcard sets",
+      "more": "More sets",
+      "empty": "No public sets yet"
+    },
+    "discord": {
+      "title": "Couldn't translate what you needed?",
+      "body": "If you wanted to translate something we don't have in the database — reach out to us on the Discord server.",
+      "cta": "Open the Buryads Discord server"
     },
     "categories": {
       "title": "Explore by topic",
@@ -74,45 +84,29 @@
   },
   "footer": {
     "description": "An open platform for the Buryad language — dictionary, translator and a community of speakers.",
-    "copyright": "© 2026 Buryad Portal · Free digital lexicography",
-    "madeWith": "Made with ♥ in Ulan-Ude",
+    "copyright": "© 2026 buryads.com · Free digital lexicography",
+    "madeWith": "Made with ♥",
+    "disclaimer": "Translations may be inaccurate; 100% correctness is not guaranteed.",
     "sections": {
+      "navigation": "Navigation",
+      "resources": "Other dictionaries",
+      "tools": "Tools",
+      "support": "Support the project"
+    },
+    "navigation": {
+      "home": "Home",
       "dictionary": "Dictionary",
-      "learn": "Learn",
-      "community": "Community",
-      "about": "About"
+      "names": "Names",
+      "packs": "Flashcards"
     },
-    "links": {
-      "dictionary": {
-        "search": "Search words",
-        "wordOfDay": "Word of the day",
-        "names": "Names",
-        "etymology": "Etymology"
-      },
-      "learn": {
-        "lessons": "Lessons",
-        "flashcards": "Flashcards",
-        "quizzes": "Quizzes",
-        "games": "Games"
-      },
-      "community": {
-        "suggest": "Suggest a word",
-        "forum": "Forum",
-        "contributors": "Contributors",
-        "news": "News"
-      },
-      "about": {
-        "about": "About us",
-        "team": "Team",
-        "partners": "Partners",
-        "contacts": "Contacts"
-      }
+    "tools": {
+      "keyboard": "Keyboard layouts (GitHub)",
+      "chrome": "Chrome extension",
+      "appstore": "App Store",
+      "playstore": "Google Play"
     },
-    "aria": {
-      "site": "Website",
-      "share": "Share",
-      "community": "Community"
-    }
+    "supportText": "Support the project on Boosty or Patreon.",
+    "todayTranslated": "Translations today"
   },
   "common": {
     "loading": "Loading",
@@ -227,5 +221,40 @@
     "trainingWordsSet": "Set of training words",
     "moreWordSets": "More sets",
     "buryadSongs": "Buryad songs"
+  },
+  "wordPage": {
+    "similar": "Similar words"
+  },
+  "names": {
+    "searchPlaceholder": "Search by name or meaning…",
+    "empty": "No matches"
+  },
+  "packCard": {
+    "private": "Private",
+    "public": "Public",
+    "train": "Train",
+    "edit": "Edit",
+    "delete": "Delete",
+    "wordsOne": "word",
+    "wordsFew": "words",
+    "wordsMany": "words",
+    "deleteConfirm": "Delete pack \"{name}\"?",
+    "deleteFailed": "Couldn't delete the pack"
+  },
+  "quiz": {
+    "title": "Training",
+    "subtitle": "",
+    "translateWord": "Translate the word",
+    "loading": "Loading",
+    "loadError": "Couldn't load the quiz",
+    "retry": "Retry",
+    "progress": "Question {current} of {total}",
+    "correctSoFar": "Correct: {count}",
+    "newGame": "New game",
+    "results": "Results",
+    "correctTotal": "Correct: {count}",
+    "wrongTotal": "Wrong: {count}",
+    "yourAnswer": "Your answer",
+    "correctAnswer": "Correct answer"
   }
 }

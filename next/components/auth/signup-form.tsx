@@ -6,10 +6,11 @@ import axios from 'axios';
 import { useTranslations } from 'next-intl';
 
 import * as auth from '@/lib/api/auth';
+import * as user from '@/lib/api/user';
 import { Logo } from '@/components/brand/logo';
 import { Soyombo } from '@/components/ui/soyombo';
 import { Icon } from '@/components/ui/icon';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 
 import { AuthCard } from './auth-card';
 import { AuthInput } from './auth-input';
@@ -28,10 +29,9 @@ function isSafeNext(next: string | null): next is string {
 
 export function SignupForm() {
   const t = useTranslations('auth');
-  const router = useRouter();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next');
-  const nextPath = isSafeNext(nextRaw) ? nextRaw : '/';
+  const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -90,8 +90,8 @@ export function SignupForm() {
     setSubmitting(true);
     try {
       await auth.register(name.trim(), email, password);
-      router.push(nextPath);
-      router.refresh();
+      await user.getUser().catch(() => undefined);
+      window.location.assign(nextPath);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 422) {

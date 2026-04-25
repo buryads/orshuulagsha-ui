@@ -2,16 +2,25 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { useState, type ReactElement } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 import { Icon } from '@/components/ui/icon';
+import type {
+  TranslateBucketItem,
+  TranslateResponse,
+  TranslationType,
+} from '@/lib/api/types';
 import {
   AI_VARIANTS,
-  DICT_ENTRIES,
   DIALECT_ENTRIES,
-  PHRASE_ENTRIES,
 } from './demo-data';
+import {
+  splitEnumerated,
+  splitRemark,
+  hasUsefulTranslation,
+  isNoTranslation,
+} from './translation-text';
 
-type Tab = 'dict' | 'phrases' | 'ai' | 'context';
+type Tab = 'dict' | 'occurrences' | 'similar' | 'ai';
 
 interface TabSpec {
   id: Tab;
@@ -19,249 +28,251 @@ interface TabSpec {
   count?: number;
 }
 
-const TABS: TabSpec[] = [
-  { id: 'dict', label: 'Словарь', count: 4 },
-  { id: 'phrases', label: 'Фразы и вхождения', count: 7 },
-  { id: 'ai', label: 'AI и Google', count: 2 },
-  { id: 'context', label: 'Культурный контекст' },
-];
+export interface TranslationResultsProps {
+  response: TranslateResponse | null;
+  loading: boolean;
+  src: string;
+  tgt: string;
+  direction: TranslationType;
+  error?: string | null;
+}
 
-function ResultsDict(): ReactElement {
+function firstUsefulName(item: TranslateBucketItem): string | undefined {
+  for (const t of item.translations ?? []) {
+    if (!isNoTranslation(t.name)) return t.name.trim();
+  }
+  return undefined;
+}
+
+// AI/Google buckets sometimes squash multiple variants into a single
+// "1) foo; 2) bar; 3) baz" string. Explode such items so the dictionary tab
+// shows one card per enumerated variant. Remark (e.g. "(Google translation)")
+// is preserved on each piece. Items that don't match the pattern pass through.
+function expandEnumerated(item: TranslateBucketItem): TranslateBucketItem[] {
+  const ts = item.translations ?? [];
+  if (ts.length !== 1) return [item];
+  const tr = ts[0]!;
+  if (isNoTranslation(tr.name)) return [item];
+  const { main, remark } = splitRemark(tr.name);
+  const pieces = splitEnumerated(main);
+  if (!pieces) return [item];
+  return pieces.map((piece) => ({
+    ...item,
+    translations: [{ id: tr.id, name: remark ? `${piece} (${remark})` : piece }],
+  }));
+}
+
+function playAudio(url: string) {
+  if (typeof window === 'undefined') return;
+  try {
+    const audio = new Audio(url);
+    void audio.play();
+  } catch {
+    // ignore — autoplay restrictions or transient codec failure
+  }
+}
+
+function wordHref(item: TranslateBucketItem): string {
+  // Detail page lookups use slug when available, otherwise fall back to id.
+  const key = item.slug ?? String(item.id);
+  return `/words/${encodeURIComponent(key)}`;
+}
+
+interface DictCardProps {
+  item: TranslateBucketItem;
+  compact?: boolean;
+}
+
+function DictCard({ item, compact = false }: DictCardProps): ReactElement {
+  const image = item.images?.[0];
+  const audio = item.speechs?.[0];
+  const parsedTranslations = (item.translations ?? []).map((t) => splitRemark(t.name));
+  const mainParts = parsedTranslations.map((p) => p.main).filter(Boolean);
+  const remarks = parsedTranslations
+    .map((p) => p.remark)
+    .filter((r): r is string => Boolean(r));
+  const itemNameParsed = splitRemark(item.name);
   return (
-    <div className="grid-2">
-      {DICT_ENTRIES.map((e, i) => (
-        <Link
-          key={i}
-          href="/words/sain-baina"
-          className="card"
-          style={{
-            padding: 18,
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-            display: 'block',
-            textDecoration: 'none',
-            color: 'inherit',
-          }}
-          onMouseEnter={(ev) => {
-            ev.currentTarget.style.borderColor = 'var(--primary)';
-            ev.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(ev) => {
-            ev.currentTarget.style.borderColor = 'var(--border)';
-            ev.currentTarget.style.transform = 'none';
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 10,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'var(--primary-700)',
-                padding: '3px 8px',
-                background: 'var(--primary-50)',
-                borderRadius: 999,
-              }}
-            >
-              {e.pos}
-            </span>
-            <span
-              style={{
-                fontSize: 11,
-                color: 'var(--text-soft)',
-                fontFamily: 'var(--font-mono)',
-              }}
-            >
-              · {e.uses.toLocaleString('ru')} употр.
-            </span>
-            <button
-              type="button"
-              className="btn-icon"
-              style={{
-                width: 28,
-                height: 28,
-                marginLeft: 'auto',
-                color: 'var(--primary)',
-              }}
-              onClick={(ev) => ev.preventDefault()}
-              aria-label="Озвучить"
-            >
-              <Icon name="volume" size={14} />
-            </button>
-          </div>
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              letterSpacing: '-0.02em',
-              marginBottom: 4,
-              color: 'var(--text)',
-              fontFamily: 'var(--font-display)',
-            }}
-          >
-            {e.bxr}
-          </div>
-          <div
-            style={{
-              fontSize: 12,
-              color: 'var(--text-soft)',
-              fontFamily: 'var(--font-mono)',
-              marginBottom: 8,
-            }}
-          >
-            {e.ipa}
-          </div>
-          <div
-            style={{
-              fontSize: 14,
-              color: 'var(--text)',
-              lineHeight: 1.5,
-              marginBottom: 6,
-            }}
-          >
-            {e.ru}
-          </div>
-          <div
-            style={{
-              fontSize: 12,
-              color: 'var(--text-muted)',
-              fontStyle: 'italic',
-            }}
-          >
-            {e.note}
-          </div>
-        </Link>
-      ))}
-
-      {/* CTA card */}
-      <Link
-        href="/words"
-        className="card"
+    <Link
+      href={wordHref(item)}
+      className="card"
+      style={{
+        padding: compact ? 14 : 18,
+        cursor: 'pointer',
+        transition: 'all 0.15s',
+        display: 'block',
+        textDecoration: 'none',
+        color: 'inherit',
+      }}
+      onMouseEnter={(ev) => {
+        ev.currentTarget.style.borderColor = 'var(--primary)';
+        ev.currentTarget.style.transform = 'translateY(-2px)';
+      }}
+      onMouseLeave={(ev) => {
+        ev.currentTarget.style.borderColor = 'var(--border)';
+        ev.currentTarget.style.transform = 'none';
+      }}
+    >
+      <div
         style={{
-          padding: 18,
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
           alignItems: 'center',
-          gap: 8,
-          borderStyle: 'dashed',
-          color: 'var(--text-muted)',
-          cursor: 'pointer',
-          textAlign: 'center',
-          textDecoration: 'none',
+          gap: 10,
+          marginBottom: 10,
         }}
       >
-        <Icon name="search" size={20} />
-        <div style={{ fontSize: 13, fontWeight: 600 }}>Ещё 12 значений</div>
-        <div style={{ fontSize: 11, color: 'var(--text-soft)' }}>
-          включая диалектные варианты
+        {image?.url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={image.url}
+            alt=""
+            width={56}
+            height={56}
+            loading="lazy"
+            style={{
+              width: 56,
+              height: 56,
+              objectFit: 'cover',
+              borderRadius: 'var(--r-md)',
+              flexShrink: 0,
+            }}
+          />
+        )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: compact ? 18 : 22,
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              color: 'var(--text)',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 1.2,
+              wordBreak: 'break-word',
+            }}
+          >
+            {itemNameParsed.main}
+            {itemNameParsed.remark && (
+              <span
+                style={{
+                  marginLeft: 6,
+                  fontSize: 12,
+                  fontWeight: 400,
+                  fontStyle: 'italic',
+                  color: 'var(--text-muted)',
+                  fontFamily: 'var(--font-body)',
+                  letterSpacing: 'normal',
+                }}
+              >
+                ({itemNameParsed.remark})
+              </span>
+            )}
+          </div>
         </div>
-      </Link>
+        {audio?.url && (
+          <button
+            type="button"
+            className="btn-icon"
+            style={{
+              width: 30,
+              height: 30,
+              color: 'var(--primary)',
+              flexShrink: 0,
+            }}
+            onClick={(ev) => {
+              ev.preventDefault();
+              playAudio(audio.url);
+            }}
+            aria-label="Озвучить"
+          >
+            <Icon name="volume" size={14} />
+          </button>
+        )}
+      </div>
+      {mainParts.length > 0 && (
+        <div
+          style={{
+            fontSize: 14,
+            color: 'var(--text)',
+            lineHeight: 1.5,
+            wordBreak: 'break-word',
+          }}
+        >
+          {mainParts.join(', ')}
+        </div>
+      )}
+      {remarks.length > 0 && (
+        <div
+          style={{
+            marginTop: 6,
+            fontSize: 12,
+            color: 'var(--text-muted)',
+            lineHeight: 1.4,
+            fontStyle: 'italic',
+          }}
+        >
+          {remarks.map((r, i) => (
+            <div key={i}>{r}</div>
+          ))}
+        </div>
+      )}
+    </Link>
+  );
+}
+
+interface BucketGridProps {
+  items: TranslateBucketItem[];
+  emptyHint: string;
+  compact?: boolean;
+}
+
+function BucketGrid({ items, emptyHint, compact = false }: BucketGridProps): ReactElement {
+  if (items.length === 0) {
+    return <EmptyHint text={emptyHint} />;
+  }
+  return (
+    <div className="grid-2">
+      {items.map((item, idx) => (
+        <DictCard key={`${item.id}-${idx}`} item={item} compact={compact} />
+      ))}
     </div>
   );
 }
 
-function ResultsPhrases(): ReactElement {
+function EmptyHint({ text }: { text: string }): ReactElement {
   return (
     <div
+      className="card"
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 0,
-        border: '1px solid var(--border)',
-        borderRadius: 16,
-        overflow: 'hidden',
-        background: 'var(--surface)',
+        padding: 22,
+        textAlign: 'center',
+        color: 'var(--text-muted)',
+        fontSize: 14,
+        borderStyle: 'dashed',
       }}
     >
-      {PHRASE_ENTRIES.map((p, i) => (
+      {text}
+    </div>
+  );
+}
+
+function SkeletonGrid(): ReactElement {
+  return (
+    <div className="grid-2">
+      {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="phrase-row"
+          className="card"
           style={{
-            padding: '14px 18px',
-            borderBottom:
-              i < PHRASE_ENTRIES.length - 1 ? '1px solid var(--border)' : 'none',
+            padding: 18,
+            height: 110,
+            background:
+              'linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%)',
+            backgroundSize: '200% 100%',
+            animation: 'wave 1.4s ease-in-out infinite',
+            opacity: 0.6,
           }}
-        >
-          <div style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.45 }}>
-            {p.ru}
-          </div>
-          <div
-            style={{
-              fontSize: 14,
-              color: 'var(--text)',
-              lineHeight: 1.45,
-              fontFamily: 'var(--font-display)',
-              fontWeight: 600,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {p.bxr}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              justifyContent: 'flex-end',
-            }}
-          >
-            <div
-              style={{
-                fontSize: 11,
-                color: 'var(--text-soft)',
-                textAlign: 'right',
-                lineHeight: 1.3,
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: 600,
-                  color: p.literary ? 'var(--accent-warm)' : 'var(--text-muted)',
-                }}
-              >
-                {p.source}
-              </div>
-              <div>{p.year}</div>
-            </div>
-            <button
-              type="button"
-              className="btn-icon"
-              style={{ width: 30, height: 30, color: 'var(--text-muted)' }}
-              aria-label="Озвучить"
-            >
-              <Icon name="volume" size={14} />
-            </button>
-          </div>
-        </div>
+        />
       ))}
-      <div
-        style={{
-          padding: '10px 18px',
-          fontSize: 12,
-          color: 'var(--text-soft)',
-          textAlign: 'center',
-          background: 'var(--surface-2)',
-          borderTop: '1px solid var(--border)',
-        }}
-      >
-        + 7 фраз из корпуса ·{' '}
-        <Link
-          href="/explore"
-          style={{ color: 'var(--primary)', fontWeight: 600 }}
-        >
-          показать все
-        </Link>
-      </div>
     </div>
   );
 }
@@ -418,44 +429,6 @@ function ResultsAI(): ReactElement {
           )}
         </div>
       ))}
-    </div>
-  );
-}
-
-function ResultsContext(): ReactElement {
-  return (
-    <div className="ctx-grid">
-      <div className="card" style={{ padding: 22 }}>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'var(--text-soft)',
-            marginBottom: 10,
-          }}
-        >
-          Этикет приветствия
-        </div>
-        <p
-          style={{
-            fontSize: 14,
-            lineHeight: 1.65,
-            color: 'var(--text)',
-            marginBottom: 12,
-          }}
-        >
-          В традиционной бурятской культуре приветствие <b>«Сайн байна»</b>{' '}
-          сопровождается лёгким наклоном головы. Старшим говорят полное{' '}
-          <b>«Амар сайн»</b> (буквально «мирно-хорошо») — это пожелание спокойствия и
-          здоровья.
-        </p>
-        <p style={{ fontSize: 14, lineHeight: 1.65, color: 'var(--text-muted)' }}>
-          В деревнях после <i>«Сайн байна»</i> обычно следует расспрос о скоте,
-          погоде и родственниках — это часть ритуала, а не любопытство.
-        </p>
-      </div>
 
       <div className="card" style={{ padding: 22, background: 'var(--surface-2)' }}>
         <div
@@ -520,8 +493,88 @@ function ResultsContext(): ReactElement {
   );
 }
 
-export function TranslationResults(): ReactElement {
-  const [tab, setTab] = useState<Tab>('dict');
+export function TranslationResults({
+  response,
+  loading,
+  src,
+  tgt,
+  error,
+}: TranslationResultsProps): ReactElement | null {
+  const tgtKey = tgt.trim();
+  const isShownInPane = (item: TranslateBucketItem): boolean => {
+    if (!tgtKey) return false;
+    return firstUsefulName(item) === tgtKey;
+  };
+  // Drop bucket items whose only translation is a generic remark (e.g. all-
+  // parenthetical AI explanations) — those carry no real translation and would
+  // be noise both in the right pane and in the tabs. Also drop the item whose
+  // first useful translation already appears in the right pane.
+  const keep = (item: TranslateBucketItem) =>
+    hasUsefulTranslation(item) && !isShownInPane(item);
+  // Explode enumerated AI/Google entries into one card per variant before the
+  // pane-dedupe filter, so each variant gets its own shot at being kept.
+  const expandedResult = (response?.result ?? []).flatMap(expandEnumerated);
+  const usefulResult = expandedResult.filter(keep);
+  const usefulInclude = (response?.include ?? []).filter(keep);
+  const usefulMatch = (response?.match ?? []).filter(keep);
+  const usefulFuzzy = (response?.fuzzy ?? []).filter(keep);
+
+  const dictExtraCount = usefulResult.length;
+  const includeCount = usefulInclude.length;
+  const similarCount = usefulFuzzy.length + usefulMatch.length;
+  const totalCount = dictExtraCount + includeCount + similarCount;
+
+  // Tabs only for buckets with content. AI tab is a demo fallback shown only
+  // when the backend returned nothing real.
+  const tabs: TabSpec[] = [];
+  if (dictExtraCount > 0) tabs.push({ id: 'dict', label: 'Словарь', count: dictExtraCount });
+  if (includeCount > 0) tabs.push({ id: 'occurrences', label: 'Вхождения', count: includeCount });
+  if (similarCount > 0) tabs.push({ id: 'similar', label: 'Похожие', count: similarCount });
+  if (totalCount === 0 && response) tabs.push({ id: 'ai', label: 'AI и контекст' });
+
+  const [tab, setTab] = useState<Tab>(tabs[0]?.id ?? 'dict');
+
+  // Reset to the first tab on every new response so the user lands on the
+  // most relevant bucket instead of a stale selection from the previous query.
+  useEffect(() => {
+    if (tabs.length > 0) setTab(tabs[0]!.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: respond
+    // only to response identity changes, not derived `tabs` array recomputes.
+  }, [response]);
+
+  const trimmedSrc = src.trim();
+  const notFoundHint = trimmedSrc
+    ? `Ничего не найдено по запросу «${trimmedSrc}»`
+    : 'Ничего не найдено';
+
+  // Hide entirely when the right pane already exhausts everything (the picked
+  // translation was the only useful item across all buckets).
+  if (response && totalCount === 0 && tgtKey) return null;
+
+  // Skeleton state on first request.
+  if (loading && !response) {
+    return (
+      <div className="fade-up" style={{ marginTop: 20 }}>
+        <SkeletonGrid />
+      </div>
+    );
+  }
+
+  // No request yet — keep the area minimal (right pane has the demo translation).
+  if (!response && !loading) return null;
+
+  // Response present but completely empty.
+  if (response && totalCount === 0) {
+    return (
+      <div className="fade-up" style={{ marginTop: 20 }}>
+        <EmptyHint text={notFoundHint} />
+      </div>
+    );
+  }
+
+  function renderBucket(items: TranslateBucketItem[], compact = false): ReactElement {
+    return <BucketGrid items={items} emptyHint={notFoundHint} compact={compact} />;
+  }
 
   return (
     <div className="fade-up" style={{ marginTop: 20 }}>
@@ -535,9 +588,10 @@ export function TranslationResults(): ReactElement {
           marginBottom: 20,
           paddingBottom: 0,
           overflowX: 'auto',
+          overflowY: 'hidden',
         }}
       >
-        {TABS.map((t) => (
+        {tabs.map((t) => (
           <button
             key={t.id}
             type="button"
@@ -593,17 +647,35 @@ export function TranslationResults(): ReactElement {
               width: 6,
               height: 6,
               borderRadius: '50%',
-              background: 'var(--accent-green)',
+              background: error
+                ? 'var(--tertiary)'
+                : loading
+                  ? 'var(--accent-warm)'
+                  : 'var(--accent-green)',
             }}
           />
-          Найдено за 0.18s
+          {error ? error : loading ? 'Поиск…' : response ? 'Найдено' : 'Готов к переводу'}
         </div>
       </div>
 
-      {tab === 'dict' && <ResultsDict />}
-      {tab === 'phrases' && <ResultsPhrases />}
-      {tab === 'ai' && <ResultsAI />}
-      {tab === 'context' && <ResultsContext />}
+      {tab === 'dict' && dictExtraCount > 0 && renderBucket(usefulResult)}
+      {tab === 'occurrences' && includeCount > 0 && renderBucket(usefulInclude, true)}
+      {tab === 'similar' && similarCount > 0 &&
+        renderBucket([...usefulMatch, ...usefulFuzzy], true)}
+      {tab === 'ai' && totalCount === 0 && <ResultsAI />}
+
+      {/* CTA */}
+      {response && totalCount > 0 && (
+        <div style={{ marginTop: 14, textAlign: 'center' }}>
+          <Link
+            href="/words"
+            className="chip"
+            style={{ cursor: 'pointer', textDecoration: 'none' }}
+          >
+            <Icon name="search" size={12} /> Открыть полный словарь
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
