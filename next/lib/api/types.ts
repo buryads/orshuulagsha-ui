@@ -125,6 +125,12 @@ export interface FoundWord {
 
 // --- Translate ---
 
+export interface TranslateBucketSubword {
+  id: number;
+  name: string;
+  slug: string | null;
+}
+
 export interface TranslateBucketItem {
   id: number;
   slug: string | null;
@@ -132,6 +138,10 @@ export interface TranslateBucketItem {
   images: WordImage[];
   speechs: WordVoiceActing[];
   translations: Translation[];
+  // Present only when the bucket entry is a Russian word (ru2bur direction):
+  // backend serialises the linked Buryat words with their slugs so the UI can
+  // open the dictionary page for the chosen translation directly.
+  bur_words?: TranslateBucketSubword[];
 }
 
 export interface TranslateResponse {

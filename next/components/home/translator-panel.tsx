@@ -54,22 +54,39 @@ function pickPrimaryTranslation(r: TranslateResponse): string | undefined {
   );
 }
 
-// Pick the slug of a dictionary entry whose surface form matches what the user
-// typed. Used to surface an "Open in dictionary" affordance on the source
-// pane only when the term is actually catalogued (id > 0 + slug present).
-function pickSourceSlug(
+// Pick the slug of the Buryat dictionary entry that backs the translation
+// shown on the right pane. Only meaningful when target language is Buryat —
+// the detail page (`/words/[slug]`) currently resolves Bur slugs only.
+//
+// Strategy: scan the response buckets for a Ruword item whose surface form
+// equals the typed source text; among its linked `bur_words` pick one whose
+// name matches the rendered target text, falling back to the first entry
+// with a slug. Synthetic id == 0 fallback rows are skipped.
+function pickTargetBurSlug(
   r: TranslateResponse | null,
   src: string,
+  tgt: string,
 ): string | undefined {
   if (!r) return undefined;
-  const q = src.trim().toLowerCase();
-  if (!q) return undefined;
+  const qSrc = src.trim().toLowerCase();
+  const qTgt = tgt.trim().toLowerCase();
+  if (!qSrc) return undefined;
   const buckets = [r.result, r.include, r.match, r.fuzzy];
   for (const bucket of buckets) {
     for (const item of bucket ?? []) {
-      if (!item || !item.slug || item.id === 0) continue;
+      if (!item || item.id === 0) continue;
       const name = (item.name ?? '').trim().toLowerCase();
-      if (name === q) return item.slug;
+      if (name !== qSrc) continue;
+      const burs = item.bur_words ?? [];
+      if (burs.length === 0) continue;
+      if (qTgt) {
+        const exact = burs.find(
+          (b) => b.slug && (b.name ?? '').trim().toLowerCase() === qTgt,
+        );
+        if (exact?.slug) return exact.slug;
+      }
+      const firstWithSlug = burs.find((b) => b.slug);
+      if (firstWithSlug?.slug) return firstWithSlug.slug;
     }
   }
   return undefined;
@@ -114,7 +131,13 @@ export function TranslatorPanel(): ReactElement {
     [from, to],
   );
 
-  const srcSlug = useMemo(() => pickSourceSlug(response, src), [response, src]);
+  // Show the dictionary affordance only on the Bur target pane — Ru detail
+  // pages aren't supported yet, so a button on the right side in bur2ru mode
+  // would lead to a broken route.
+  const tgtSlug = useMemo(
+    () => (to === 'bur' ? pickTargetBurSlug(response, src, tgt) : undefined),
+    [response, src, tgt, to],
+  );
 
   const runTranslate = useCallback(
     async (value: string, type: TranslationType) => {
@@ -218,7 +241,7 @@ export function TranslatorPanel(): ReactElement {
         loading={loading}
         onSwap={swap}
         onCommit={handleCommit}
-        srcSlug={srcSlug}
+        tgtSlug={tgtSlug}
       />
       <TranslationResults
         response={response}
