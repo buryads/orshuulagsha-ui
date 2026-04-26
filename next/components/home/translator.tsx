@@ -9,11 +9,10 @@ import {
 } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { TranslationText } from './translation-text';
+import { BurKeyboard } from './bur-keyboard';
 
 export type FromLang = 'ru' | 'en' | 'mn' | 'auto' | 'bur';
 export type ToLang = 'bur' | 'ru';
-
-const BUR_CHARS = ['Ү', 'ү', 'Ө', 'ө', 'Һ', 'һ', 'Ң', 'ң', 'Ё', 'ё'] as const;
 
 function speechLangFor(lang: FromLang | ToLang): string {
   // Browsers don't ship a Buryat voice — Mongolian is the closest match.
@@ -29,68 +28,6 @@ function speechLangFor(lang: FromLang | ToLang): string {
     default:
       return 'ru-RU';
   }
-}
-
-interface BurKeyboardProps {
-  onInsert: (c: string) => void;
-  onClose: () => void;
-}
-
-function BurKeyboard({ onInsert, onClose }: BurKeyboardProps): ReactElement {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: '100%',
-        left: 0,
-        marginBottom: 10,
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: 14,
-        padding: 10,
-        display: 'flex',
-        gap: 6,
-        boxShadow: 'var(--shadow-md)',
-        zIndex: 10,
-      }}
-    >
-      {BUR_CHARS.map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => onInsert(c)}
-          style={{
-            width: 36,
-            height: 36,
-            fontSize: 16,
-            fontWeight: 600,
-            background: 'var(--surface-2)',
-            borderRadius: 8,
-            color: 'var(--text)',
-            transition: 'all 0.15s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--primary-50)';
-            e.currentTarget.style.color = 'var(--primary-700)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'var(--surface-2)';
-            e.currentTarget.style.color = 'var(--text)';
-          }}
-        >
-          {c}
-        </button>
-      ))}
-      <button
-        type="button"
-        onClick={onClose}
-        style={{ width: 36, height: 36, color: 'var(--text-muted)' }}
-        aria-label="Закрыть клавиатуру"
-      >
-        <Icon name="x" size={16} />
-      </button>
-    </div>
-  );
 }
 
 function langLabel(code: FromLang | ToLang): string {
@@ -155,6 +92,29 @@ export function Translator({
       const pos = start + c.length;
       el.setSelectionRange(pos, pos);
     });
+  };
+
+  const deleteBack = () => {
+    const el = textareaRef.current;
+    if (!el) {
+      setSrc(src.slice(0, -1));
+      return;
+    }
+    const start = el.selectionStart ?? src.length;
+    const end = el.selectionEnd ?? src.length;
+    if (start !== end) {
+      setSrc(src.slice(0, start) + src.slice(end));
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start, start);
+      });
+    } else if (start > 0) {
+      setSrc(src.slice(0, start - 1) + src.slice(start));
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start - 1, start - 1);
+      });
+    }
   };
 
   const speak = (text: string, lang: FromLang | ToLang) => {
@@ -361,9 +321,6 @@ export function Translator({
             <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
               {src.length} / 5000
             </span>
-            {showKb && (
-              <BurKeyboard onInsert={insertChar} onClose={() => setShowKb(false)} />
-            )}
           </div>
         </div>
 
@@ -476,13 +433,19 @@ export function Translator({
                 <Icon name={shared ? 'check' : 'share'} size={16} />
               </button>
             </div>
-            <button type="button" className="chip chip-primary" style={{ cursor: 'pointer' }}>
-              <Icon name="book" size={12} /> Открыть в словаре
-            </button>
           </div>
         </div>
       </div>
 
+      {showKb && (
+        <div style={{ padding: '0 14px 14px' }}>
+          <BurKeyboard
+            onInsert={insertChar}
+            onBackspace={deleteBack}
+            onClose={() => setShowKb(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }

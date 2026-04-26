@@ -298,6 +298,27 @@ h2 { font-weight: 700; }
 /* Hide on small */
 .hide-sm { display: initial; }
 
+/* Buryat keyboard adapts on narrow screens: tighter padding, smaller keys,
+   and the special-key labels (tab/caps/shift/enter/backspace) get clipped
+   to icons. */
+@media (max-width: 720px) {
+  .bur-kb { padding: 6px !important; gap: 4px !important; }
+  .bur-kb > div { gap: 4px !important; }
+  .bur-kb button {
+    height: 34px !important;
+    font-size: 13px !important;
+    padding: 0 4px !important;
+    border-radius: 6px !important;
+  }
+}
+@media (max-width: 480px) {
+  .bur-kb button {
+    height: 30px !important;
+    font-size: 12px !important;
+    padding: 0 2px !important;
+  }
+}
+
 /* Quiz answers grid: 4 across on desktop, 2 on tablet, 1 on narrow */
 .quiz-answers {
   display: grid;
