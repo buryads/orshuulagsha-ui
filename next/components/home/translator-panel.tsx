@@ -54,6 +54,27 @@ function pickPrimaryTranslation(r: TranslateResponse): string | undefined {
   );
 }
 
+// Pick the slug of a dictionary entry whose surface form matches what the user
+// typed. Used to surface an "Open in dictionary" affordance on the source
+// pane only when the term is actually catalogued (id > 0 + slug present).
+function pickSourceSlug(
+  r: TranslateResponse | null,
+  src: string,
+): string | undefined {
+  if (!r) return undefined;
+  const q = src.trim().toLowerCase();
+  if (!q) return undefined;
+  const buckets = [r.result, r.include, r.match, r.fuzzy];
+  for (const bucket of buckets) {
+    for (const item of bucket ?? []) {
+      if (!item || !item.slug || item.id === 0) continue;
+      const name = (item.name ?? '').trim().toLowerCase();
+      if (name === q) return item.slug;
+    }
+  }
+  return undefined;
+}
+
 function pickTranslationType(from: FromLang, to: ToLang): TranslationType | null {
   if (to === 'bur') {
     if (from === 'ru' || from === 'auto') return 'ru2bur';
@@ -92,6 +113,8 @@ export function TranslatorPanel(): ReactElement {
     () => pickTranslationType(from, to),
     [from, to],
   );
+
+  const srcSlug = useMemo(() => pickSourceSlug(response, src), [response, src]);
 
   const runTranslate = useCallback(
     async (value: string, type: TranslationType) => {
@@ -195,6 +218,7 @@ export function TranslatorPanel(): ReactElement {
         loading={loading}
         onSwap={swap}
         onCommit={handleCommit}
+        srcSlug={srcSlug}
       />
       <TranslationResults
         response={response}
