@@ -7,6 +7,7 @@ import {
   useState,
   type ReactElement,
 } from 'react';
+import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { Link } from '@/i18n/navigation';
 import { TranslationText } from './translation-text';
@@ -68,6 +69,7 @@ export function Translator({
   onCommit,
   tgtSlug,
 }: TranslatorProps): ReactElement {
+  const t = useTranslations('home.translator');
   const [showKb, setShowKb] = useState(false);
   const [recording, setRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -445,7 +447,7 @@ export function Translator({
                 className="chip chip-primary"
                 style={{ cursor: 'pointer', textDecoration: 'none' }}
               >
-                <Icon name="book" size={12} /> Открыть в словаре
+                <Icon name="book" size={12} /> {t('openInDictionary')}
               </Link>
             )}
           </div>

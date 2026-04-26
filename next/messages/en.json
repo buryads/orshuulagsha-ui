@@ -70,6 +70,9 @@
       "body": "If you wanted to translate something we don't have in the database — reach out to us on the Discord server.",
       "cta": "Open the Buryads Discord server"
     },
+    "translator": {
+      "openInDictionary": "Open in dictionary"
+    },
     "categories": {
       "title": "Explore by topic",
       "subtitle": "Find your way through the living language of the steppe",
