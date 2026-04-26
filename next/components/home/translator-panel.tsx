@@ -27,8 +27,8 @@ function parseTo(v: string | null): ToLang | null {
   return v && VALID_TO.has(v as ToLang) ? (v as ToLang) : null;
 }
 
-const INITIAL_DEMO_SRC = 'Здравствуйте, как дела?';
-const INITIAL_DEMO_TGT = 'Сайн байна, юу һонин бэ?';
+// Empty initial state — no canned demo so we don't fire a wasted translate
+// call on first mount. URL `?q=` still hydrates if shared.
 
 function firstUsefulTranslation(items: TranslateResponse['result']): string | undefined {
   for (const item of items) {
@@ -72,14 +72,12 @@ export function TranslatorPanel(): ReactElement {
   const router = useRouter();
   const initFrom = parseFrom(sp.get('from')) ?? 'ru';
   const initTo = parseTo(sp.get('to')) ?? 'bur';
-  const initQ = sp.get('q');
-  const initSrc = initQ ?? INITIAL_DEMO_SRC;
-  const initTgt = initQ == null ? INITIAL_DEMO_TGT : '';
+  const initQ = sp.get('q') ?? '';
 
   const [from, setFrom] = useState<FromLang>(initFrom);
   const [to, setTo] = useState<ToLang>(initTo);
-  const [src, setSrc] = useState<string>(initSrc);
-  const [tgt, setTgt] = useState<string>(initTgt);
+  const [src, setSrc] = useState<string>(initQ);
+  const [tgt, setTgt] = useState<string>('');
   const [response, setResponse] = useState<TranslateResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,11 +85,7 @@ export function TranslatorPanel(): ReactElement {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Token used to ignore stale responses when src changes mid-flight.
   const requestIdRef = useRef(0);
-  // Skip the very first auto-translate call when the textarea still holds the
-  // canned demo string — keeps curated `tgt` visible and avoids a wasted API hit.
-  const isInitial = useRef(initQ == null);
-  // Skip the first URL-write effect so we don't overwrite a clean URL with
-  // demo defaults on mount. Subsequent state changes will sync.
+  // Skip the first URL-write effect so we don't overwrite a clean URL on mount.
   const didMountRef = useRef(false);
 
   const direction: TranslationType | null = useMemo(
@@ -153,14 +147,9 @@ export function TranslatorPanel(): ReactElement {
     [to, src, tgt],
   );
 
-  // Debounced translate on src change. Skips the first effect run when the
-  // textarea still holds the canned demo string so the curated `tgt` remains.
+  // Debounced translate on src change. Empty input skips the API call via
+  // runTranslate's own guard.
   useEffect(() => {
-    if (isInitial.current && src === INITIAL_DEMO_SRC) {
-      isInitial.current = false;
-      return;
-    }
-    isInitial.current = false;
     if (!direction) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
@@ -185,8 +174,7 @@ export function TranslatorPanel(): ReactElement {
       return;
     }
     const params = new URLSearchParams();
-    const trimmed = src.trim();
-    if (trimmed && trimmed !== INITIAL_DEMO_SRC) params.set('q', src);
+    if (src.trim()) params.set('q', src);
     params.set('from', from);
     params.set('to', to);
     const qs = params.toString();
