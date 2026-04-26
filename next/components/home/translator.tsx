@@ -52,8 +52,8 @@ export interface TranslatorProps {
   loading: boolean;
   onSwap: () => void;
   onCommit?: () => void;
-  /** Slug of the dictionary entry matching the source text (when known). */
-  srcSlug?: string;
+  /** Slug of the Bur dictionary entry that matches the rendered target text. */
+  tgtSlug?: string;
 }
 
 export function Translator({
@@ -66,7 +66,7 @@ export function Translator({
   loading,
   onSwap,
   onCommit,
-  srcSlug,
+  tgtSlug,
 }: TranslatorProps): ReactElement {
   const [showKb, setShowKb] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -322,20 +322,9 @@ export function Translator({
                 <Icon name="mic" size={16} />
               </button>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {srcSlug && (
-                <Link
-                  href={`/words/${encodeURIComponent(srcSlug)}`}
-                  className="chip chip-primary"
-                  style={{ cursor: 'pointer', textDecoration: 'none' }}
-                >
-                  <Icon name="book" size={12} /> Открыть в словаре
-                </Link>
-              )}
-              <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
-                {src.length} / 5000
-              </span>
-            </div>
+            <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
+              {src.length} / 5000
+            </span>
           </div>
         </div>
 
@@ -404,6 +393,8 @@ export function Translator({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              gap: 10,
+              flexWrap: 'wrap',
             }}
           >
             <div style={{ display: 'flex', gap: 6 }}>
@@ -448,6 +439,15 @@ export function Translator({
                 <Icon name={shared ? 'check' : 'share'} size={16} />
               </button>
             </div>
+            {tgtSlug && (
+              <Link
+                href={`/words/${encodeURIComponent(tgtSlug)}`}
+                className="chip chip-primary"
+                style={{ cursor: 'pointer', textDecoration: 'none' }}
+              >
+                <Icon name="book" size={12} /> Открыть в словаре
+              </Link>
+            )}
           </div>
         </div>
       </div>
