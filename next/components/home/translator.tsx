@@ -8,6 +8,7 @@ import {
   type ReactElement,
 } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { Link } from '@/i18n/navigation';
 import { TranslationText } from './translation-text';
 import { BurKeyboard } from './bur-keyboard';
 
@@ -51,6 +52,8 @@ export interface TranslatorProps {
   loading: boolean;
   onSwap: () => void;
   onCommit?: () => void;
+  /** Slug of the dictionary entry matching the source text (when known). */
+  srcSlug?: string;
 }
 
 export function Translator({
@@ -63,6 +66,7 @@ export function Translator({
   loading,
   onSwap,
   onCommit,
+  srcSlug,
 }: TranslatorProps): ReactElement {
   const [showKb, setShowKb] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -318,9 +322,20 @@ export function Translator({
                 <Icon name="mic" size={16} />
               </button>
             </div>
-            <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
-              {src.length} / 5000
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {srcSlug && (
+                <Link
+                  href={`/words/${encodeURIComponent(srcSlug)}`}
+                  className="chip chip-primary"
+                  style={{ cursor: 'pointer', textDecoration: 'none' }}
+                >
+                  <Icon name="book" size={12} /> Открыть в словаре
+                </Link>
+              )}
+              <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
+                {src.length} / 5000
+              </span>
+            </div>
           </div>
         </div>
 
