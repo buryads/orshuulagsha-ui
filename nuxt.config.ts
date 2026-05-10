@@ -14,6 +14,13 @@ export default defineNuxtConfig({
         },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
+      script: [
+        {
+          defer: true,
+          'data-domain': 't.buryads.com',
+          src: 'https://analytics.dzik.email/js/script.js',
+        },
+      ],
     },
     /* page transition doesn't work https://github.com/nuxt/nuxt/issues/13350 */
   },
