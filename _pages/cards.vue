@@ -109,22 +109,15 @@
       return {};
     },
     async asyncData({ $axios, params, error }) {
-      let pack = null;
+      if (!params.packName) return { pack: null };
       try {
-        document;
         const { data } = await $axios.$get(
           `/api/user/packs/${params.packName}/by-slug`,
         );
-        pack = data;
+        return { pack: data };
       } catch (e) {
-        const { data } = await $axios.$get(
-          `/api/user/packs/${params.packName}/by-slug`,
-        );
-        pack = data;
+        return { pack: null };
       }
-      return {
-        pack,
-      };
     },
     components: {
       Header,
@@ -141,9 +134,6 @@
       packName() {
         return this.$route.params.packName;
       },
-    },
-    created() {
-      this.loadPack();
     },
     computed: {
       packName() {
@@ -204,10 +194,15 @@
     methods: {
       extractDefaultBurImageFromBurWord,
       async loadPack() {
-        const { data } = await this.$axios.$get(
-          `/api/user/packs/${this.packName}/by-slug`,
-        );
-        this.pack = data;
+        if (!this.packName) return;
+        try {
+          const { data } = await this.$axios.$get(
+            `/api/user/packs/${this.packName}/by-slug`,
+          );
+          this.pack = data;
+        } catch (e) {
+          // pack not found — keep null
+        }
       },
       async learnPack() {
         const { data } = await this.$axios.$post(

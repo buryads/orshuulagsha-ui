@@ -153,6 +153,9 @@ class UserModule extends HttpFactory implements IUserModule {
   }
 
   async getPublicPack(slug: string) {
+    if (!slug || slug === 'undefined' || slug === 'null') {
+      throw new Error('getPublicPack: invalid slug');
+    }
     try {
       const {
         data: { data },
@@ -179,6 +182,9 @@ class UserModule extends HttpFactory implements IUserModule {
   }
 
   async getPack(slug: string) {
+    if (!slug || slug === 'undefined' || slug === 'null') {
+      throw new Error('getPack: invalid slug');
+    }
     try {
       const {
         data: { data },
@@ -205,6 +211,9 @@ class UserModule extends HttpFactory implements IUserModule {
   }
 
   async getPackQuizQuestionsBySlug(packSlug: string) {
+    if (!packSlug || packSlug === 'undefined' || packSlug === 'null') {
+      throw new Error('getPackQuizQuestionsBySlug: invalid slug');
+    }
     try {
       const {
         data: { data },

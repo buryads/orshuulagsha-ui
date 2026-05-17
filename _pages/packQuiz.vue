@@ -208,27 +208,38 @@
     },
     watch: {},
     async mounted() {
+      if (!this.packName) return;
       await this.loadQuestions();
       await this.loadPack();
     },
     methods: {
       extractDefaultBurImageFromBurWord,
       async loadPack() {
-        const { data } = await this.$axios.$get(
-          `/api/user/packs/${this.packName}/by-slug`,
-        );
-        this.pack = data;
+        if (!this.packName) return;
+        try {
+          const { data } = await this.$axios.$get(
+            `/api/user/packs/${this.packName}/by-slug`,
+          );
+          this.pack = data;
+        } catch (e) {
+          // pack not found
+        }
       },
       async loadQuestions() {
-        const {
-          data: questions,
-          meta: { count },
-        } = await this.$axios.$get(
-          `/api/user/packs/${this.packName}/by-slug/questions`,
-        );
-        this.questions = questions;
-        this.count = count;
-        console.log(questions, count);
+        if (!this.packName) return;
+        try {
+          const {
+            data: questions,
+            meta: { count },
+          } = await this.$axios.$get(
+            `/api/user/packs/${this.packName}/by-slug/questions`,
+          );
+          this.questions = questions;
+          this.count = count;
+        } catch (e) {
+          this.questions = [];
+          this.count = 0;
+        }
       },
       answered(e) {
         if (this.questions[this.idx].correctAnswer.answered) {
