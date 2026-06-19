@@ -12,9 +12,6 @@ import { getDueCards, gradeCard } from '@/lib/api/srs';
 import { getGamificationMe } from '@/lib/api/gamification';
 import type { SrsDueItem, GamificationMe } from '@/lib/api/types';
 
-// XP за каждую оценённую карточку (косметический фикс, бэк не возвращает xpDelta)
-const XP_PER_CARD = 10;
-
 type SessionState = 'loading' | 'error' | 'unauthorized' | 'empty' | 'active' | 'complete';
 
 export function SrsSession(): ReactElement {

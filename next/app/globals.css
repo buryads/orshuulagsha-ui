@@ -301,6 +301,8 @@ h2 { font-weight: 700; }
 
 /* Hide on small */
 .hide-sm { display: initial; }
+/* Complement: hidden by default, visible on small (≤720px) — same breakpoint as .hide-sm */
+.show-sm { display: none !important; }
 
 /* Buryat keyboard adapts on narrow screens: tighter padding, smaller keys,
    and the special-key labels (tab/caps/shift/enter/backspace) get clipped
@@ -448,6 +450,7 @@ h2 { font-weight: 700; }
   .phrase-row > div:nth-child(3) { justify-content: flex-start !important; }
 
   .hide-sm { display: none !important; }
+  .show-sm { display: inline-flex !important; }
 
   .card { padding: 16px !important; }
 
