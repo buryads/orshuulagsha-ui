@@ -335,7 +335,8 @@
         "close": "Close",
         "error": "Failed to load. Retry?",
         "authRequired": "Sign in to save your progress",
-        "signIn": "Sign in"
+        "signIn": "Sign in",
+        "retry": "Retry"
       },
       "statusNew": "new",
       "statusKnown": "known",

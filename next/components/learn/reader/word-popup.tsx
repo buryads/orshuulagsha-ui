@@ -316,7 +316,7 @@ export function WordPopup({
               onClick={() => void loadWord()}
               style={{ fontSize: 13 }}
             >
-              {t('retry', { defaultValue: 'Retry' })}
+              {t('retry')}
             </button>
           </div>
         )}
