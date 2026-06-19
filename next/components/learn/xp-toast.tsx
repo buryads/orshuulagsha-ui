@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 
@@ -18,6 +18,8 @@ interface XpToastProps {
 export function XpToast({ amount, onDone }: XpToastProps) {
   const t = useTranslations('learn.hud');
   const [visible, setVisible] = useState(false);
+  // Ref for the inner fade-out delay so we can cancel it on unmount.
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!amount) return;
@@ -25,9 +27,17 @@ export function XpToast({ amount, onDone }: XpToastProps) {
     const timer = setTimeout(() => {
       setVisible(false);
       // Give the CSS fade-out time to play before notifying parent.
-      setTimeout(onDone, 300);
+      fadeTimerRef.current = setTimeout(onDone, 300);
     }, 1500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      // Also cancel the inner fade-out timer so a unmounted instance
+      // never calls onDone and kills the freshly mounted replacement.
+      if (fadeTimerRef.current !== null) {
+        clearTimeout(fadeTimerRef.current);
+        fadeTimerRef.current = null;
+      }
+    };
   }, [amount, onDone]);
 
   if (!amount) return null;
