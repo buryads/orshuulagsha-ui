@@ -192,7 +192,7 @@ export function ReaderView({ slug }: ReaderViewProps): ReactElement {
       <div
         style={{
           position: 'sticky',
-          top: 0,
+          top: 'var(--header-h)',
           zIndex: 10,
           background: 'var(--surface)',
           borderBottom: '1px solid var(--border)',
