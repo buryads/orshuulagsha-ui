@@ -299,6 +299,55 @@
       "startLearning": "Начать учиться",
       "guestCta": "Войди, чтобы соревноваться",
       "signIn": "Войти"
+    },
+    "tree": {
+      "title": "Путь обучения",
+      "loading": "Загружаю курс…",
+      "error": "Не удалось загрузить курс",
+      "retry": "Повторить",
+      "empty": "Курс скоро появится",
+      "locked": "Сначала пройди предыдущий урок",
+      "start": "Начать",
+      "completed": "Пройдено",
+      "score": "{score}%",
+      "xpReward": "+{xp} XP",
+      "exercises": "{count} упражнений"
+    },
+    "lesson": {
+      "loading": "Загружаю урок…",
+      "error": "Не удалось загрузить урок",
+      "retry": "Повторить",
+      "exit": "← Выход",
+      "progress": "{current} из {total}",
+      "check": "Проверить",
+      "continue": "Продолжить",
+      "correct": "Верно!",
+      "wrong": "Неверно",
+      "resultTitle": "Урок завершён",
+      "score": "Точность: {score}%",
+      "passed": "Зачёт!",
+      "failed": "Попробуй ещё раз",
+      "xpAwarded": "+{xp} XP",
+      "next": "Дальше по пути",
+      "retry": "Повторить урок",
+      "done": "На главную",
+      "match": {
+        "instruction": "Соедини пары"
+      },
+      "type": {
+        "instruction": "Введи перевод",
+        "placeholder": "Твой ответ…",
+        "dontKnow": "Не знаю",
+        "keyboard": "Бурятская клавиатура"
+      },
+      "listenPick": {
+        "instruction": "Послушай и выбери",
+        "replay": "Повторить",
+        "noAudio": "Аудио недоступно"
+      },
+      "imagePick": {
+        "instruction": "Выбери картинку"
+      }
     }
   },
   "quiz": {
