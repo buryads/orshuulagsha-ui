@@ -226,7 +226,9 @@ export function LeaderboardView() {
   }
 
   const podiumRows = rows.slice(0, 3);
-  const listRows = rows.slice(3);
+  // When fewer than 3 rows exist the podium doesn't render, so show all rows in
+  // the list instead of only rank-4+ entries (which would be an empty slice).
+  const listRows = rows.length >= 3 ? rows.slice(3) : rows;
 
   // Find "me" row inside the full list (to highlight inline too)
   const meRow = me ? rows.find((r) => r.rank === me.rank) : null;
