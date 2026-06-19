@@ -76,18 +76,25 @@ export function Header() {
   }, []);
 
   // One gamification fetch feeds both desktop and mobile HUD variants.
+  // Re-fires on pathname change so XP/streak are fresh after /learn sessions
+  // without a full page reload. Shows the loading skeleton only on the very
+  // first load (gamification === null); subsequent navigations update silently
+  // in the background to avoid a jarring flicker.
   useEffect(() => {
     if (!signedIn) {
       setGamificationLoading(false);
       return;
     }
+    // Show skeleton only while we have no data yet.
+    if (gamification === null) setGamificationLoading(true);
     getGamificationMe()
       .then(setGamification)
       .catch(() => {
         // silently hide on error — HUD is non-critical
       })
       .finally(() => setGamificationLoading(false));
-  }, [signedIn]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn, pathname]);
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
