@@ -849,8 +849,9 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
         setSessionXp((prev) => prev + result.xp_awarded);
         setXpToast(result.xp_awarded);
 
-        // Check streak celebration
-        if (prevGoalMetRef.current === false && result.stats.goal_met) {
+        // Check streak celebration: fire when this lesson crossed the daily goal.
+        // null means "unknown / not yet met before this lesson" — treat same as false.
+        if (prevGoalMetRef.current !== true && result.stats.goal_met) {
           setStreakCelebration(true);
         }
         prevGoalMetRef.current = result.stats.goal_met;
@@ -1017,6 +1018,7 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
         )}
         {current.type === 'image-pick' && (
           <ImagePickExercise
+            key={current.id}
             exercise={current}
             selected={selectedOption}
             onSelect={setSelectedOption}
