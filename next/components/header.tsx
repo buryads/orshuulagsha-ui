@@ -9,6 +9,7 @@ import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
+import { GamificationHud } from '@/components/learn/gamification-hud';
 
 type NavItem = {
   id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
@@ -135,6 +136,11 @@ export function Header() {
         </button>
 
         <div style={{ flex: 1 }} />
+
+        {/* Gamification HUD — streak / XP / level, hidden for guests */}
+        <span className="hide-sm" style={{ display: 'inline-flex' }}>
+          <GamificationHud signedIn={signedIn} />
+        </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
