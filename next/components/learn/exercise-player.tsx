@@ -40,11 +40,13 @@ function tileBorder(s: TileState): string {
 }
 
 // ─── match exercise ───────────────────────────────────────────────────────────
-interface MatchPair { id: string; bur: string; ru: string; }
+// New contract: payload = { left: string[], right: string[] } — both sides
+// already shuffled by the server. Client builds pairs freely; server grades.
+// answer sent to /check: [[leftTerm, rightTerm], ...]
 
 interface MatchExerciseProps {
   exercise: Exercise;
-  onAnswer: (answer: string) => void;
+  onAnswer: (answer: [string, string][]) => void;
   feedbackPhase: boolean;
   correct: boolean | null;
 }
@@ -52,57 +54,82 @@ interface MatchExerciseProps {
 function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExerciseProps): ReactElement {
   const t = useTranslations('learn.lesson.match');
 
-  const pairs: MatchPair[] = Array.isArray((exercise.payload as Record<string, unknown>).pairs)
-    ? (exercise.payload as { pairs: MatchPair[] }).pairs
-    : [];
+  const payload = exercise.payload as Record<string, unknown>;
+  const left: string[] = Array.isArray(payload.left) ? (payload.left as string[]) : [];
+  const right: string[] = Array.isArray(payload.right) ? (payload.right as string[]) : [];
 
-  const [selectedBurId, setSelectedBurId] = useState<string | null>(null);
-  const [matched, setMatched] = useState<Set<string>>(new Set());
-  const [wrongIds, setWrongIds] = useState<Set<string>>(new Set());
+  // Map: leftTerm → rightTerm (user-built pairs)
+  const [pairs, setPairs] = useState<Map<string, string>>(new Map());
+  const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
 
-  // Shuffle ru side once
-  const [shuffledRu] = useState<MatchPair[]>(() => [...pairs].sort(() => Math.random() - 0.5));
-
-  const allMatched = matched.size === pairs.length;
+  const pairedRights = new Set(pairs.values());
+  const allPaired = left.length > 0 && pairs.size === left.length;
 
   useEffect(() => {
-    if (allMatched) {
-      onAnswer('matched');
+    if (allPaired) {
+      onAnswer([...pairs.entries()] as [string, string][]);
     }
-  }, [allMatched, onAnswer]);
+  }, [allPaired, onAnswer, pairs]);
 
-  const handleBurClick = (id: string) => {
-    if (matched.has(id) || feedbackPhase) return;
-    setSelectedBurId(id === selectedBurId ? null : id);
+  const handleLeftClick = (term: string) => {
+    if (feedbackPhase) return;
+    // If already paired — unlink so user can reassign
+    if (pairs.has(term)) {
+      setPairs((prev) => {
+        const next = new Map(prev);
+        next.delete(term);
+        return next;
+      });
+      setSelectedLeft(term);
+      return;
+    }
+    setSelectedLeft(term === selectedLeft ? null : term);
   };
 
-  const handleRuClick = (id: string) => {
-    if (matched.has(id) || feedbackPhase) return;
-    if (!selectedBurId) return;
-
-    if (selectedBurId === id) {
-      setMatched((prev) => new Set([...prev, id]));
-      setSelectedBurId(null);
-    } else {
-      // Wrong pair — flash both red
-      setWrongIds(new Set([selectedBurId, id]));
-      setTimeout(() => {
-        setWrongIds(new Set());
-        setSelectedBurId(null);
-      }, 600);
-    }
+  const handleRightClick = (term: string) => {
+    if (feedbackPhase) return;
+    if (!selectedLeft) return;
+    // If this right side is already used by another left — unlink it first
+    setPairs((prev) => {
+      const next = new Map(prev);
+      // Remove any existing left→term mapping
+      for (const [l, r] of next) {
+        if (r === term) { next.delete(l); break; }
+      }
+      next.set(selectedLeft, term);
+      return next;
+    });
+    setSelectedLeft(null);
   };
 
-  const burTileState = (id: string): TileState => {
-    if (matched.has(id)) return correct === false ? 'wrong' : 'correct';
-    if (wrongIds.has(id)) return 'wrong';
-    if (selectedBurId === id) return 'selected';
+  const pairIndex = (term: string, side: 'left' | 'right'): number | null => {
+    let idx = 0;
+    for (const [l, r] of pairs) {
+      if ((side === 'left' && l === term) || (side === 'right' && r === term)) return idx;
+      idx++;
+    }
+    return null;
+  };
+
+  // Badge colours cycle through a small palette
+  const BADGE_COLORS = [
+    'var(--primary)',
+    'var(--accent-green)',
+    'var(--accent-warm)',
+    '#8b5cf6',
+    '#06b6d4',
+  ];
+
+  const leftTileState = (term: string): TileState => {
+    if (feedbackPhase) return correct === false ? 'wrong' : correct === true ? 'correct' : 'idle';
+    if (pairs.has(term)) return 'correct';
+    if (selectedLeft === term) return 'selected';
     return 'idle';
   };
 
-  const ruTileState = (id: string): TileState => {
-    if (matched.has(id)) return correct === false ? 'wrong' : 'correct';
-    if (wrongIds.has(id)) return 'wrong';
+  const rightTileState = (term: string): TileState => {
+    if (feedbackPhase) return correct === false ? 'wrong' : correct === true ? 'correct' : 'idle';
+    if (pairedRights.has(term)) return 'correct';
     return 'idle';
   };
 
@@ -112,16 +139,18 @@ function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExer
         {t('instruction')}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {/* Left column — bur */}
+        {/* Left column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {pairs.map((p) => {
-            const s = burTileState(p.id);
+          {left.map((term) => {
+            const s = leftTileState(term);
+            const idx = pairIndex(term, 'left');
+            const badgeColor = idx !== null ? BADGE_COLORS[idx % BADGE_COLORS.length] : undefined;
             return (
               <button
-                key={`bur-${p.id}`}
+                key={`left-${term}`}
                 type="button"
-                disabled={matched.has(p.id) || feedbackPhase}
-                onClick={() => handleBurClick(p.id)}
+                disabled={feedbackPhase}
+                onClick={() => handleLeftClick(term)}
                 style={{
                   padding: '12px 16px',
                   borderRadius: 12,
@@ -130,28 +159,46 @@ function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExer
                   color: 'var(--text)',
                   fontWeight: 600,
                   fontSize: 15,
-                  cursor: matched.has(p.id) || feedbackPhase ? 'default' : 'pointer',
+                  cursor: feedbackPhase ? 'default' : 'pointer',
                   minHeight: 48,
                   transition: 'background 0.15s, border-color 0.15s',
                   textAlign: 'center',
                   fontFamily: 'var(--font-display)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  position: 'relative',
                 }}
               >
-                {p.bur}
+                {idx !== null && (
+                  <span style={{
+                    width: 18, height: 18, borderRadius: '50%',
+                    background: badgeColor, color: '#fff',
+                    fontSize: 11, fontWeight: 700,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    {idx + 1}
+                  </span>
+                )}
+                {term}
               </button>
             );
           })}
         </div>
-        {/* Right column — ru (shuffled) */}
+        {/* Right column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {shuffledRu.map((p) => {
-            const s = ruTileState(p.id);
+          {right.map((term) => {
+            const s = rightTileState(term);
+            const idx = pairIndex(term, 'right');
+            const badgeColor = idx !== null ? BADGE_COLORS[idx % BADGE_COLORS.length] : undefined;
             return (
               <button
-                key={`ru-${p.id}`}
+                key={`right-${term}`}
                 type="button"
-                disabled={matched.has(p.id) || feedbackPhase}
-                onClick={() => handleRuClick(p.id)}
+                disabled={feedbackPhase}
+                onClick={() => handleRightClick(term)}
                 style={{
                   padding: '12px 16px',
                   borderRadius: 12,
@@ -160,14 +207,29 @@ function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExer
                   color: 'var(--text)',
                   fontWeight: 600,
                   fontSize: 15,
-                  cursor: matched.has(p.id) || feedbackPhase ? 'default' : 'pointer',
+                  cursor: feedbackPhase ? 'default' : 'pointer',
                   minHeight: 48,
                   transition: 'background 0.15s, border-color 0.15s',
                   textAlign: 'center',
                   fontFamily: 'var(--font-display)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
                 }}
               >
-                {p.ru}
+                {idx !== null && (
+                  <span style={{
+                    width: 18, height: 18, borderRadius: '50%',
+                    background: badgeColor, color: '#fff',
+                    fontSize: 11, fontWeight: 700,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    {idx + 1}
+                  </span>
+                )}
+                {term}
               </button>
             );
           })}
@@ -570,8 +632,10 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<CheckAnswer[]>([]);
 
-  // Per-exercise answer buffer
+  // Per-exercise answer buffer (string for type; unused for match/pick)
   const [currentAnswer, setCurrentAnswer] = useState<string>('');
+  // Match-exercise pairs built by the user: [[leftTerm, rightTerm], ...]
+  const [matchPairs, setMatchPairs] = useState<[string, string][]>([]);
 
   // Feedback phase (after "Проверить")
   const [feedbackPhase, setFeedbackPhase] = useState(false);
@@ -615,6 +679,7 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
   // Reset per-exercise state when index changes
   useEffect(() => {
     setCurrentAnswer('');
+    setMatchPairs([]);
     setSelectedOption(null);
     setFeedbackPhase(false);
     setFeedbackCorrect(null);
@@ -735,7 +800,12 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
 
   const progressPct = ((index) / total) * 100;
 
-  const getEffectiveAnswer = (): string => {
+  // Returns the answer for the current exercise in the correct shape.
+  // match → [string, string][]; others → string.
+  const getEffectiveAnswer = (): unknown => {
+    if (current.type === 'match') {
+      return matchPairs;
+    }
     if (current.type === 'listen-pick' || current.type === 'image-pick') {
       return selectedOption ?? '';
     }
@@ -744,11 +814,13 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
 
   const canCheck = (): boolean => {
     if (feedbackPhase) return false;
-    const ans = getEffectiveAnswer();
-    // For match type, the component calls onAnswer when done; we check if we have answer already
     if (current.type === 'match') {
-      return currentAnswer === 'matched';
+      // Ready when every left term has been paired
+      const payload = current.payload as Record<string, unknown>;
+      const leftLen = Array.isArray(payload.left) ? (payload.left as unknown[]).length : 0;
+      return leftLen > 0 && matchPairs.length === leftLen;
     }
+    const ans = getEffectiveAnswer() as string;
     return ans.trim().length > 0;
   };
 
@@ -809,8 +881,8 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
     setIndex((i) => i + 1);
   };
 
-  const handleMatchAnswer = (ans: string) => {
-    setCurrentAnswer(ans);
+  const handleMatchAnswer = (ans: [string, string][]) => {
+    setMatchPairs(ans);
   };
 
   const feedbackBg = feedbackCorrect === true

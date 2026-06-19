@@ -318,7 +318,8 @@ export interface LessonDetail {
 
 export interface CheckAnswer {
   exercise_id: number;
-  answer: string;
+  // string for type/listen-pick/image-pick; [left,right][] for match
+  answer: unknown;
 }
 
 export interface CheckResult {
