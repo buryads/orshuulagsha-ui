@@ -54,6 +54,9 @@ export function SrsSession(): ReactElement {
         setIndex(0);
         setGraded(0);
         setXp(0);
+        // Reset celebration flags so a restarted session starts clean.
+        setGoalJustMet(false);
+        setStreakJustGained(false);
         setState('active');
       }
     } catch (err) {
