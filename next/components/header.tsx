@@ -10,6 +10,8 @@ import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
 import { GamificationHud, GamificationHudMobile } from '@/components/learn/gamification-hud';
+import { getGamificationMe } from '@/lib/api/gamification';
+import type { GamificationMe } from '@/lib/api/gamification';
 
 type NavItem = {
   id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
@@ -38,6 +40,9 @@ export function Header() {
   const [signedIn, setSignedIn] = useState(false);
   const [initials, setInitials] = useState('У');
   const [menuOpen, setMenuOpen] = useState(false);
+  // Single gamification fetch — shared by both HUD variants to avoid duplicate requests.
+  const [gamification, setGamification] = useState<GamificationMe | null>(null);
+  const [gamificationLoading, setGamificationLoading] = useState(true);
 
   // Close drawer when route changes — otherwise tapping a link leaves the
   // drawer hanging open over the new page.
@@ -69,6 +74,20 @@ export function Header() {
         // ignore — keep default initials
       });
   }, []);
+
+  // One gamification fetch feeds both desktop and mobile HUD variants.
+  useEffect(() => {
+    if (!signedIn) {
+      setGamificationLoading(false);
+      return;
+    }
+    getGamificationMe()
+      .then(setGamification)
+      .catch(() => {
+        // silently hide on error — HUD is non-critical
+      })
+      .finally(() => setGamificationLoading(false));
+  }, [signedIn]);
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
@@ -137,14 +156,15 @@ export function Header() {
 
         <div style={{ flex: 1 }} />
 
-        {/* Gamification HUD — streak / XP / level, hidden for guests */}
+        {/* Gamification HUD — streak / XP / level, hidden for guests.
+            Both variants share the same fetched data to avoid duplicate requests. */}
         {/* Desktop strip (≥720px): streak · XP · CEFR badge */}
         <span className="hide-sm" style={{ display: 'inline-flex' }}>
-          <GamificationHud signedIn={signedIn} />
+          <GamificationHud signedIn={signedIn} stats={gamification} loading={gamificationLoading} />
         </span>
         {/* Mobile chip (≤720px): 🔥streak · XP in one compact chip */}
         <span className="show-sm">
-          <GamificationHudMobile signedIn={signedIn} />
+          <GamificationHudMobile signedIn={signedIn} stats={gamification} />
         </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
-import { getGamificationMe } from '@/lib/api/gamification';
 import type { GamificationMe } from '@/lib/api/gamification';
 
 /** Maps numeric level to a CEFR badge label. */
@@ -13,28 +11,22 @@ function levelLabel(level: number): string {
   return labels[Math.min(level - 1, labels.length - 1)] ?? 'A1';
 }
 
+interface GamificationHudProps {
+  signedIn: boolean;
+  /** Resolved stats from parent; null while loading or on error. */
+  stats: GamificationMe | null;
+  /** True while the parent is still fetching. */
+  loading: boolean;
+}
+
 /**
  * Compact gamification status strip for the global header.
  * Shows 🔥 streak · ◆ XP · level badge.
  * Hidden for guests (renders nothing when signedIn=false).
+ * Data is fetched once by the parent Header and passed in to avoid duplicate requests.
  */
-export function GamificationHud({ signedIn }: { signedIn: boolean }) {
+export function GamificationHud({ signedIn, stats, loading }: GamificationHudProps) {
   const t = useTranslations('learn.hud');
-  const [stats, setStats] = useState<GamificationMe | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!signedIn) {
-      setLoading(false);
-      return;
-    }
-    getGamificationMe()
-      .then(setStats)
-      .catch(() => {
-        // silently hide on error — HUD is non-critical
-      })
-      .finally(() => setLoading(false));
-  }, [signedIn]);
 
   if (!signedIn) return null;
 
@@ -123,20 +115,19 @@ export function GamificationHud({ signedIn }: { signedIn: boolean }) {
   );
 }
 
+interface GamificationHudMobileProps {
+  signedIn: boolean;
+  /** Resolved stats from parent; null while loading or on error. */
+  stats: GamificationMe | null;
+}
+
 /**
  * Compact mobile version: "🔥7 · 1240 XP" in a single chip.
  * Rendered at ≤640px via CSS, desktop version hidden there.
+ * Data is fetched once by the parent Header and passed in to avoid duplicate requests.
  */
-export function GamificationHudMobile({ signedIn }: { signedIn: boolean }) {
+export function GamificationHudMobile({ signedIn, stats }: GamificationHudMobileProps) {
   const t = useTranslations('learn.hud');
-  const [stats, setStats] = useState<GamificationMe | null>(null);
-
-  useEffect(() => {
-    if (!signedIn) return;
-    getGamificationMe()
-      .then(setStats)
-      .catch(() => {/* silently hide */});
-  }, [signedIn]);
 
   if (!signedIn || !stats) return null;
 
