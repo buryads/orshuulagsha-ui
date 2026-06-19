@@ -228,21 +228,39 @@ export interface DataEnvelope<T> {
 }
 
 // --- SRS (Spaced Repetition System) ---
+// Контракт: GET /api/srs/due, POST /api/srs/grade [auth:sanctum]
 
-export type SrsGrade = 'again' | 'hard' | 'good' | 'easy';
+/**
+ * Числовая оценка карточки (grade < 3 → lapse, reps сбрасываются):
+ *   Again = 1, Hard = 3, Good = 4, Easy = 5
+ */
+export type SrsGradeValue = 1 | 3 | 4 | 5;
 
-export interface SrsCard {
-  id: string;
+/** Элемент из GET /api/srs/due */
+export interface SrsDueItem {
+  word_id: number;
   word: string;
-  translation: string;
-  ipa?: string;
-  audioUrl?: string;
-  imageUrl?: string;
-  exampleBur?: string;
-  exampleRu?: string;
+  slug: string;
+  due_at: string | null;
+  reps: number;
+  interval: number;
+  ease: number;
+  lapses: number;
+  is_new: boolean;
 }
 
 export interface SrsDueResponse {
-  cards: SrsCard[];
+  cards: SrsDueItem[];
   count: number;
+}
+
+/** Ответ POST /api/srs/grade */
+export interface SrsGradeResponse {
+  word_id: number;
+  ease: number;
+  interval: number;
+  due_at: string;
+  reps: number;
+  lapses: number;
+  last_reviewed_at: string;
 }

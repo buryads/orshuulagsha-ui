@@ -1,51 +1,52 @@
-// TODO(8794): свериться с финальным контрактом backend-tl (борд API-CONTRACTS)
-// Временный контракт: GET /api/srs/due, POST /api/srs/grade
+// Контракт: GET /api/srs/due, POST /api/srs/grade [auth:sanctum]
+// Источник: backend-tl (Кабан), борд API-CONTRACTS.
 import { apiCall } from './client';
-import type { SrsCard, SrsDueResponse, SrsGrade } from '@/lib/api/types';
+import type { SrsDueItem, SrsDueResponse, SrsGradeResponse, SrsGradeValue } from '@/lib/api/types';
 
 const RESOURCE_DUE = '/api/srs/due';
 const RESOURCE_GRADE = '/api/srs/grade';
 
 interface SrsDueApiResponse {
-  data: SrsCardDto[];
+  data: SrsDueItem[];
   meta: { count: number };
 }
 
-// TODO(8794): DTO-форма ответа бэка — уточнить при публикации контракта
-interface SrsCardDto {
-  id: string;
-  word: string;
-  translation: string;
-  ipa?: string;
-  audio_url?: string;
-  image_url?: string;
-  example_bur?: string;
-  example_ru?: string;
+interface SrsGradeApiResponse {
+  data: SrsGradeResponse;
 }
 
-function mapCardDto(dto: SrsCardDto): SrsCard {
-  return {
-    id: dto.id,
-    word: dto.word,
-    translation: dto.translation,
-    ipa: dto.ipa,
-    audioUrl: dto.audio_url,
-    imageUrl: dto.image_url,
-    exampleBur: dto.example_bur,
-    exampleRu: dto.example_ru,
-  };
-}
-
+/**
+ * Возвращает карточки к повторению на сегодня из паков пользователя.
+ * Новые слова (is_new: true, due_at: null) идут первыми — порядок от бэка,
+ * не пересортировываем.
+ * Требует авторизацию (sanctum); при 401 бросает AxiosError.
+ */
 export async function getDueCards(): Promise<SrsDueResponse> {
   const body = await apiCall<SrsDueApiResponse>('GET', RESOURCE_DUE);
   return {
-    cards: body.data.map(mapCardDto),
+    cards: body.data,
     count: body.meta.count,
   };
 }
 
-export async function gradeCard(cardId: string, grade: SrsGrade): Promise<void> {
-  await apiCall<void>('POST', RESOURCE_GRADE, {
-    data: { cardId, grade },
+/**
+ * Отправляет оценку за карточку.
+ *
+ * Маппинг кнопок → числовой grade (grade < 3 = lapse):
+ *   Again = 1  (lapse: reps сбрасываются)
+ *   Hard  = 3  (не lapse)
+ *   Good  = 4
+ *   Easy  = 5
+ *
+ * 404 — слова нет в паках юзера.
+ * 422 — grade вне допустимого диапазона 0-5.
+ */
+export async function gradeCard(
+  wordId: number,
+  grade: SrsGradeValue,
+): Promise<SrsGradeResponse> {
+  const body = await apiCall<SrsGradeApiResponse>('POST', RESOURCE_GRADE, {
+    data: { word_id: wordId, grade },
   });
+  return body.data;
 }

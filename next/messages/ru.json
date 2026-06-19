@@ -257,6 +257,10 @@
     "completeTitle": "Сессия завершена",
     "completeBody": "Повторено карточек: {count}",
     "restart": "Начать заново",
+    "newCard": "Новое",
+    "noTranslation": "Перевод не найден",
+    "authRequired": "Для повторения карточек нужно войти в аккаунт.",
+    "signIn": "Войти",
     "grade": {
       "again": "Не помню",
       "hard": "Сложно",

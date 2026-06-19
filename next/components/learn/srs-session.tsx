@@ -3,19 +3,21 @@
 import { useCallback, useEffect, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { Icon } from '@/components/ui/icon';
+import { Link } from '@/i18n/navigation';
 import { SrsCardView } from '@/components/learn/srs-card';
 import { getDueCards, gradeCard } from '@/lib/api/srs';
-import type { SrsCard, SrsGrade } from '@/lib/api/types';
+import type { SrsDueItem, SrsGradeValue } from '@/lib/api/types';
 
-type SessionState = 'loading' | 'error' | 'empty' | 'active' | 'complete';
+type SessionState = 'loading' | 'error' | 'unauthorized' | 'empty' | 'active' | 'complete';
 
 export function SrsSession(): ReactElement {
   const t = useTranslations('srs');
   const router = useRouter();
 
   const [state, setState] = useState<SessionState>('loading');
-  const [cards, setCards] = useState<SrsCard[]>([]);
+  const [cards, setCards] = useState<SrsDueItem[]>([]);
   const [index, setIndex] = useState(0);
   const [graded, setGraded] = useState(0);
 
@@ -31,8 +33,12 @@ export function SrsSession(): ReactElement {
         setGraded(0);
         setState('active');
       }
-    } catch {
-      setState('error');
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setState('unauthorized');
+      } else {
+        setState('error');
+      }
     }
   }, []);
 
@@ -40,19 +46,18 @@ export function SrsSession(): ReactElement {
     void load();
   }, [load]);
 
-  const handleGrade = async (grade: SrsGrade): Promise<void> => {
-    const card = cards[index];
-    if (!card) return;
+  const handleGrade = async (grade: SrsGradeValue): Promise<void> => {
+    const item = cards[index];
+    if (!item) return;
 
     try {
-      await gradeCard(card.id, grade);
+      await gradeCard(item.word_id, grade);
     } catch {
       // Не блокируем прогресс сессии при ошибке отправки оценки —
       // пользователь продолжает, потеря одной оценки некритична
     }
 
-    const nextGraded = graded + 1;
-    setGraded(nextGraded);
+    setGraded((n) => n + 1);
 
     if (index + 1 >= cards.length) {
       setState('complete');
@@ -65,6 +70,17 @@ export function SrsSession(): ReactElement {
     return (
       <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
         {t('loading')}…
+      </div>
+    );
+  }
+
+  if (state === 'unauthorized') {
+    return (
+      <div className="card fade-up" style={{ padding: 28, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 20 }}>{t('authRequired')}</p>
+        <Link href="/signin" className="btn btn-primary">
+          {t('signIn')}
+        </Link>
       </div>
     );
   }
@@ -138,7 +154,7 @@ export function SrsSession(): ReactElement {
 
   return (
     <SrsCardView
-      card={current}
+      item={current}
       index={index}
       total={cards.length}
       onGrade={(grade) => void handleGrade(grade)}

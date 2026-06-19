@@ -1,38 +1,73 @@
 'use client';
 
-import { useState, type ReactElement, type MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
-import type { SrsCard, SrsGrade } from '@/lib/api/types';
+import { getOneBurWord } from '@/lib/api/words';
+import type { SrsDueItem, SrsGradeValue, Word } from '@/lib/api/types';
 
+/**
+ * Маппинг кнопок оценки → числовой grade (grade < 3 = lapse):
+ *   Again = 1  (lapse)
+ *   Hard  = 3  (не lapse)
+ *   Good  = 4
+ *   Easy  = 5
+ */
 interface GradeButton {
-  grade: SrsGrade;
+  grade: SrsGradeValue;
+  labelKey: 'again' | 'hard' | 'good' | 'easy';
   color: string;
 }
 
 const GRADE_BUTTONS: readonly GradeButton[] = [
-  { grade: 'again', color: 'var(--tertiary)' },
-  { grade: 'hard', color: 'var(--accent-warm)' },
-  { grade: 'good', color: 'var(--primary)' },
-  { grade: 'easy', color: 'var(--accent-green)' },
+  { grade: 1, labelKey: 'again', color: 'var(--tertiary)' },
+  { grade: 3, labelKey: 'hard', color: 'var(--accent-warm)' },
+  { grade: 4, labelKey: 'good', color: 'var(--primary)' },
+  { grade: 5, labelKey: 'easy', color: 'var(--accent-green)' },
 ];
 
 interface SrsCardProps {
-  card: SrsCard;
+  item: SrsDueItem;
   index: number;
   total: number;
-  onGrade: (grade: SrsGrade) => void;
+  onGrade: (grade: SrsGradeValue) => void;
 }
 
-export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): ReactElement {
+export function SrsCardView({ item, index, total, onGrade }: SrsCardProps): ReactElement {
   const t = useTranslations('srs');
+
+  // Гидрация: лениво тянем детали карточки (перевод, фото, аудио)
+  const [details, setDetails] = useState<Word | null>(null);
   const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    setDetails(null);
+    setFlipped(false);
+
+    if (!item.slug) return;
+
+    let cancelled = false;
+    getOneBurWord(item.slug)
+      .then((word) => {
+        if (!cancelled) setDetails(word);
+      })
+      .catch(() => {
+        // Деградируем: показываем хотя бы word и кнопки оценки
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [item.slug]);
+
+  const translation = details?.ru_words?.[0]?.name ?? details?.translations?.[0]?.name ?? null;
+  const imageUrl = details?.images?.[0]?.url ?? null;
+  const audioUrl = details?.speechs?.[0]?.url ?? null;
 
   const handleFlip = (): void => {
     setFlipped((f) => !f);
   };
 
-  const handleGrade = (grade: SrsGrade): void => {
+  const handleGrade = (grade: SrsGradeValue): void => {
     setFlipped(false);
     onGrade(grade);
   };
@@ -43,9 +78,9 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
 
   const handleListen = (e: MouseEvent<HTMLButtonElement>): void => {
     stopProp(e);
-    if (card.audioUrl) {
-      new Audio(card.audioUrl).play().catch(() => {
-        // Игнорируем ошибку воспроизведения — пользователь сам видит кнопку
+    if (audioUrl) {
+      new Audio(audioUrl).play().catch(() => {
+        // Игнорируем ошибку воспроизведения
       });
     }
   };
@@ -66,6 +101,11 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
         <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
           {t('progress', { current: index + 1, total })}
         </span>
+        {item.is_new && (
+          <span className="chip chip-primary" style={{ fontSize: 11 }}>
+            {t('newCard')}
+          </span>
+        )}
       </div>
 
       <div
@@ -108,7 +148,7 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
             transform: flipped ? 'rotateY(180deg)' : 'none',
           }}
         >
-          {/* Лицевая сторона */}
+          {/* Лицевая сторона — слово на бурятском */}
           <div
             className="card"
             style={{
@@ -124,12 +164,12 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
             }}
           >
             <div style={{ textAlign: 'center', width: '100%' }}>
-              {card.imageUrl && (
+              {imageUrl && (
                 <div style={{ marginBottom: 20 }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={card.imageUrl}
-                    alt={card.word}
+                    src={imageUrl}
+                    alt={item.word}
                     style={{
                       maxHeight: 120,
                       maxWidth: '100%',
@@ -141,28 +181,16 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
               )}
               <div
                 style={{
-                  fontSize: card.imageUrl ? 64 : 88,
+                  fontSize: imageUrl ? 64 : 88,
                   fontWeight: 800,
                   fontFamily: 'var(--font-display)',
                   letterSpacing: '-0.03em',
                   lineHeight: 1,
                 }}
               >
-                {card.word}
+                {item.word}
               </div>
-              {card.ipa && (
-                <div
-                  style={{
-                    fontSize: 16,
-                    color: 'var(--text-muted)',
-                    fontFamily: 'var(--font-mono)',
-                    marginTop: 12,
-                  }}
-                >
-                  {card.ipa}
-                </div>
-              )}
-              {card.audioUrl && (
+              {audioUrl && (
                 <button
                   type="button"
                   onClick={handleListen}
@@ -193,7 +221,7 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
             </div>
           </div>
 
-          {/* Обратная сторона */}
+          {/* Обратная сторона — перевод */}
           <div
             className="card"
             style={{
@@ -210,50 +238,20 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
             }}
           >
             <div style={{ textAlign: 'center', width: '100%' }}>
-              <div
-                style={{
-                  fontSize: 56,
-                  fontWeight: 700,
-                  fontFamily: 'var(--font-display)',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {card.translation}
-              </div>
-              {(card.exampleBur || card.exampleRu) && (
+              {translation ? (
                 <div
                   style={{
-                    marginTop: 24,
-                    padding: 18,
-                    background: 'rgba(255,255,255,0.6)',
-                    borderRadius: 14,
-                    backdropFilter: 'blur(8px)',
-                    maxWidth: 460,
-                    margin: '24px auto 0',
+                    fontSize: 56,
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-display)',
+                    letterSpacing: '-0.02em',
                   }}
                 >
-                  {card.exampleBur && (
-                    <div
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 500,
-                        fontFamily: 'var(--font-display)',
-                      }}
-                    >
-                      {card.exampleBur}
-                    </div>
-                  )}
-                  {card.exampleRu && (
-                    <div
-                      style={{
-                        fontSize: 13,
-                        color: 'var(--text-muted)',
-                        marginTop: 6,
-                      }}
-                    >
-                      {card.exampleRu}
-                    </div>
-                  )}
+                  {translation}
+                </div>
+              ) : (
+                <div style={{ color: 'var(--text-muted)', fontSize: 18 }}>
+                  {t('noTranslation')}
                 </div>
               )}
             </div>
@@ -291,10 +289,10 @@ export function SrsCardView({ card, index, total, onGrade }: SrsCardProps): Reac
             }}
           >
             <div style={{ fontWeight: 700, fontSize: 14 }}>
-              {t(`grade.${b.grade}`)}
+              {t(`grade.${b.labelKey}`)}
             </div>
             <div style={{ fontSize: 11, opacity: 0.7, marginTop: 2 }}>
-              {t(`gradeDelay.${b.grade}`)}
+              {t(`gradeDelay.${b.labelKey}`)}
             </div>
           </button>
         ))}
