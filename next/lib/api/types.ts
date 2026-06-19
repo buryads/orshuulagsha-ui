@@ -226,3 +226,23 @@ export interface UploadedImage {
 export interface DataEnvelope<T> {
   data: T;
 }
+
+// --- SRS (Spaced Repetition System) ---
+
+export type SrsGrade = 'again' | 'hard' | 'good' | 'easy';
+
+export interface SrsCard {
+  id: string;
+  word: string;
+  translation: string;
+  ipa?: string;
+  audioUrl?: string;
+  imageUrl?: string;
+  exampleBur?: string;
+  exampleRu?: string;
+}
+
+export interface SrsDueResponse {
+  cards: SrsCard[];
+  count: number;
+}
