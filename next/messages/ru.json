@@ -346,25 +346,7 @@
         "known": "Известное — ты уже знаешь это слово",
         "ignored": "Не отслеживается (имена, числа, пунктуация)"
       }
-    }
-  },
-  "quiz": {
-    "title": "Тренировка",
-    "subtitle": "",
-    "translateWord": "Переведите слово",
-    "loading": "Загружаю",
-    "loadError": "Не удалось загрузить квиз",
-    "retry": "Повторить",
-    "progress": "Вопрос {current} из {total}",
-    "correctSoFar": "Правильно: {count}",
-    "newGame": "Новая игра",
-    "results": "Результаты",
-    "correctTotal": "Правильно: {count}",
-    "wrongTotal": "Неправильно: {count}",
-    "yourAnswer": "Ваш ответ",
-    "correctAnswer": "Правильный ответ"
-  },
-  "learn": {
+    },
     "contrib": {
       "pageTitle": "Вклад в словарь",
       "pageSubtitle": "Помогите развивать бурятский язык — предлагайте слова и исправления",
@@ -417,6 +399,22 @@
       "typeTranslation": "Перевод",
       "typeCorrection": "Исправление"
     }
+  },
+  "quiz": {
+    "title": "Тренировка",
+    "subtitle": "",
+    "translateWord": "Переведите слово",
+    "loading": "Загружаю",
+    "loadError": "Не удалось загрузить квиз",
+    "retry": "Повторить",
+    "progress": "Вопрос {current} из {total}",
+    "correctSoFar": "Правильно: {count}",
+    "newGame": "Новая игра",
+    "results": "Результаты",
+    "correctTotal": "Правильно: {count}",
+    "wrongTotal": "Неправильно: {count}",
+    "yourAnswer": "Ваш ответ",
+    "correctAnswer": "Правильный ответ"
   },
   "moderation": {
     "pageTitle": "Модерация вкладов",

@@ -347,25 +347,7 @@
         "known": "Known — you already know this word",
         "ignored": "Not tracked (names, numbers, punctuation)"
       }
-    }
-  },
-  "quiz": {
-    "title": "Training",
-    "subtitle": "",
-    "translateWord": "Translate the word",
-    "loading": "Loading",
-    "loadError": "Couldn't load the quiz",
-    "retry": "Retry",
-    "progress": "Question {current} of {total}",
-    "correctSoFar": "Correct: {count}",
-    "newGame": "New game",
-    "results": "Results",
-    "correctTotal": "Correct: {count}",
-    "wrongTotal": "Wrong: {count}",
-    "yourAnswer": "Your answer",
-    "correctAnswer": "Correct answer"
-  },
-  "learn": {
+    },
     "contrib": {
       "pageTitle": "Contribute to the dictionary",
       "pageSubtitle": "Help grow the Buryat language — suggest words and corrections",
@@ -418,6 +400,22 @@
       "typeTranslation": "Translation",
       "typeCorrection": "Correction"
     }
+  },
+  "quiz": {
+    "title": "Training",
+    "subtitle": "",
+    "translateWord": "Translate the word",
+    "loading": "Loading",
+    "loadError": "Couldn't load the quiz",
+    "retry": "Retry",
+    "progress": "Question {current} of {total}",
+    "correctSoFar": "Correct: {count}",
+    "newGame": "New game",
+    "results": "Results",
+    "correctTotal": "Correct: {count}",
+    "wrongTotal": "Wrong: {count}",
+    "yourAnswer": "Your answer",
+    "correctAnswer": "Correct answer"
   },
   "moderation": {
     "pageTitle": "Contribution moderation",

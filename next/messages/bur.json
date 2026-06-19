@@ -345,25 +345,7 @@
         "known": "Мэдэхэ — энэ үгэ мэдэнэт",
         "ignored": "Тоолоогүй (нэрэнүүд, тоонууд, тэмдэгүүд)"
       }
-    }
-  },
-  "quiz": {
-    "title": "Бэлэдхэл",
-    "subtitle": "",
-    "translateWord": "Үгые оршуулагты",
-    "loading": "Ачаалжа байна",
-    "loadError": "Викторинэ ачаалагдаагүй",
-    "retry": "Дахяа оролдохо",
-    "progress": "{total} соогоо {current}-дахи асуудал",
-    "correctSoFar": "Зүб: {count}",
-    "newGame": "Шэнэ наадан",
-    "results": "Дүн",
-    "correctTotal": "Зүб: {count}",
-    "wrongTotal": "Буруу: {count}",
-    "yourAnswer": "Танай харюу",
-    "correctAnswer": "Зүб харюу"
-  },
-  "learn": {
+    },
     "contrib": {
       "pageTitle": "Толидо туhа хүргэхэ",
       "pageSubtitle": "Буряад хэлэн хүгжэлтэдэ туhалагты — үгэ болон залруулга дурадхагты",
@@ -416,6 +398,22 @@
       "typeTranslation": "Оршуулга",
       "typeCorrection": "Залруулга"
     }
+  },
+  "quiz": {
+    "title": "Бэлэдхэл",
+    "subtitle": "",
+    "translateWord": "Үгые оршуулагты",
+    "loading": "Ачаалжа байна",
+    "loadError": "Викторинэ ачаалагдаагүй",
+    "retry": "Дахяа оролдохо",
+    "progress": "{total} соогоо {current}-дахи асуудал",
+    "correctSoFar": "Зүб: {count}",
+    "newGame": "Шэнэ наадан",
+    "results": "Дүн",
+    "correctTotal": "Зүб: {count}",
+    "wrongTotal": "Буруу: {count}",
+    "yourAnswer": "Танай харюу",
+    "correctAnswer": "Зүб харюу"
   },
   "moderation": {
     "pageTitle": "Дурадхалнуудай модераци",
