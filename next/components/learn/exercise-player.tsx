@@ -16,6 +16,7 @@ import { Icon } from '@/components/ui/icon';
 import { XpToast } from '@/components/learn/xp-toast';
 import { BurKeyboard } from '@/components/home/bur-keyboard';
 import { getLessonDetail, checkLesson } from '@/lib/api/lessons';
+import { getGamificationMe } from '@/lib/api/gamification';
 import type { LessonDetail, Exercise, CheckAnswer, CheckResponse } from '@/lib/api/types';
 
 // ─── shared option-tile state ─────────────────────────────────────────────────
@@ -661,7 +662,16 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
   const load = useCallback(async () => {
     setPlayerState('loading');
     try {
-      const data = await getLessonDetail(slug);
+      // Seed pre-lesson goal_met so streak-celebration only fires on a real
+      // false→true transition. Fetch in parallel with lesson detail; if stats
+      // call fails we leave the ref null and conservatively skip celebration.
+      const [data] = await Promise.all([
+        getLessonDetail(slug),
+        getGamificationMe().then(
+          (stats) => { prevGoalMetRef.current = stats.goal_met; },
+          () => { /* keep null — conservative: no false celebration */ },
+        ),
+      ]);
       setLesson(data);
       setPlayerState('active');
     } catch {
@@ -846,9 +856,10 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
         setSessionXp((prev) => prev + result.xp_awarded);
         setXpToast(result.xp_awarded);
 
-        // Check streak celebration: fire when this lesson crossed the daily goal.
-        // null means "unknown / not yet met before this lesson" — treat same as false.
-        if (prevGoalMetRef.current !== true && result.stats.goal_met) {
+        // Celebrate only on a real false→true transition (goal not met before
+        // this lesson, met after). If pre-lesson seed failed (null) — skip
+        // conservatively to avoid false celebration.
+        if (prevGoalMetRef.current === false && result.stats.goal_met) {
           setStreakCelebration(true);
         }
         prevGoalMetRef.current = result.stats.goal_met;
