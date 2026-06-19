@@ -63,23 +63,20 @@ function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExer
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
 
   const pairedRights = new Set(pairs.values());
-  const allPaired = left.length > 0 && pairs.size === left.length;
 
-  useEffect(() => {
-    if (allPaired) {
-      onAnswer([...pairs.entries()] as [string, string][]);
-    }
-  }, [allPaired, onAnswer, pairs]);
+  // No useEffect for onAnswer — call it synchronously in handlers to avoid
+  // render-loop: useEffect(deps=[onAnswer,pairs]) would re-fire on every
+  // parent re-render because handleMatchAnswer recreates on each render.
 
   const handleLeftClick = (term: string) => {
     if (feedbackPhase) return;
     // If already paired — unlink so user can reassign
     if (pairs.has(term)) {
-      setPairs((prev) => {
-        const next = new Map(prev);
-        next.delete(term);
-        return next;
-      });
+      const next = new Map(pairs);
+      next.delete(term);
+      setPairs(next);
+      // Notify parent that we now have fewer pairs (canCheck must go false)
+      onAnswer([...next.entries()] as [string, string][]);
       setSelectedLeft(term);
       return;
     }
@@ -89,17 +86,17 @@ function MatchExercise({ exercise, onAnswer, feedbackPhase, correct }: MatchExer
   const handleRightClick = (term: string) => {
     if (feedbackPhase) return;
     if (!selectedLeft) return;
-    // If this right side is already used by another left — unlink it first
-    setPairs((prev) => {
-      const next = new Map(prev);
-      // Remove any existing left→term mapping
-      for (const [l, r] of next) {
-        if (r === term) { next.delete(l); break; }
-      }
-      next.set(selectedLeft, term);
-      return next;
-    });
+    // Build next map synchronously so we can pass it to onAnswer immediately
+    const next = new Map(pairs);
+    // Remove any existing left→term mapping for this right side
+    for (const [l, r] of next) {
+      if (r === term) { next.delete(l); break; }
+    }
+    next.set(selectedLeft, term);
+    setPairs(next);
     setSelectedLeft(null);
+    // Notify parent on every pairing action; canCheck fires when all left paired
+    onAnswer([...next.entries()] as [string, string][]);
   };
 
   const pairIndex = (term: string, side: 'left' | 'right'): number | null => {
