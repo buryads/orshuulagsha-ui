@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Icon } from '@/components/ui/icon';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { SrsCardView } from '@/components/learn/srs-card';
 import { getDueCards, gradeCard } from '@/lib/api/srs';
 import type { SrsDueItem } from '@/lib/api/types';

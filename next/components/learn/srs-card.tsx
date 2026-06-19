@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type MouseEvent,
   type ReactElement,
@@ -449,7 +450,7 @@ export function SrsCardView({
                     fontWeight: 700,
                     fontFamily: 'var(--font-display)',
                     letterSpacing: '-0.02em',
-                    textWrap: 'balance' as React.CSSProperties['textWrap'],
+                    textWrap: 'balance' as CSSProperties['textWrap'],
                     color: 'var(--text)',
                   }}
                 >
