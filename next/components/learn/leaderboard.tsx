@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
 import { Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
 import { getLeaderboard } from '@/lib/api/gamification';
 import type { LeaderboardRow, LeaderboardMe, LeaderboardPeriod } from '@/lib/api/gamification';
 
-type LeaderboardState = 'loading' | 'error' | 'empty' | 'active';
+type LeaderboardState = 'loading' | 'error' | 'empty' | 'active' | 'guest';
 
 const PERIODS: { id: LeaderboardPeriod; labelKey: string }[] = [
   { id: 'week', labelKey: 'periodWeek' },
@@ -210,8 +211,13 @@ export function LeaderboardView() {
         setMe(res.me);
         setState('active');
       }
-    } catch {
-      setState('error');
+    } catch (err) {
+      // 401 means the endpoint requires auth — treat as guest, not a real error.
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setState('guest');
+      } else {
+        setState('error');
+      }
     }
   }, [period]);
 
@@ -299,6 +305,16 @@ export function LeaderboardView() {
               }}
             />
           ))}
+        </div>
+      )}
+
+      {/* Guest: leaderboard requires auth — show sign-in CTA instead of error */}
+      {state === 'guest' && (
+        <div className="card fade-up" style={{ padding: 40, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-muted)', marginBottom: 20 }}>{t('guestCta')}</p>
+          <Link href="/signin" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+            {t('signIn')}
+          </Link>
         </div>
       )}
 
