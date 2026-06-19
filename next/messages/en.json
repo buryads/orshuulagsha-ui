@@ -330,7 +330,7 @@
       "failed": "Try again",
       "xpAwarded": "+{xp} XP",
       "next": "Continue the path",
-      "retry": "Retry lesson",
+      "retryLesson": "Retry lesson",
       "done": "Go home",
       "match": {
         "instruction": "Match the pairs"

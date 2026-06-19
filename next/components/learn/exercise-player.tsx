@@ -717,7 +717,7 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
             className="btn btn-ghost"
             onClick={() => window.location.reload()}
           >
-            {t('retry')}
+            {t('retryLesson')}
           </button>
         </div>
 
