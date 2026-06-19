@@ -7,6 +7,7 @@ import {
   type ReactElement,
 } from 'react';
 import { useTranslations } from 'next-intl';
+import axios from 'axios';
 import { Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
 import { getTexts } from '@/lib/api/reader';
@@ -30,8 +31,12 @@ export function TextList(): ReactElement {
     try {
       const data = await getTexts();
       setTexts(data);
-    } catch {
-      setError(t('loadError'));
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setError('unauthorized');
+      } else {
+        setError(t('loadError'));
+      }
     } finally {
       setLoading(false);
     }
@@ -85,6 +90,22 @@ export function TextList(): ReactElement {
             />
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (error === 'unauthorized') {
+    return (
+      <div
+        className="card fade-up"
+        style={{ padding: 28, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}
+      >
+        <p style={{ color: 'var(--text-muted)', marginBottom: 20 }}>
+          {t('popup.authRequired')}
+        </p>
+        <Link href="/signin" className="btn btn-primary">
+          {t('popup.signIn')}
+        </Link>
       </div>
     );
   }
