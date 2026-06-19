@@ -82,6 +82,9 @@ export function SkillTree(): ReactElement {
     );
   }
 
+  // Index of the first available lesson (list is already sorted by position).
+  const firstAvailableIdx = lessons.findIndex((l) => l.status === 'available');
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, paddingBottom: 60 }}>
       {lessons.map((lesson, idx) => {
@@ -115,7 +118,7 @@ export function SkillTree(): ReactElement {
 
             {/* Lesson node */}
             <div
-              ref={lesson.status === 'available' ? availableRef : undefined}
+              ref={idx === firstAvailableIdx ? availableRef : undefined}
               style={{
                 transform: `translateX(${isLeft ? offset : -offset}px)`,
                 display: 'flex',
