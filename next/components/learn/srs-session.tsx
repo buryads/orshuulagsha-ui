@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState, type ReactElement } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -51,9 +51,15 @@ export function SrsSession(): ReactElement {
     void load();
   }, [load]);
 
+  // In-flight guard: не даём дубль-сабмит оценки (быстрый дабл-тап/хоткей),
+  // иначе двойной POST grade, перерасход XP и проскок карточки.
+  const submittingRef = useRef(false);
+
   const handleGrade = async (grade: number): Promise<void> => {
+    if (submittingRef.current) return;
     const item = items[index];
     if (!item) return;
+    submittingRef.current = true;
 
     try {
       await gradeCard(item.word_id, grade);
@@ -70,6 +76,7 @@ export function SrsSession(): ReactElement {
     } else {
       setIndex((i) => i + 1);
     }
+    submittingRef.current = false;
   };
 
   const handleFinish = (): void => {

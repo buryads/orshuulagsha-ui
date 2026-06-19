@@ -99,8 +99,12 @@ export function SrsCardView({
     wrapperRef.current?.focus();
   }, [item.word_id]);
 
-  // Горячие клавиши: Space/Enter = flip; 1-4 = оценка (только после flip)
+  // Горячие клавиши: 1-4 = оценка (только после flip).
+  // Flip по Space/Enter обрабатывает САМА карточка (handleCardKeyDown) —
+  // здесь его НЕ дублируем, иначе оконный keydown + onKeyDown карточки
+  // переворачивали бы дважды (double-toggle).
   useEffect(() => {
+    if (!flipped) return;
     const handleKey = (e: globalThis.KeyboardEvent): void => {
       // Не перехватываем если фокус на интерактивном элементе
       if (
@@ -109,18 +113,10 @@ export function SrsCardView({
         e.target instanceof HTMLInputElement
       ) return;
 
-      if (e.key === ' ' || e.key === 'Enter') {
+      const btn = GRADE_BUTTONS.find((b) => b.hotkey === e.key);
+      if (btn) {
         e.preventDefault();
-        setFlipped((f) => !f);
-        return;
-      }
-
-      if (flipped) {
-        const btn = GRADE_BUTTONS.find((b) => b.hotkey === e.key);
-        if (btn) {
-          e.preventDefault();
-          handleGrade(btn.grade);
-        }
+        handleGrade(btn.grade);
       }
     };
     window.addEventListener('keydown', handleKey);
