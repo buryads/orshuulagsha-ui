@@ -8,7 +8,7 @@ interface LearnPageProps {
 
 export default async function LearnPage({ params }: LearnPageProps): Promise<ReactElement> {
   setRequestLocale(params.locale);
-  const t = await getTranslations('srs');
+  const t = await getTranslations('learn.srs');
 
   return (
     <div className="container fade-up" style={{ paddingTop: 40, paddingBottom: 40 }}>

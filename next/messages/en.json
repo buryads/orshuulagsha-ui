@@ -244,35 +244,37 @@
     "deleteConfirm": "Delete pack \"{name}\"?",
     "deleteFailed": "Couldn't delete the pack"
   },
-  "srs": {
-    "title": "Review",
-    "loading": "Loading",
-    "loadError": "Couldn't load cards",
-    "retry": "Retry",
-    "progress": "Card {current} of {total}",
-    "listen": "Listen",
-    "tapToReveal": "Tap to reveal translation",
-    "emptyTitle": "All done for today!",
-    "emptyBody": "You've reviewed all due cards for today. Come back tomorrow.",
-    "goHome": "Go home",
-    "completeTitle": "Session complete",
-    "completeBody": "Cards reviewed: {count}",
-    "restart": "Start again",
-    "newCard": "New",
-    "noTranslation": "Translation not found",
-    "authRequired": "Please sign in to review your cards.",
-    "signIn": "Sign in",
-    "grade": {
-      "again": "Again",
-      "hard": "Hard",
-      "good": "Good",
-      "easy": "Easy"
-    },
-    "gradeDelay": {
-      "again": "in 1 min",
-      "hard": "in 4 min",
-      "good": "in 1 day",
-      "easy": "in 5 days"
+  "learn": {
+    "srs": {
+      "title": "Review",
+      "loading": "Loading",
+      "loadError": "Couldn't load cards",
+      "retry": "Retry",
+      "progress": "{current} of {total}",
+      "finish": "Finish",
+      "xp": "+{xp} XP",
+      "listen": "Listen",
+      "audioLoading": "Loading…",
+      "audioError": "Couldn't play audio",
+      "tapToReveal": "Tap to reveal translation →",
+      "emptyTitle": "All done for today!",
+      "emptyBody": "You've reviewed all due cards for today. Come back tomorrow.",
+      "learnNew": "Learn new words",
+      "goHome": "Go home",
+      "completeTitle": "Session complete",
+      "completeBody": "Cards reviewed: {count}",
+      "restart": "Start again",
+      "done": "Done",
+      "newCard": "New",
+      "noTranslation": "Translation not found",
+      "authRequired": "Please sign in to review your cards.",
+      "signIn": "Sign in",
+      "grade": {
+        "again": "Again",
+        "hard": "Hard",
+        "good": "Good",
+        "easy": "Easy"
+      }
     }
   },
   "quiz": {

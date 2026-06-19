@@ -10,16 +10,20 @@ import { SrsCardView } from '@/components/learn/srs-card';
 import { getDueCards, gradeCard } from '@/lib/api/srs';
 import type { SrsDueItem, SrsGradeValue } from '@/lib/api/types';
 
+// XP за каждую оценённую карточку (косметический фикс, бэк не возвращает xpDelta)
+const XP_PER_CARD = 10;
+
 type SessionState = 'loading' | 'error' | 'unauthorized' | 'empty' | 'active' | 'complete';
 
 export function SrsSession(): ReactElement {
-  const t = useTranslations('srs');
+  const t = useTranslations('learn.srs');
   const router = useRouter();
 
   const [state, setState] = useState<SessionState>('loading');
   const [cards, setCards] = useState<SrsDueItem[]>([]);
   const [index, setIndex] = useState(0);
   const [graded, setGraded] = useState(0);
+  const [xp, setXp] = useState(0);
 
   const load = useCallback(async () => {
     setState('loading');
@@ -31,6 +35,7 @@ export function SrsSession(): ReactElement {
         setCards(res.cards);
         setIndex(0);
         setGraded(0);
+        setXp(0);
         setState('active');
       }
     } catch (err) {
@@ -54,10 +59,11 @@ export function SrsSession(): ReactElement {
       await gradeCard(item.word_id, grade);
     } catch {
       // Не блокируем прогресс сессии при ошибке отправки оценки —
-      // пользователь продолжает, потеря одной оценки некритична
+      // оптимистичный переход, потеря одной оценки некритична для UX
     }
 
     setGraded((n) => n + 1);
+    setXp((n) => n + XP_PER_CARD);
 
     if (index + 1 >= cards.length) {
       setState('complete');
@@ -66,14 +72,44 @@ export function SrsSession(): ReactElement {
     }
   };
 
+  const handleFinish = (): void => {
+    router.push('/');
+  };
+
+  // ── loading: скелетон карточки ──────────────────────────────────────────────
   if (state === 'loading') {
     return (
-      <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
-        {t('loading')}…
+      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        {/* Топбар-плейсхолдер */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 18,
+          }}
+        >
+          <div style={{ width: 90, height: 32, borderRadius: 8, background: 'var(--surface-2)', animation: 'pulse-soft 1.4s ease-in-out infinite' }} />
+          <div style={{ width: 60, height: 20, borderRadius: 6, background: 'var(--surface-2)', animation: 'pulse-soft 1.4s ease-in-out infinite' }} />
+          <div style={{ width: 60, height: 24, borderRadius: 999, background: 'var(--surface-2)', animation: 'pulse-soft 1.4s ease-in-out infinite' }} />
+        </div>
+        {/* Progress bar-плейсхолдер */}
+        <div style={{ height: 6, borderRadius: 999, background: 'var(--surface-2)', marginBottom: 32, animation: 'pulse-soft 1.4s ease-in-out infinite' }} />
+        {/* Карточка-скелетон */}
+        <div
+          className="card"
+          style={{
+            height: 'clamp(300px, 45vw, 360px)',
+            background: 'var(--surface-2)',
+            animation: 'pulse-soft 1.4s ease-in-out infinite',
+            marginBottom: 24,
+          }}
+        />
       </div>
     );
   }
 
+  // ── unauthorized ────────────────────────────────────────────────────────────
   if (state === 'unauthorized') {
     return (
       <div className="card fade-up" style={{ padding: 28, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
@@ -85,6 +121,7 @@ export function SrsSession(): ReactElement {
     );
   }
 
+  // ── error ───────────────────────────────────────────────────────────────────
   if (state === 'error') {
     return (
       <div className="card" style={{ padding: 28, textAlign: 'center' }}>
@@ -96,6 +133,7 @@ export function SrsSession(): ReactElement {
     );
   }
 
+  // ── empty: всё повторено на сегодня ─────────────────────────────────────────
   if (state === 'empty') {
     return (
       <div className="card fade-up" style={{ padding: 40, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
@@ -112,13 +150,16 @@ export function SrsSession(): ReactElement {
           {t('emptyTitle')}
         </h2>
         <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>{t('emptyBody')}</p>
-        <button type="button" className="btn btn-ghost" onClick={() => router.push('/')}>
-          <Icon name="arrow-left" size={14} /> {t('goHome')}
-        </button>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button type="button" className="btn btn-ghost" onClick={() => router.push('/')}>
+            <Icon name="arrow-left" size={14} /> {t('goHome')}
+          </button>
+        </div>
       </div>
     );
   }
 
+  // ── complete: итоги сессии ───────────────────────────────────────────────────
   if (state === 'complete') {
     return (
       <div className="card fade-up" style={{ padding: 40, textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
@@ -133,10 +174,13 @@ export function SrsSession(): ReactElement {
         >
           {t('completeTitle')}
         </h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 8 }}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 4 }}>
           {t('completeBody', { count: graded })}
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 24, flexWrap: 'wrap' }}>
+        <p style={{ color: 'var(--accent-warm)', fontWeight: 700, marginBottom: 24, fontSize: 18 }}>
+          🔥 {t('xp', { xp })}
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button type="button" className="btn btn-primary" onClick={() => void load()}>
             <Icon name="play" size={14} /> {t('restart')}
           </button>
@@ -148,7 +192,7 @@ export function SrsSession(): ReactElement {
     );
   }
 
-  // state === 'active'
+  // ── active ───────────────────────────────────────────────────────────────────
   const current = cards[index];
   if (!current) return <></>;
 
@@ -157,7 +201,9 @@ export function SrsSession(): ReactElement {
       item={current}
       index={index}
       total={cards.length}
+      xpTotal={xp}
       onGrade={(grade) => void handleGrade(grade)}
+      onFinish={handleFinish}
     />
   );
 }
