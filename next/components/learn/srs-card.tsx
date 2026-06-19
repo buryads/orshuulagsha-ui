@@ -11,18 +11,19 @@ import {
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { getOneBurWord } from '@/lib/api/words';
-import type { SrsDueItem, SrsGradeValue, Word } from '@/lib/api/types';
+import type { SrsDueItem, Word } from '@/lib/api/types';
 
 /**
- * Маппинг кнопок оценки → числовой grade (grade < 3 = lapse):
- *   Again = 1  (lapse: reps сбрасываются)
+ * Маппинг кнопок оценки → числовой grade для POST /api/srs/grade (0–5).
+ * grade < 3 = lapse (reps сбрасываются):
+ *   Again = 1  (единственная даёт lapse)
  *   Hard  = 3  (не lapse)
  *   Good  = 4
  *   Easy  = 5
  * Горячие клавиши (desktop): 1/2/3/4 соответственно.
  */
 interface GradeButton {
-  grade: SrsGradeValue;
+  grade: number;
   labelKey: 'again' | 'hard' | 'good' | 'easy';
   color: string;
   hotkey: string;
@@ -42,7 +43,7 @@ interface SrsCardProps {
   index: number;
   total: number;
   xpTotal: number;
-  onGrade: (grade: SrsGradeValue) => void;
+  onGrade: (grade: number) => void;
   onFinish: () => void;
 }
 
@@ -142,7 +143,7 @@ export function SrsCardView({
     setFlipped((f) => !f);
   };
 
-  const handleGrade = (grade: SrsGradeValue): void => {
+  const handleGrade = (grade: number): void => {
     setFlipped(false);
     onGrade(grade);
   };

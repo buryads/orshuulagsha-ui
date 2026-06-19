@@ -8,7 +8,7 @@ import { Icon } from '@/components/ui/icon';
 import { Link } from '@/i18n/navigation';
 import { SrsCardView } from '@/components/learn/srs-card';
 import { getDueCards, gradeCard } from '@/lib/api/srs';
-import type { SrsDueItem, SrsGradeValue } from '@/lib/api/types';
+import type { SrsDueItem } from '@/lib/api/types';
 
 // XP за каждую оценённую карточку (косметический фикс, бэк не возвращает xpDelta)
 const XP_PER_CARD = 10;
@@ -20,7 +20,7 @@ export function SrsSession(): ReactElement {
   const router = useRouter();
 
   const [state, setState] = useState<SessionState>('loading');
-  const [cards, setCards] = useState<SrsDueItem[]>([]);
+  const [items, setItems] = useState<SrsDueItem[]>([]);
   const [index, setIndex] = useState(0);
   const [graded, setGraded] = useState(0);
   const [xp, setXp] = useState(0);
@@ -29,10 +29,10 @@ export function SrsSession(): ReactElement {
     setState('loading');
     try {
       const res = await getDueCards();
-      if (res.count === 0 || res.cards.length === 0) {
+      if (res.count === 0 || res.items.length === 0) {
         setState('empty');
       } else {
-        setCards(res.cards);
+        setItems(res.items);
         setIndex(0);
         setGraded(0);
         setXp(0);
@@ -51,8 +51,8 @@ export function SrsSession(): ReactElement {
     void load();
   }, [load]);
 
-  const handleGrade = async (grade: SrsGradeValue): Promise<void> => {
-    const item = cards[index];
+  const handleGrade = async (grade: number): Promise<void> => {
+    const item = items[index];
     if (!item) return;
 
     try {
@@ -65,7 +65,7 @@ export function SrsSession(): ReactElement {
     setGraded((n) => n + 1);
     setXp((n) => n + XP_PER_CARD);
 
-    if (index + 1 >= cards.length) {
+    if (index + 1 >= items.length) {
       setState('complete');
     } else {
       setIndex((i) => i + 1);
@@ -193,14 +193,14 @@ export function SrsSession(): ReactElement {
   }
 
   // ── active ───────────────────────────────────────────────────────────────────
-  const current = cards[index];
+  const current = items[index];
   if (!current) return <></>;
 
   return (
     <SrsCardView
       item={current}
       index={index}
-      total={cards.length}
+      total={items.length}
       xpTotal={xp}
       onGrade={(grade) => void handleGrade(grade)}
       onFinish={handleFinish}
