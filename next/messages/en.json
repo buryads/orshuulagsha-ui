@@ -300,6 +300,52 @@
       "startLearning": "Start learning",
       "guestCta": "Sign in to compete",
       "signIn": "Sign in"
+    },
+    "reader": {
+      "title": "Reader",
+      "subtitle": "Read Buryat texts and learn words in context",
+      "filterAll": "All levels",
+      "filterA1": "A1",
+      "filterA2": "A2",
+      "filterB1": "B1",
+      "filterB2": "B2",
+      "wordCount": "~{count} words",
+      "loading": "Loading…",
+      "loadError": "Failed to load texts",
+      "retry": "Retry",
+      "empty": "No texts yet",
+      "back": "Back",
+      "fontSmall": "S",
+      "fontMedium": "M",
+      "fontLarge": "L",
+      "fontSizeLabel": "Font size",
+      "footerKnown": "{pct}% known",
+      "footerNew": "{count} new",
+      "textLoading": "Loading text…",
+      "textError": "Failed to load text",
+      "popup": {
+        "loading": "Loading…",
+        "noTranslation": "No translation found yet",
+        "saveToSrs": "Save to SRS",
+        "savedToSrs": "In SRS ✓",
+        "markKnown": "I know this",
+        "markUnknown": "Mark as unknown",
+        "openDictionary": "Open in dictionary",
+        "playAudio": "Play audio",
+        "close": "Close",
+        "error": "Failed to load. Retry?",
+        "authRequired": "Sign in to save your progress",
+        "signIn": "Sign in"
+      },
+      "statusNew": "new",
+      "statusKnown": "known",
+      "statusIgnored": "ignored",
+      "legend": {
+        "title": "Word highlighting",
+        "new": "New — tap to study",
+        "known": "Known — you already know this word",
+        "ignored": "Not tracked (names, numbers, punctuation)"
+      }
     }
   },
   "quiz": {

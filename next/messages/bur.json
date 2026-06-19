@@ -298,6 +298,52 @@
       "startLearning": "hурахаа эхилхэ",
       "guestCta": "Мүрысэхын тулада нэбтэрэгты",
       "signIn": "Нэбтэрхэ"
+    },
+    "reader": {
+      "title": "Уншалга",
+      "subtitle": "Буряад текст уншажа, үгэнүүд hуранги",
+      "filterAll": "Бүхы шатанууд",
+      "filterA1": "A1",
+      "filterA2": "A2",
+      "filterB1": "B1",
+      "filterB2": "B2",
+      "wordCount": "~{count} үгэ",
+      "loading": "Ачаалжа байна…",
+      "loadError": "Текстнүүд ачаалагдаагүй",
+      "retry": "Дахяа оролдохо",
+      "empty": "Текст алга",
+      "back": "Бусаха",
+      "fontSmall": "Ж",
+      "fontMedium": "Д",
+      "fontLarge": "Т",
+      "fontSizeLabel": "Фонтын хэмжэ",
+      "footerKnown": "мэдэхэ {pct}%",
+      "footerNew": "шэнэ {count}",
+      "textLoading": "Текст ачаалжа байна…",
+      "textError": "Текст ачаалагдаагүй",
+      "popup": {
+        "loading": "Ачаалжа байна…",
+        "noTranslation": "Оршуулга олдоогүй",
+        "saveToSrs": "SRS-дэ хадагалха",
+        "savedToSrs": "SRS ✓",
+        "markKnown": "Мэдэхэб",
+        "markUnknown": "Мэдэхэгүйб",
+        "openDictionary": "Словарьта нээхэ",
+        "playAudio": "Шагнаха",
+        "close": "Хаахa",
+        "error": "Ачаалагдаагүй. Дахяа?",
+        "authRequired": "Прогресс хадагалхын тулада нэбтэрэгты",
+        "signIn": "Нэбтэрхэ"
+      },
+      "statusNew": "шэнэ",
+      "statusKnown": "мэдэхэ",
+      "statusIgnored": "тоолоогүй",
+      "legend": {
+        "title": "Үгэнүүдэй тодорхойлолго",
+        "new": "Шэнэ — hуранги дарагты",
+        "known": "Мэдэхэ — энэ үгэ мэдэнэт",
+        "ignored": "Тоолоогүй (нэрэнүүд, тоонууд, тэмдэгүүд)"
+      }
     }
   },
   "quiz": {
