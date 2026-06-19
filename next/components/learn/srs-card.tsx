@@ -66,6 +66,7 @@ export function SrsCardView({
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setDetails(null);
@@ -94,9 +95,9 @@ export function SrsCardView({
     };
   }, [item.slug]);
 
-  // Фокус на враппере при смене карточки — чтобы a11y клавиатура работала сразу
+  // Фокус на flip-карточке при смене карточки — чтобы Space/Enter сразу переворачивали
   useEffect(() => {
-    wrapperRef.current?.focus();
+    cardRef.current?.focus();
   }, [item.word_id]);
 
   // Горячие клавиши: 1-4 = оценка (только после flip).
@@ -175,6 +176,8 @@ export function SrsCardView({
   };
 
   const handleCardKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
+    // Игнорируем всплывшие события от вложенных контролов (напр. кнопка аудио)
+    if (e.target !== e.currentTarget) return;
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       handleFlip();
@@ -309,6 +312,7 @@ export function SrsCardView({
 
       {/* Flip-карточка */}
       <div
+        ref={cardRef}
         role="button"
         tabIndex={0}
         aria-label={
