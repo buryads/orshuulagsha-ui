@@ -33,6 +33,10 @@ export function SrsSession(): ReactElement {
 
   // Track whether this session's XP crossed the daily goal
   const xpTodayRef = useRef<number>(0);
+  // Monotonically-incrementing key so XpToast remounts on every grade, even
+  // when the awarded XP amount is identical to the previous card (same number
+  // would otherwise be a React state no-op and skip the toast animation).
+  const xpToastSeqRef = useRef<number>(0);
 
   const load = useCallback(async () => {
     setState('loading');
@@ -89,6 +93,8 @@ export function SrsSession(): ReactElement {
 
     setGraded(nextGraded);
     setXp(nextXp);
+    // Bump seq so XpToast always remounts, even when awardedXp equals the last value.
+    xpToastSeqRef.current += 1;
     setXpToast(awardedXp);
 
     // Check if daily goal crossed during this session
@@ -319,8 +325,9 @@ export function SrsSession(): ReactElement {
         onFinish={handleFinish}
       />
 
-      {/* XP micro-toast */}
-      <XpToast amount={xpToast} onDone={() => setXpToast(null)} />
+      {/* XP micro-toast — key forces remount on every grade so the animation
+          fires even when two consecutive cards award the same XP amount. */}
+      <XpToast key={xpToastSeqRef.current} amount={xpToast} onDone={() => setXpToast(null)} />
     </>
   );
 }
