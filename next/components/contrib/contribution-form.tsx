@@ -25,11 +25,21 @@ import type {
 
 type TabId = ContributionType;
 
-// Optional prefill from reader's "suggest translation" chip
+// Optional prefill — used both from reader's "suggest translation" chip (word only)
+// and from "Edit and resubmit" on a rejected contribution (full payload).
 export interface ContribPrefill {
   type?: ContributionType;
   burword_id?: number | null;
   word?: string;
+  // new_word / translation
+  translation?: string;
+  lang?: ContributionLang;
+  // new_word
+  example?: string;
+  // correction
+  field?: 'translation' | 'example' | 'other';
+  suggestion?: string;
+  comment?: string;
 }
 
 interface ContributionFormProps {
@@ -61,18 +71,28 @@ interface CorrectionFields {
   comment: string;
 }
 
-function emptyNewWord(): NewWordFields {
-  return { word: '', translation: '', lang: 'ru', example: '' };
+function emptyNewWord(prefill?: ContribPrefill): NewWordFields {
+  return {
+    word: prefill?.word ?? '',
+    translation: prefill?.translation ?? '',
+    lang: prefill?.lang ?? 'ru',
+    example: prefill?.example ?? '',
+  };
 }
 function emptyTranslation(prefill?: ContribPrefill): TranslationFields {
   return {
     word: prefill?.word ?? '',
-    translation: '',
-    lang: 'ru',
+    translation: prefill?.translation ?? '',
+    lang: prefill?.lang ?? 'ru',
   };
 }
-function emptyCorrection(): CorrectionFields {
-  return { word: '', field: 'translation', suggestion: '', comment: '' };
+function emptyCorrection(prefill?: ContribPrefill): CorrectionFields {
+  return {
+    word: prefill?.word ?? '',
+    field: prefill?.field ?? 'translation',
+    suggestion: prefill?.suggestion ?? '',
+    comment: prefill?.comment ?? '',
+  };
 }
 
 type FieldErrors = Record<string, string>;
@@ -91,21 +111,24 @@ export function ContributionForm({
   const [formState, setFormState] = useState<FormState>('idle');
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  // Per-tab field states — preserved across tab switches (allows returning)
-  const [newWord, setNewWord] = useState<NewWordFields>(emptyNewWord);
+  // Per-tab field states — seeded from prefill (full payload on resubmit, or
+  // word-only when opened from the reader chip).
+  const [newWord, setNewWord] = useState<NewWordFields>(() => emptyNewWord(prefill));
   const [translation, setTranslation] = useState<TranslationFields>(() =>
     emptyTranslation(prefill),
   );
-  const [correction, setCorrection] = useState<CorrectionFields>(emptyCorrection);
+  const [correction, setCorrection] = useState<CorrectionFields>(() =>
+    emptyCorrection(prefill),
+  );
 
-  // Apply prefill when prop changes (e.g. when opened from reader chip)
+  // Re-seed all tab states when prefill prop identity changes (e.g. user clicks
+  // "resubmit" on a different rejected item without unmounting the form).
   useEffect(() => {
     if (!prefill) return;
     if (prefill.type) setTab(prefill.type);
-    if (prefill.word) {
-      setTranslation((prev) => ({ ...prev, word: prefill.word ?? prev.word }));
-      setCorrection((prev) => ({ ...prev, word: prefill.word ?? prev.word }));
-    }
+    setNewWord(emptyNewWord(prefill));
+    setTranslation(emptyTranslation(prefill));
+    setCorrection(emptyCorrection(prefill));
   }, [prefill]);
 
   // ----- validation -----
@@ -204,7 +227,7 @@ export function ContributionForm({
     setFormState('idle');
     setErrors({});
     setNewWord(emptyNewWord());
-    setTranslation(emptyTranslation(prefill));
+    setTranslation(emptyTranslation());
     setCorrection(emptyCorrection());
   }
 

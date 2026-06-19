@@ -23,16 +23,32 @@ export function TabContributions(): ReactElement {
 
   if (resubmit) {
     const { item } = resubmit;
-    const payload = item.payload as unknown as Record<string, unknown>;
+    const p = item.payload as unknown as Record<string, unknown>;
+
+    // Build a full prefill so every form field is pre-populated for editing.
+    const prefill: Parameters<typeof ContributionForm>[0]['prefill'] = {
+      type: item.type,
+      burword_id: typeof p.burword_id === 'number' ? p.burword_id : null,
+      word: typeof p.word === 'string' ? p.word : undefined,
+      // new_word / translation
+      translation: typeof p.translation === 'string' ? p.translation : undefined,
+      lang:
+        p.lang === 'ru' || p.lang === 'en' ? p.lang : undefined,
+      // new_word only
+      example: typeof p.example === 'string' ? p.example : undefined,
+      // correction only
+      field:
+        p.field === 'translation' || p.field === 'example' || p.field === 'other'
+          ? p.field
+          : undefined,
+      suggestion: typeof p.suggestion === 'string' ? p.suggestion : undefined,
+      comment: typeof p.comment === 'string' ? p.comment : undefined,
+    };
+
     return (
       <div style={{ padding: '24px 0' }}>
         <ContributionForm
-          prefill={{
-            type: item.type,
-            burword_id:
-              typeof payload.burword_id === 'number' ? payload.burword_id : null,
-            word: typeof payload.word === 'string' ? payload.word : undefined,
-          }}
+          prefill={prefill}
           onCancel={handleFormCancel}
         />
       </div>

@@ -151,7 +151,7 @@ export function ModerationPanel(): ReactElement {
   return (
     <>
       <div
-        className="fade-up"
+        className="mod-grid fade-up"
         style={{
           display: 'grid',
           gridTemplateColumns: 'minmax(260px, 1fr) minmax(0, 1.6fr)',
