@@ -582,6 +582,7 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
 
   // Result screen
   const [checkResult, setCheckResult] = useState<CheckResponse | null>(null);
+  const [checkPending, setCheckPending] = useState(false);
 
   // Session XP counter
   const [sessionXp, setSessionXp] = useState(0);
@@ -768,7 +769,8 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
     setAnswers(newAnswers);
 
     if (index + 1 >= total) {
-      // Last exercise — call check API
+      // Last exercise — call check API; block Continue until resolved
+      setCheckPending(true);
       try {
         const result = await checkLesson(slug, newAnswers);
         setCheckResult(result);
@@ -785,8 +787,13 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
         const resultMap = new Map(result.results.map((r) => [r.exercise_id, r.correct]));
         setFeedbackCorrect(resultMap.get(current.id) ?? null);
       } catch {
-        // Show generic feedback
+        // /check failed — show error state so user can retry; do NOT advance index
+        setFeedbackPhase(false);
         setFeedbackCorrect(null);
+        // Remove the answer we just added so user can re-check
+        setAnswers(answers);
+      } finally {
+        setCheckPending(false);
       }
     } else {
       // Non-last exercise — optimistic (no local correctness check)
@@ -911,6 +918,7 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
       <div className="card" style={{ padding: 24, marginBottom: 20 }}>
         {current.type === 'match' && (
           <MatchExercise
+            key={current.id}
             exercise={current}
             onAnswer={handleMatchAnswer}
             feedbackPhase={feedbackPhase}
@@ -973,9 +981,10 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
           <button
             type="button"
             className="btn btn-primary"
+            disabled={checkPending}
             onClick={handleContinue}
           >
-            {t('continue')}
+            {checkPending ? '…' : t('continue')}
           </button>
         </div>
       ) : (
