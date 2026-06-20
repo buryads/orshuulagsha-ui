@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactElement } from 'react';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { ContributionForm } from '@/components/contrib/contribution-form';
+import { MyContributions } from '@/components/contrib/my-contributions';
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: 'Contribute' };
@@ -39,6 +40,11 @@ export default async function ContributePage({
       </header>
 
       <ContributionForm />
+
+      {/* История вкладов — единственный канон вклада */}
+      <div style={{ marginTop: 48 }}>
+        <MyContributions />
+      </div>
     </div>
   );
 }

@@ -7,9 +7,8 @@ import { TabCollections } from './tab-collections';
 import { TabHistory } from './tab-history';
 import { TabOverview } from './tab-overview';
 import { TabSettings } from './tab-settings';
-import { TabContributions } from './tab-contributions';
 
-type TabId = 'overview' | 'collections' | 'achievements' | 'history' | 'settings' | 'contributions';
+type TabId = 'overview' | 'collections' | 'achievements' | 'history' | 'settings';
 
 interface TabDef {
   id: TabId;
@@ -21,7 +20,6 @@ const TABS: TabDef[] = [
   { id: 'collections', label: 'Коллекции · 6' },
   { id: 'achievements', label: 'Достижения' },
   { id: 'history', label: 'История' },
-  { id: 'contributions', label: 'Мой вклад' },
   { id: 'settings', label: 'Настройки' },
 ];
 
@@ -69,7 +67,6 @@ export function ProfileTabs(): ReactElement {
       {tab === 'collections' && <TabCollections />}
       {tab === 'achievements' && <TabAchievements />}
       {tab === 'history' && <TabHistory />}
-      {tab === 'contributions' && <TabContributions />}
       {tab === 'settings' && <TabSettings />}
     </div>
   );
