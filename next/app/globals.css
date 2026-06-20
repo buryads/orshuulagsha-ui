@@ -4,6 +4,9 @@
 
 /* ===== Buryad Portal — Design Tokens ===== */
 :root {
+  /* Layout tokens */
+  --header-h: 66px;            /* sticky global header: 14px top + 38px content + 14px bottom */
+
   /* Buryad flag palette
      синий #0066B3 (небо/вечность) · жёлтый #FFD200 (солнце/буддизм) · белый #FFFFFF (чистота)
      плюс акценты для UI-нужд (red/green) — ультра-сдержанно */
