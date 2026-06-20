@@ -4,8 +4,10 @@ import { routing } from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-// /learn/leaderboard is public (shows top without auth, guest sees sign-in CTA)
-const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|learn(?!\/leaderboard))(\/|$)/;
+// /learn/* is public — each screen shows its own guest-CTA (SRS/reader/leaderboard/hub).
+// /admin (incl. /admin/moderation) stays protected here; bэк also returns 403 without a role.
+// Authed requests with an expired token on /learn/* get a 401 from the API → global handler → signin.
+const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin)(\/|$)/;
 const AUTH_COOKIE = 'token';
 
 export default function middleware(req: NextRequest) {
