@@ -48,6 +48,8 @@ export function WordPopup({
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Флаг отмены для in-flight запроса — предотвращает гонку при быстрой смене слова
+  const cancelledRef = useRef(false);
 
   // Вычисляем позицию попапа (desktop: под словом; mobile: bottom)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
@@ -82,20 +84,25 @@ export function WordPopup({
       };
 
   const loadWord = useCallback(async () => {
+    cancelledRef.current = false;
     if (!token.slug) {
-      setState('ready');
+      if (!cancelledRef.current) setState('ready');
       return;
     }
-    setState('loading');
+    if (!cancelledRef.current) setState('loading');
     try {
       const data = await getOneBurWord(token.slug);
-      setWord(data);
-      setState('ready');
+      if (!cancelledRef.current) {
+        setWord(data);
+        setState('ready');
+      }
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
-        setState('unauthorized');
-      } else {
-        setState('error');
+      if (!cancelledRef.current) {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          setState('unauthorized');
+        } else {
+          setState('error');
+        }
       }
     }
   }, [token.slug]);
@@ -115,6 +122,9 @@ export function WordPopup({
 
   useEffect(() => {
     void loadWord();
+    return () => {
+      cancelledRef.current = true;
+    };
   }, [loadWord]);
 
   // Синхронизируем known при смене слова — React переиспользует инстанс попапа,
