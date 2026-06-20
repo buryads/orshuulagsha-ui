@@ -2,8 +2,7 @@
 
 import { useEffect, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
-import { Icon } from '@/components/ui/icon';
+import { Link, useRouter } from '@/i18n/navigation';
 import { DailyMission } from '@/components/learn/daily-mission';
 import { getAuthToken } from '@/lib/api/cookies';
 import * as userApi from '@/lib/api/user';
@@ -33,6 +32,7 @@ function isModerator(roles: IRole[]): boolean {
 
 export function LearnHub(): ReactElement {
   const t = useTranslations('learn.hub');
+  const router = useRouter();
 
   const [signedIn, setSignedIn] = useState(false);
   const [canModerate, setCanModerate] = useState(false);
@@ -60,7 +60,7 @@ export function LearnHub(): ReactElement {
     <div>
       {/* Дневная миссия */}
       <div style={{ marginBottom: 32 }}>
-        <DailyMission onContinue={() => { window.location.href = '/learn/srs'; }} />
+        <DailyMission onContinue={() => router.push('/learn/srs')} />
       </div>
 
       {/* Грид карточек-входов */}

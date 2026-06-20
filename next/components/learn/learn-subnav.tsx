@@ -238,13 +238,6 @@ export function LearnSubnav(): ReactElement {
           </div>
         )}
       </nav>
-
-      {/* Spacer so mobile content isn't hidden under bottom bar */}
-      <div
-        className="show-sm"
-        style={{ height: 'calc(56px + env(safe-area-inset-bottom))' }}
-        aria-hidden
-      />
     </>
   );
 }
