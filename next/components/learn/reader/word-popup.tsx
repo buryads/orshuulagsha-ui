@@ -48,8 +48,11 @@ export function WordPopup({
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  // Флаг отмены для in-flight запроса — предотвращает гонку при быстрой смене слова
-  const cancelledRef = useRef(false);
+  // Монотонный счётчик запросов — гарантирует что применяется только последний.
+  // Каждый вызов loadWord захватывает myId = ++reqIdRef.current; результат
+  // применяется только если myId === reqIdRef.current (т.е. запрос не устарел).
+  // Работает корректно при быстром A→B: ответ A имеет старый myId → игнорируется.
+  const reqIdRef = useRef(0);
 
   // Вычисляем позицию попапа (desktop: под словом; mobile: bottom)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
@@ -84,20 +87,20 @@ export function WordPopup({
       };
 
   const loadWord = useCallback(async () => {
-    cancelledRef.current = false;
+    const myId = ++reqIdRef.current;
     if (!token.slug) {
-      if (!cancelledRef.current) setState('ready');
+      if (myId === reqIdRef.current) setState('ready');
       return;
     }
-    if (!cancelledRef.current) setState('loading');
+    setState('loading');
     try {
       const data = await getOneBurWord(token.slug);
-      if (!cancelledRef.current) {
+      if (myId === reqIdRef.current) {
         setWord(data);
         setState('ready');
       }
     } catch (err) {
-      if (!cancelledRef.current) {
+      if (myId === reqIdRef.current) {
         if (axios.isAxiosError(err) && err.response?.status === 401) {
           setState('unauthorized');
         } else {
@@ -122,9 +125,6 @@ export function WordPopup({
 
   useEffect(() => {
     void loadWord();
-    return () => {
-      cancelledRef.current = true;
-    };
   }, [loadWord]);
 
   // Синхронизируем known при смене слова — React переиспользует инстанс попапа,
