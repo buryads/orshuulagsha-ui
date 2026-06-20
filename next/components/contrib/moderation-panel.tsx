@@ -307,8 +307,8 @@ function PayloadDetail({ item }: { item: ModerationContribution }): ReactElement
   if (item.type === 'new_word') {
     return (
       <dl style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: 0 }}>
-        <Row label="Бурятское слово" value={String(p.word ?? '')} />
-        <Row label="Перевод" value={`${String(p.translation ?? '')} (${String(p.lang ?? '')})`} />
+        <Row label="Бурятское слово" value={String(p.bur ?? '')} />
+        <Row label="Перевод (рус.)" value={String(p.ru ?? '')} />
         {p.example ? <Row label="Пример" value={String(p.example)} /> : null}
       </dl>
     );
@@ -316,8 +316,8 @@ function PayloadDetail({ item }: { item: ModerationContribution }): ReactElement
   if (item.type === 'translation') {
     return (
       <dl style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: 0 }}>
-        <Row label="Бурятское слово" value={String(p.word ?? '')} />
-        <Row label="Перевод" value={`${String(p.translation ?? '')} (${String(p.lang ?? '')})`} />
+        <Row label="Бурятское слово" value={String(p.bur ?? '')} />
+        <Row label="Перевод (рус.)" value={String(p.ru ?? '')} />
         {p.burword_id ? <Row label="ID слова" value={String(p.burword_id)} /> : null}
       </dl>
     );
@@ -325,10 +325,9 @@ function PayloadDetail({ item }: { item: ModerationContribution }): ReactElement
   // correction
   return (
     <dl style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: 0 }}>
-      <Row label="Слово" value={String(p.word ?? '')} />
-      <Row label="Поле" value={String(p.field ?? '')} />
-      <Row label="Предлагаемая замена" value={String(p.suggestion ?? '')} />
-      {p.comment ? <Row label="Комментарий" value={String(p.comment)} /> : null}
+      <Row label="Что исправить" value={String(p.target ?? '')} />
+      <Row label="Предлагаемая замена" value={String(p.suggested ?? '')} />
+      {p.note ? <Row label="Комментарий" value={String(p.note)} /> : null}
     </dl>
   );
 }
@@ -603,5 +602,8 @@ function typeLabel(
 
 function extractWord(item: ModerationContribution): string {
   const p = item.payload as unknown as Record<string, unknown>;
-  return typeof p.word === 'string' ? p.word : `#${item.id}`;
+  // new_word / translation use `bur`; correction uses `suggested` as summary
+  if (typeof p.bur === 'string' && p.bur) return p.bur;
+  if (typeof p.suggested === 'string' && p.suggested) return p.suggested;
+  return `#${item.id}`;
 }

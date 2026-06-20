@@ -29,20 +29,18 @@ export function TabContributions(): ReactElement {
     const prefill: Parameters<typeof ContributionForm>[0]['prefill'] = {
       type: item.type,
       burword_id: typeof p.burword_id === 'number' ? p.burword_id : null,
-      word: typeof p.word === 'string' ? p.word : undefined,
       // new_word / translation
-      translation: typeof p.translation === 'string' ? p.translation : undefined,
-      lang:
-        p.lang === 'ru' || p.lang === 'en' ? p.lang : undefined,
+      bur: typeof p.bur === 'string' ? p.bur : undefined,
+      ru: typeof p.ru === 'string' ? p.ru : undefined,
       // new_word only
       example: typeof p.example === 'string' ? p.example : undefined,
       // correction only
-      field:
-        p.field === 'translation' || p.field === 'example' || p.field === 'other'
-          ? p.field
+      target:
+        p.target === 'translation' || p.target === 'word' || p.target === 'example'
+          ? p.target
           : undefined,
-      suggestion: typeof p.suggestion === 'string' ? p.suggestion : undefined,
-      comment: typeof p.comment === 'string' ? p.comment : undefined,
+      suggested: typeof p.suggested === 'string' ? p.suggested : undefined,
+      note: typeof p.note === 'string' ? p.note : undefined,
     };
 
     return (

@@ -198,16 +198,16 @@ function typeDisplayLabel(
 function buildSummary(item: Contribution): string {
   const p = item.payload as unknown as Record<string, unknown>;
   if (item.type === 'new_word' || item.type === 'translation') {
-    const word = typeof p.word === 'string' ? p.word : '';
-    const tr = typeof p.translation === 'string' ? p.translation : '';
-    if (word && tr) return `${word} → ${tr}`;
-    return word || tr;
+    const bur = typeof p.bur === 'string' ? p.bur : '';
+    const ru = typeof p.ru === 'string' ? p.ru : '';
+    if (bur && ru) return `${bur} → ${ru}`;
+    return bur || ru;
   }
   if (item.type === 'correction') {
-    const word = typeof p.word === 'string' ? p.word : '';
-    const suggestion = typeof p.suggestion === 'string' ? p.suggestion : '';
-    if (word && suggestion) return `${word}: "${suggestion}"`;
-    return word;
+    const suggested = typeof p.suggested === 'string' ? p.suggested : '';
+    const target = typeof p.target === 'string' ? p.target : '';
+    if (target && suggested) return `${target}: "${suggested}"`;
+    return suggested;
   }
   return '';
 }

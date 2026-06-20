@@ -8,7 +8,6 @@ import {
   type ReactElement,
 } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Icon } from '@/components/ui/icon';
 import { Link } from '@/i18n/navigation';
@@ -17,7 +16,6 @@ import { submitContribution } from '@/lib/api/contributions';
 import { getAuthToken } from '@/lib/api/cookies';
 import type {
   ContributionType,
-  ContributionLang,
   ContribPayloadNewWord,
   ContribPayloadTranslation,
   ContribPayloadCorrection,
@@ -25,21 +23,20 @@ import type {
 
 type TabId = ContributionType;
 
-// Optional prefill — used both from reader's "suggest translation" chip (word only)
+// Optional prefill — used both from reader's "suggest translation" chip (bur only)
 // and from "Edit and resubmit" on a rejected contribution (full payload).
 export interface ContribPrefill {
   type?: ContributionType;
   burword_id?: number | null;
-  word?: string;
   // new_word / translation
-  translation?: string;
-  lang?: ContributionLang;
-  // new_word
+  bur?: string;
+  ru?: string;
+  // new_word only
   example?: string;
-  // correction
-  field?: 'translation' | 'example' | 'other';
-  suggestion?: string;
-  comment?: string;
+  // correction only
+  target?: 'translation' | 'word' | 'example';
+  suggested?: string;
+  note?: string;
 }
 
 interface ContributionFormProps {
@@ -52,46 +49,40 @@ type FormState = 'idle' | 'submitting' | 'success' | 'error' | 'guest';
 
 // ----- new_word form state -----
 interface NewWordFields {
-  word: string;
-  translation: string;
-  lang: ContributionLang;
+  bur: string;
+  ru: string;
   example: string;
 }
 // ----- translation form state -----
 interface TranslationFields {
-  word: string;
-  translation: string;
-  lang: ContributionLang;
+  bur: string;
+  ru: string;
 }
 // ----- correction form state -----
 interface CorrectionFields {
-  word: string;
-  field: 'translation' | 'example' | 'other';
-  suggestion: string;
-  comment: string;
+  target: 'translation' | 'word' | 'example';
+  suggested: string;
+  note: string;
 }
 
 function emptyNewWord(prefill?: ContribPrefill): NewWordFields {
   return {
-    word: prefill?.word ?? '',
-    translation: prefill?.translation ?? '',
-    lang: prefill?.lang ?? 'ru',
+    bur: prefill?.bur ?? '',
+    ru: prefill?.ru ?? '',
     example: prefill?.example ?? '',
   };
 }
 function emptyTranslation(prefill?: ContribPrefill): TranslationFields {
   return {
-    word: prefill?.word ?? '',
-    translation: prefill?.translation ?? '',
-    lang: prefill?.lang ?? 'ru',
+    bur: prefill?.bur ?? '',
+    ru: prefill?.ru ?? '',
   };
 }
 function emptyCorrection(prefill?: ContribPrefill): CorrectionFields {
   return {
-    word: prefill?.word ?? '',
-    field: prefill?.field ?? 'translation',
-    suggestion: prefill?.suggestion ?? '',
-    comment: prefill?.comment ?? '',
+    target: prefill?.target ?? 'translation',
+    suggested: prefill?.suggested ?? '',
+    note: prefill?.note ?? '',
   };
 }
 
@@ -103,7 +94,6 @@ export function ContributionForm({
   onCancel,
 }: ContributionFormProps): ReactElement {
   const t = useTranslations('learn.contrib');
-  const router = useRouter();
 
   // Determine initial tab from prefill
   const initialTab: TabId = prefill?.type ?? 'new_word';
@@ -112,7 +102,7 @@ export function ContributionForm({
   const [errors, setErrors] = useState<FieldErrors>({});
 
   // Per-tab field states — seeded from prefill (full payload on resubmit, or
-  // word-only when opened from the reader chip).
+  // bur-word-only when opened from the reader chip).
   const [newWord, setNewWord] = useState<NewWordFields>(() => emptyNewWord(prefill));
   const [translation, setTranslation] = useState<TranslationFields>(() =>
     emptyTranslation(prefill),
@@ -134,25 +124,23 @@ export function ContributionForm({
   // ----- validation -----
   function validateNewWord(): FieldErrors {
     const errs: FieldErrors = {};
-    if (!newWord.word.trim()) errs.word = t('validationRequired');
-    else if (newWord.word.trim().length < 2) errs.word = t('validationTooShort', { min: 2 });
-    if (!newWord.translation.trim()) errs.translation = t('validationRequired');
+    if (!newWord.bur.trim()) errs.bur = t('validationRequired');
+    else if (newWord.bur.trim().length < 2) errs.bur = t('validationTooShort', { min: 2 });
+    if (!newWord.ru.trim()) errs.ru = t('validationRequired');
     return errs;
   }
 
   function validateTranslation(): FieldErrors {
     const errs: FieldErrors = {};
-    if (!translation.word.trim()) errs.word = t('validationRequired');
-    else if (translation.word.trim().length < 2) errs.word = t('validationTooShort', { min: 2 });
-    if (!translation.translation.trim()) errs.translation = t('validationRequired');
+    if (!translation.bur.trim()) errs.bur = t('validationRequired');
+    else if (translation.bur.trim().length < 2) errs.bur = t('validationTooShort', { min: 2 });
+    if (!translation.ru.trim()) errs.ru = t('validationRequired');
     return errs;
   }
 
   function validateCorrection(): FieldErrors {
     const errs: FieldErrors = {};
-    if (!correction.word.trim()) errs.word = t('validationRequired');
-    else if (correction.word.trim().length < 2) errs.word = t('validationTooShort', { min: 2 });
-    if (!correction.suggestion.trim()) errs.suggestion = t('validationRequired');
+    if (!correction.suggested.trim()) errs.suggested = t('validationRequired');
     return errs;
   }
 
@@ -186,28 +174,25 @@ export function ContributionForm({
 
       if (tab === 'new_word') {
         const nw: ContribPayloadNewWord = {
-          word: newWord.word.trim(),
-          translation: newWord.translation.trim(),
-          lang: newWord.lang,
+          bur: newWord.bur.trim(),
+          ru: newWord.ru.trim(),
         };
         if (newWord.example.trim()) nw.example = newWord.example.trim();
         payload = nw;
       } else if (tab === 'translation') {
         const tr: ContribPayloadTranslation = {
           burword_id: prefill?.burword_id ?? null,
-          word: translation.word.trim(),
-          translation: translation.translation.trim(),
-          lang: translation.lang,
+          bur: translation.bur.trim(),
+          ru: translation.ru.trim(),
         };
         payload = tr;
       } else {
         const cr: ContribPayloadCorrection = {
           burword_id: prefill?.burword_id ?? null,
-          word: correction.word.trim(),
-          field: correction.field,
-          suggestion: correction.suggestion.trim(),
+          target: correction.target,
+          suggested: correction.suggested.trim(),
         };
-        if (correction.comment.trim()) cr.comment = correction.comment.trim();
+        if (correction.note.trim()) cr.note = correction.note.trim();
         payload = cr;
       }
 
@@ -239,10 +224,7 @@ export function ContributionForm({
         <Icon name="lock" size={32} style={{ color: 'var(--text-muted)', marginBottom: 12 }} />
         <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{t('guestTitle')}</h2>
         <p style={{ color: 'var(--text-muted)', marginBottom: 20 }}>{t('guestBody')}</p>
-        <Link
-          href="/signin"
-          className="btn btn-primary"
-        >
+        <Link href="/signin" className="btn btn-primary">
           {t('guestBtn')}
         </Link>
       </div>
@@ -332,29 +314,22 @@ export function ContributionForm({
           {tab === 'new_word' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <BurField
-                id="nw-word"
-                label={t('fieldWord')}
-                placeholder={t('fieldWordPlaceholder')}
-                value={newWord.word}
-                onChange={(v) => setNewWord((prev) => ({ ...prev, word: v }))}
-                error={errors.word}
+                id="nw-bur"
+                label={t('fieldBur')}
+                placeholder={t('fieldBurPlaceholder')}
+                value={newWord.bur}
+                onChange={(v) => setNewWord((prev) => ({ ...prev, bur: v }))}
+                error={errors.bur}
                 required
               />
               <TextareaField
-                id="nw-translation"
-                label={t('fieldTranslation')}
-                placeholder={t('fieldTranslationPlaceholder')}
-                value={newWord.translation}
-                onChange={(v) => setNewWord((prev) => ({ ...prev, translation: v }))}
-                error={errors.translation}
+                id="nw-ru"
+                label={t('fieldRu')}
+                placeholder={t('fieldRuPlaceholder')}
+                value={newWord.ru}
+                onChange={(v) => setNewWord((prev) => ({ ...prev, ru: v }))}
+                error={errors.ru}
                 required
-              />
-              <LangSelector
-                label={t('fieldLang')}
-                value={newWord.lang}
-                onChange={(v) => setNewWord((prev) => ({ ...prev, lang: v }))}
-                ruLabel={t('fieldLangRu')}
-                enLabel={t('fieldLangEn')}
               />
               <TextareaField
                 id="nw-example"
@@ -377,29 +352,22 @@ export function ContributionForm({
           {tab === 'translation' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <BurField
-                id="tr-word"
-                label={t('fieldWord')}
-                placeholder={t('fieldWordPlaceholder')}
-                value={translation.word}
-                onChange={(v) => setTranslation((prev) => ({ ...prev, word: v }))}
-                error={errors.word}
+                id="tr-bur"
+                label={t('fieldBur')}
+                placeholder={t('fieldBurPlaceholder')}
+                value={translation.bur}
+                onChange={(v) => setTranslation((prev) => ({ ...prev, bur: v }))}
+                error={errors.bur}
                 required
               />
               <TextareaField
-                id="tr-translation"
-                label={t('fieldTranslation')}
-                placeholder={t('fieldTranslationPlaceholder')}
-                value={translation.translation}
-                onChange={(v) => setTranslation((prev) => ({ ...prev, translation: v }))}
-                error={errors.translation}
+                id="tr-ru"
+                label={t('fieldRu')}
+                placeholder={t('fieldRuPlaceholder')}
+                value={translation.ru}
+                onChange={(v) => setTranslation((prev) => ({ ...prev, ru: v }))}
+                error={errors.ru}
                 required
-              />
-              <LangSelector
-                label={t('fieldLang')}
-                value={translation.lang}
-                onChange={(v) => setTranslation((prev) => ({ ...prev, lang: v }))}
-                ruLabel={t('fieldLangRu')}
-                enLabel={t('fieldLangEn')}
               />
             </div>
           )}
@@ -414,46 +382,37 @@ export function ContributionForm({
         >
           {tab === 'correction' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <BurField
-                id="cr-word"
-                label={t('fieldWord')}
-                placeholder={t('fieldWordPlaceholder')}
-                value={correction.word}
-                onChange={(v) => setCorrection((prev) => ({ ...prev, word: v }))}
-                error={errors.word}
-                required
-              />
               <FieldSelect
-                id="cr-field"
-                label={t('fieldField')}
-                value={correction.field}
+                id="cr-target"
+                label={t('fieldTarget')}
+                value={correction.target}
                 options={[
-                  { value: 'translation', label: t('fieldFieldTranslation') },
-                  { value: 'example', label: t('fieldFieldExample') },
-                  { value: 'other', label: t('fieldFieldOther') },
+                  { value: 'translation', label: t('fieldTargetTranslation') },
+                  { value: 'word', label: t('fieldTargetWord') },
+                  { value: 'example', label: t('fieldTargetExample') },
                 ]}
                 onChange={(v) =>
                   setCorrection((prev) => ({
                     ...prev,
-                    field: v as 'translation' | 'example' | 'other',
+                    target: v as 'translation' | 'word' | 'example',
                   }))
                 }
               />
               <TextareaField
-                id="cr-suggestion"
-                label={t('fieldSuggestion')}
-                placeholder={t('fieldSuggestionPlaceholder')}
-                value={correction.suggestion}
-                onChange={(v) => setCorrection((prev) => ({ ...prev, suggestion: v }))}
-                error={errors.suggestion}
+                id="cr-suggested"
+                label={t('fieldSuggested')}
+                placeholder={t('fieldSuggestedPlaceholder')}
+                value={correction.suggested}
+                onChange={(v) => setCorrection((prev) => ({ ...prev, suggested: v }))}
+                error={errors.suggested}
                 required
               />
               <TextareaField
-                id="cr-comment"
-                label={t('fieldComment')}
-                placeholder={t('fieldCommentPlaceholder')}
-                value={correction.comment}
-                onChange={(v) => setCorrection((prev) => ({ ...prev, comment: v }))}
+                id="cr-note"
+                label={t('fieldNote')}
+                placeholder={t('fieldNotePlaceholder')}
+                value={correction.note}
+                onChange={(v) => setCorrection((prev) => ({ ...prev, note: v }))}
               />
             </div>
           )}
@@ -612,48 +571,6 @@ function TextareaField({
         </span>
       ) : null}
     </div>
-  );
-}
-
-interface LangSelectorProps {
-  label: string;
-  value: ContributionLang;
-  onChange: (val: ContributionLang) => void;
-  ruLabel: string;
-  enLabel: string;
-}
-
-function LangSelector({ label, value, onChange, ruLabel, enLabel }: LangSelectorProps): ReactElement {
-  return (
-    <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
-      <legend style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8 }}>
-        {label}
-      </legend>
-      <div style={{ display: 'flex', gap: 8 }}>
-        {(
-          [
-            ['ru', ruLabel] as const,
-            ['en', enLabel] as const,
-          ] as [ContributionLang, string][]
-        ).map(([v, lbl]) => (
-          <label
-            key={v}
-            className={value === v ? 'chip chip-primary' : 'chip'}
-            style={{ cursor: 'pointer' }}
-          >
-            <input
-              type="radio"
-              name="contrib-lang"
-              value={v}
-              checked={value === v}
-              onChange={() => onChange(v)}
-              style={{ display: 'none' }}
-            />
-            {lbl}
-          </label>
-        ))}
-      </div>
-    </fieldset>
   );
 }
 

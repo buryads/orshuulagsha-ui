@@ -344,31 +344,27 @@ export interface LeaderboardResponse {
 
 export type ContributionType = 'new_word' | 'translation' | 'correction';
 export type ContributionStatus = 'pending' | 'approved' | 'rejected';
-export type ContributionLang = 'ru' | 'en';
 
-/** Payload for type=translation — suggest a missing translation */
+/** Payload for type=translation — suggest a missing translation (always bur→ru) */
 export interface ContribPayloadTranslation {
   burword_id?: number | null;
-  word: string; // буряатское слово
-  translation: string;
-  lang: ContributionLang;
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
 }
 
-/** Payload for type=new_word — add a word not yet in the dictionary */
+/** Payload for type=new_word — add a word not yet in the dictionary (always bur→ru) */
 export interface ContribPayloadNewWord {
-  word: string; // буряатское слово
-  translation: string;
-  lang: ContributionLang;
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
   example?: string;
 }
 
 /** Payload for type=correction — suggest a fix to existing entry */
 export interface ContribPayloadCorrection {
-  burword_id: number | null;
-  word: string;
-  field: 'translation' | 'example' | 'other';
-  suggestion: string;
-  comment?: string;
+  burword_id?: number | null;
+  target: 'translation' | 'word' | 'example';
+  suggested: string;
+  note?: string;
 }
 
 export type ContribPayload =
