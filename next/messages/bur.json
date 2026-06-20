@@ -273,6 +273,31 @@
         "good": "Һайн",
         "easy": "Хялбар"
       }
+    },
+    "hud": {
+      "ariaLabel": "{streak} үдэрэй дараалал · {xp} XP · {level}",
+      "streakAtRisk": "Дараалалаа алдангүйн тулада мүнѳѳ hурагты",
+      "streakGained": "Дараалал +1! Аль хэдэн {streak} үдэр 🔥",
+      "xpAwarded": "+{xp} XP",
+      "dailyGoalBar": "Үдэрэй зорилго: {current} — {goal} XP",
+      "goalMet": "Зорилго бэелүүлэгдэбэ!"
+    },
+    "leaderboard": {
+      "title": "Лидерборд",
+      "periodWeek": "7 үдэр",
+      "periodAll": "Бүхы сагтаа",
+      "scopeGlobal": "Дэлхэйн рейтинг",
+      "podiumLabel": "Топ-3",
+      "you": "Та",
+      "deltaUp": "{n} байра дээшэлбэ",
+      "deltaDown": "{n} байра доошолбо",
+      "deltaStable": "хубилаагүй",
+      "error": "Рейтинг ачаалагдаагүй",
+      "retry": "Дахяа оролдохо",
+      "empty": "Мэдээн алга — hурахаа эхилжэ топ-оор оро",
+      "startLearning": "hурахаа эхилхэ",
+      "guestCta": "Мүрысэхын тулада нэбтэрэгты",
+      "signIn": "Нэбтэрхэ"
     }
   },
   "quiz": {
