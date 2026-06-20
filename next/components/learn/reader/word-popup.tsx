@@ -381,16 +381,29 @@ export function WordPopup({
                 ))}
               </div>
             ) : (
-              <p
-                style={{
-                  fontSize: 14,
-                  color: 'var(--text-muted)',
-                  marginBottom: 16,
-                  fontStyle: 'italic',
-                }}
-              >
-                {t('noTranslation')}
-              </p>
+              <div style={{ marginBottom: 16 }}>
+                <p
+                  style={{
+                    fontSize: 14,
+                    color: 'var(--text-muted)',
+                    marginBottom: 10,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  {t('noTranslation')}
+                </p>
+                {/* Контекстный вход в вклад — предложить перевод */}
+                <Link
+                  href={token.slug
+                    ? `/learn/contribute?word=${encodeURIComponent(token.slug)}`
+                    : '/learn/contribute'
+                  }
+                  className="btn btn-ghost"
+                  style={{ fontSize: 12, padding: '4px 10px' }}
+                >
+                  {t('suggest')}
+                </Link>
+              </div>
             )}
 
             {/* Действия */}
