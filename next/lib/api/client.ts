@@ -4,7 +4,27 @@ import axios, {
   type Method,
 } from 'axios';
 
-import { getAuthToken } from './cookies';
+import { getAuthToken, clearAuthToken } from './cookies';
+
+// Supported locales — must match i18n/routing.ts.
+const KNOWN_LOCALES = ['ru', 'bur', 'en'] as const;
+const DEFAULT_LOCALE = 'ru';
+
+// Auth endpoints that must NOT trigger the global 401 handler — their callers
+// need to receive the error directly (e.g. to show a "wrong password" message).
+const AUTH_ENDPOINT_PATTERNS = ['/api/jwt/login', '/api/jwt/signup'];
+
+// Module-level guard: redirect only once even if multiple requests 401 at the same time.
+let redirecting401 = false;
+
+/** Extract the locale prefix from window.location.pathname (always-prefix mode). */
+function currentLocale(): string {
+  if (typeof window === 'undefined') return DEFAULT_LOCALE;
+  const first = window.location.pathname.split('/')[1] ?? '';
+  return (KNOWN_LOCALES as readonly string[]).includes(first)
+    ? first
+    : DEFAULT_LOCALE;
+}
 
 const ENV_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 const baseURL =
@@ -46,6 +66,49 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Global 401 handler: clear auth and redirect to /signin when any authed
+// request receives a 401. Guards against redirect loops and double-firing.
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401 &&
+      typeof window !== 'undefined' &&
+      !redirecting401
+    ) {
+      const requestUrl = error.config?.url ?? '';
+
+      // Skip auth endpoints — callers need the raw error to show form feedback.
+      const isAuthEndpoint = AUTH_ENDPOINT_PATTERNS.some((p) =>
+        requestUrl.includes(p),
+      );
+
+      // Skip if already on sign-in / sign-up to avoid a redirect loop.
+      const isAuthPage =
+        window.location.pathname.includes('/signin') ||
+        window.location.pathname.includes('/signup');
+
+      if (!isAuthEndpoint && !isAuthPage) {
+        redirecting401 = true;
+
+        // Clear the stale token and any cached user data.
+        clearAuthToken();
+        try {
+          localStorage.removeItem('user');
+        } catch {
+          // localStorage unavailable (private mode, cross-origin, etc.) — ignore.
+        }
+
+        const locale = currentLocale();
+        window.location.assign(`/${locale}/signin`);
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 /**
  * Mirrors the legacy HttpFactory.call signature. Returns the parsed response
