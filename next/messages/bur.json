@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Үндэһэн",
+    "learn": "Һуранам",
     "dictionary": "Толи",
     "names": "Нэрэнүүд",
     "packs": "Карточкэ",
@@ -383,7 +384,8 @@
         "error": "Ачаалагдаагүй. Дахяа?",
         "authRequired": "Прогресс хадагалхын тулада нэбтэрэгты",
         "signIn": "Нэбтэрхэ",
-        "retry": "Дахяа оролдохо"
+        "retry": "Дахяа оролдохо",
+        "suggest": "Оршуулга дурадха"
       },
       "statusNew": "шэнэ",
       "statusKnown": "мэдэхэ",
@@ -443,6 +445,32 @@
       "fieldSuggestedPlaceholder": "Залруулhан хубилбар",
       "fieldNote": "Тайлбар (шаардлагагүй)",
       "fieldNotePlaceholder": "Нэмэлтэ мэдээ (шаардлагагүй)"
+    },
+    "hub": {
+      "title": "Буряад хэлэ шудала",
+      "subtitle": "Мүнөөдэр юу хэхэб",
+      "srs": "Давталга",
+      "srsDesc": "Карточкэнуудаар давталга",
+      "path": "Курс",
+      "pathDesc": "Хэшээлнүүд",
+      "reader": "Уншалга",
+      "readerDesc": "Оршуулгатай текстнүүд",
+      "leaderboard": "Рейтинг",
+      "leaderboardDesc": "Таниие байран",
+      "contribute": "Туһалха",
+      "contributeDesc": "Үгэ гү, оршуулга дурадха",
+      "moderation": "Шалгалта",
+      "moderationDesc": "Дурадхалнуудые шалгаха"
+    },
+    "subnav": {
+      "hub": "Хаб",
+      "srs": "Давталга",
+      "path": "Курс",
+      "reader": "Уншалга",
+      "leaderboard": "Рейтинг",
+      "contribute": "Туһалха",
+      "moderation": "Шалгалта",
+      "more": "Бусад"
     }
   },
   "quiz": {

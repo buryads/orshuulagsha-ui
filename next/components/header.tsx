@@ -14,12 +14,13 @@ import { getGamificationMe } from '@/lib/api/gamification';
 import type { GamificationMe } from '@/lib/api/gamification';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
+  id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz';
   href: string;
 };
 
 const NAV_ITEMS: readonly NavItem[] = [
   { id: 'home', href: '/' },
+  { id: 'learn', href: '/learn' },
   { id: 'dictionary', href: '/explore' },
   { id: 'names', href: '/names' },
   { id: 'packs', href: '/packs' },

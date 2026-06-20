@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Home",
+    "learn": "Learn",
     "dictionary": "Dictionary",
     "names": "Names",
     "packs": "Flashcards",
@@ -385,7 +386,8 @@
         "error": "Failed to load. Retry?",
         "authRequired": "Sign in to save your progress",
         "signIn": "Sign in",
-        "retry": "Retry"
+        "retry": "Retry",
+        "suggest": "Suggest translation"
       },
       "statusNew": "new",
       "statusKnown": "known",
@@ -445,6 +447,32 @@
       "fieldSuggestedPlaceholder": "Corrected version",
       "fieldNote": "Comment (optional)",
       "fieldNotePlaceholder": "Additional context (optional)"
+    },
+    "hub": {
+      "title": "Learn Buryat",
+      "subtitle": "Choose what to do today",
+      "srs": "Revision",
+      "srsDesc": "Spaced repetition flashcards",
+      "path": "Course",
+      "pathDesc": "Structured lessons",
+      "reader": "Reader",
+      "readerDesc": "Texts with clickable translation",
+      "leaderboard": "Leaderboard",
+      "leaderboardDesc": "Your ranking",
+      "contribute": "Contribute",
+      "contributeDesc": "Suggest a word or translation",
+      "moderation": "Moderation",
+      "moderationDesc": "Review contributions"
+    },
+    "subnav": {
+      "hub": "Hub",
+      "srs": "Revision",
+      "path": "Course",
+      "reader": "Reader",
+      "leaderboard": "Rating",
+      "contribute": "Contribute",
+      "moderation": "Moderation",
+      "more": "More"
     }
   },
   "quiz": {
