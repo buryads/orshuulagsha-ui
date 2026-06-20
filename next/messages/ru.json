@@ -348,6 +348,53 @@
       "imagePick": {
         "instruction": "Выбери картинку"
       }
+    },
+    "reader": {
+      "title": "Читалка",
+      "subtitle": "Читай бурятские тексты и учи слова в контексте",
+      "filterAll": "Все уровни",
+      "filterA1": "A1",
+      "filterA2": "A2",
+      "filterB1": "B1",
+      "filterB2": "B2",
+      "wordCount": "~{count} слов",
+      "loading": "Загрузка…",
+      "loadError": "Не удалось загрузить тексты",
+      "retry": "Повторить",
+      "empty": "Текстов пока нет",
+      "back": "Назад",
+      "fontSmall": "S",
+      "fontMedium": "M",
+      "fontLarge": "L",
+      "fontSizeLabel": "Размер шрифта",
+      "footerKnown": "известно {pct}%",
+      "footerNew": "новых {count}",
+      "textLoading": "Загружаю текст…",
+      "textError": "Не удалось загрузить текст",
+      "popup": {
+        "loading": "Загрузка…",
+        "noTranslation": "Перевод пока не найден",
+        "saveToSrs": "Сохранить в SRS",
+        "savedToSrs": "В SRS ✓",
+        "markKnown": "Знаю",
+        "markUnknown": "Не знаю",
+        "openDictionary": "Открыть в словаре",
+        "playAudio": "Прослушать",
+        "close": "Закрыть",
+        "error": "Не удалось загрузить. Повторить?",
+        "authRequired": "Войди, чтобы сохранять прогресс",
+        "signIn": "Войти",
+        "retry": "Повторить"
+      },
+      "statusNew": "новое",
+      "statusKnown": "известное",
+      "statusIgnored": "служебное",
+      "legend": {
+        "title": "Подсветка слов",
+        "new": "Новое — нажми, чтобы изучить",
+        "known": "Известное — ты уже знаешь это слово",
+        "ignored": "Не отслеживается (имена, числа, пунктуация)"
+      }
     }
   },
   "quiz": {

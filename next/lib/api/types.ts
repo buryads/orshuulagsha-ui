@@ -248,6 +248,57 @@ export interface SrsDueResponse {
   count: number;
 }
 
+// --- Reader (Learn-2, Phase 4) ---
+// Контракт: GET /api/texts, GET /api/texts/{slug},
+//           POST /api/known-words, DELETE /api/known-words/{burword_id},
+//           POST /api/srs/words [auth:sanctum]
+
+/** Элемент списка текстов из GET /api/texts */
+export interface TextListItem {
+  id: number;
+  slug: string;
+  title: string;
+  level: string | null;
+  word_count: number;
+}
+
+/** Токен тела текста из GET /api/texts/{slug} */
+export interface TextToken {
+  token: string;
+  burword_id: number | null;
+  slug: string | null;
+  known: boolean;
+}
+
+/** Полный текст из GET /api/texts/{slug} */
+export interface TextDetail {
+  id: number;
+  slug: string;
+  title: string;
+  body: string;
+  tokens: TextToken[];
+}
+
+/** Статус слова в читалке (вычисляется на клиенте по токену) */
+export type WordStatus = 'known' | 'new' | 'ignored';
+
+/** Токен с вычисленным статусом для рендера */
+export interface ReaderToken extends TextToken {
+  status: WordStatus;
+}
+
+/** Ответ POST /api/srs/words */
+export interface SrsAddWordResponse {
+  word_id: number;
+  added: boolean;
+}
+
+/** Ответ POST /api/known-words */
+export interface KnownWordResponse {
+  burword_id: number;
+  known: true;
+}
+
 // --- Gamification (Learn-2, Phase 2) ---
 // TODO(8795-Ф2): сверить с финальным контрактом backend-tl
 
