@@ -67,8 +67,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Global 401 handler: clear auth and redirect to /signin when any authed
-// request receives a 401. Guards against redirect loops and double-firing.
+// Global 401 handler: clear auth and redirect to /signin when an AUTHED request
+// (one that carried a Bearer token) receives a 401 — i.e. the token is stale or
+// revoked. Guest requests (no token → no Authorization header) are NOT redirected
+// so components can render their own guest-CTA. Guards against redirect loops.
 api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
@@ -90,7 +92,13 @@ api.interceptors.response.use(
         window.location.pathname.includes('/signin') ||
         window.location.pathname.includes('/signup');
 
-      if (!isAuthEndpoint && !isAuthPage) {
+      // Only redirect when the request actually carried a Bearer token — that
+      // means the token was present but stale/revoked. Guests have no token,
+      // so the request interceptor never sets Authorization; their 401s should
+      // fall through so components can render their own guest-CTA instead.
+      const hadToken = Boolean(error.config?.headers?.['Authorization']);
+
+      if (!isAuthEndpoint && !isAuthPage && hadToken) {
         redirecting401 = true;
 
         // Clear the stale token and any cached user data.
