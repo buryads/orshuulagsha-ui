@@ -104,6 +104,12 @@ export function WordPopup({
     void loadWord();
   }, [loadWord]);
 
+  // Синхронизируем known при смене слова — React переиспользует инстанс попапа,
+  // поэтому useState(token.known) не пересчитывается при смене token.burword_id
+  useEffect(() => {
+    setKnown(token.known);
+  }, [token.burword_id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Focus trap + Esc
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
