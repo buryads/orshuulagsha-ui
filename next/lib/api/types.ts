@@ -385,3 +385,64 @@ export interface CheckResponse {
   xp_awarded: number;
   stats: GamificationMe;
 }
+// --- Contributions (Learn-2, Phase 5) ---
+// POST /api/contributions [auth]
+// GET  /api/contributions/mine [auth]
+// GET  /api/moderation/contributions?status=pending&limit [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/approve [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/reject  [auth:admin|moderator]
+
+export type ContributionType = 'new_word' | 'translation' | 'correction';
+export type ContributionStatus = 'pending' | 'approved' | 'rejected';
+export type ContributionLang = 'ru' | 'en';
+
+/** Payload for type=translation — suggest a missing translation */
+export interface ContribPayloadTranslation {
+  burword_id?: number | null;
+  word: string; // буряатское слово
+  translation: string;
+  lang: ContributionLang;
+}
+
+/** Payload for type=new_word — add a word not yet in the dictionary */
+export interface ContribPayloadNewWord {
+  word: string; // буряатское слово
+  translation: string;
+  lang: ContributionLang;
+  example?: string;
+}
+
+/** Payload for type=correction — suggest a fix to existing entry */
+export interface ContribPayloadCorrection {
+  burword_id: number | null;
+  word: string;
+  field: 'translation' | 'example' | 'other';
+  suggestion: string;
+  comment?: string;
+}
+
+export type ContribPayload =
+  | ContribPayloadTranslation
+  | ContribPayloadNewWord
+  | ContribPayloadCorrection;
+
+/** Single contribution item (mine + moderation queue) */
+export interface Contribution {
+  id: number;
+  type: ContributionType;
+  status: ContributionStatus;
+  payload: ContribPayload;
+  moderation_note?: string | null;
+  created_at: string;
+}
+
+/** Moderation-queue item — includes submitter info */
+export interface ModerationContribution extends Contribution {
+  user_id: number;
+  user_name: string;
+}
+
+export interface ModerationListResponse {
+  data: ModerationContribution[];
+  meta: { count: number };
+}
