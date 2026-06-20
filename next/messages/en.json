@@ -275,6 +275,31 @@
         "good": "Good",
         "easy": "Easy"
       }
+    },
+    "hud": {
+      "ariaLabel": "{streak}-day streak · {xp} XP · {level}",
+      "streakAtRisk": "Practice today to keep your streak",
+      "streakGained": "Streak +1! {streak} days in a row 🔥",
+      "xpAwarded": "+{xp} XP",
+      "dailyGoalBar": "Daily goal: {current} of {goal} XP",
+      "goalMet": "Goal reached!"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "periodWeek": "This week",
+      "periodAll": "All time",
+      "scopeGlobal": "Global rankings",
+      "podiumLabel": "Top 3 leaders",
+      "you": "You",
+      "deltaUp": "moved up {n} places",
+      "deltaDown": "moved down {n} places",
+      "deltaStable": "no change",
+      "error": "Couldn't load the leaderboard",
+      "retry": "Retry",
+      "empty": "No data yet — start learning to make the top",
+      "startLearning": "Start learning",
+      "guestCta": "Sign in to compete",
+      "signIn": "Sign in"
     }
   },
   "quiz": {

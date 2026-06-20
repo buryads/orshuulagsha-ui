@@ -247,3 +247,39 @@ export interface SrsDueResponse {
   items: SrsDueItem[];
   count: number;
 }
+
+// --- Gamification (Learn-2, Phase 2) ---
+// TODO(8795-Ф2): сверить с финальным контрактом backend-tl
+
+/** GET /api/stats/me [auth:sanctum] */
+export interface GamificationMe {
+  xp: number;
+  level: number;
+  streak: number;
+  longest_streak: number;
+  last_active_date: string | null;
+  daily_goal_xp: number;
+  xp_today: number;
+  goal_met: boolean;
+}
+
+/** Строка лидерборда из GET /api/leaderboard */
+export interface LeaderboardRow {
+  rank: number;
+  user_id: number;
+  name: string;
+  xp: number;
+  level: number;
+}
+
+/** Мета «своей» позиции из GET /api/leaderboard */
+export interface LeaderboardMe {
+  rank: number;
+  xp: number;
+}
+
+/** GET /api/leaderboard?period=all|week&limit=20 [auth:sanctum] */
+export interface LeaderboardResponse {
+  rows: LeaderboardRow[];
+  me: LeaderboardMe | null;
+}
