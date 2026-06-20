@@ -100,6 +100,19 @@ export function WordPopup({
     }
   }, [token.slug]);
 
+  // Сбрасываем per-token стейт при смене слова — React переиспользует инстанс попапа.
+  // Запускается ДО loadWord-эффекта (порядок объявления), поэтому slug-ветка
+  // не мигает стейлом: word=null → loading → новые данные.
+  // Slugless-ветка: word=null → ready → показывает noTranslation (верно).
+  // known намеренно синхронизируется отдельным эффектом ниже, чтобы
+  // не конфликтовать с оптимистичными обновлениями.
+  useEffect(() => {
+    setWord(null);
+    setInSrs(false);
+    setSrsLoading(false);
+    setKnownLoading(false);
+  }, [token.burword_id, token.slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     void loadWord();
   }, [loadWord]);
