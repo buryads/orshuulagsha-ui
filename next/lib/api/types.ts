@@ -283,3 +283,54 @@ export interface LeaderboardResponse {
   rows: LeaderboardRow[];
   me: LeaderboardMe | null;
 }
+
+// --- Lessons / Skill-tree (Learn-2, Phase 3) ---
+// TODO(8795-Ф3): сверить с финальным контрактом backend-tl
+
+export interface LessonListItem {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  position: number;
+  xp_reward: number;
+  exercise_count: number;
+  status: 'locked' | 'available' | 'completed';
+  score: number | null;
+  prerequisite_id: number | null;
+}
+
+export type ExerciseType = 'match' | 'type' | 'listen-pick' | 'image-pick';
+
+export interface Exercise {
+  id: number;
+  type: ExerciseType;
+  prompt: string;
+  payload: Record<string, unknown>;
+}
+
+export interface LessonDetail {
+  id: number;
+  slug: string;
+  title: string;
+  exercises: Exercise[];
+}
+
+export interface CheckAnswer {
+  exercise_id: number;
+  // string for type/listen-pick/image-pick; [left,right][] for match
+  answer: unknown;
+}
+
+export interface CheckResult {
+  exercise_id: number;
+  correct: boolean;
+}
+
+export interface CheckResponse {
+  results: CheckResult[];
+  score: number;
+  passed: boolean;
+  xp_awarded: number;
+  stats: GamificationMe;
+}

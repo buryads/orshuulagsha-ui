@@ -298,6 +298,55 @@
       "startLearning": "hурахаа эхилхэ",
       "guestCta": "Мүрысэхын тулада нэбтэрэгты",
       "signIn": "Нэбтэрхэ"
+    },
+    "tree": {
+      "title": "Hуралгын зам",
+      "loading": "Курс ачаалжа байна…",
+      "error": "Курс ачаалагдаагүй",
+      "retry": "Дахяа оролдохо",
+      "empty": "Курс удангүй гарана",
+      "locked": "Урда хэшээлые дүүргэгты",
+      "start": "Эхилхэ",
+      "completed": "Дүүрбэ",
+      "score": "{score}%",
+      "xpReward": "+{xp} XP",
+      "exercises": "{count} даабари"
+    },
+    "lesson": {
+      "loading": "Хэшээл ачаалжа байна…",
+      "error": "Хэшээл ачаалагдаагүй",
+      "retry": "Дахяа оролдохо",
+      "exit": "← Гараха",
+      "progress": "{total} соогоо {current}",
+      "check": "Шалгаха",
+      "continue": "Үргэлжэлхэ",
+      "correct": "Зүб!",
+      "wrong": "Буруу",
+      "resultTitle": "Хэшээл дүүрбэ",
+      "score": "Зүбшэл: {score}%",
+      "passed": "Тооложо абагдаба!",
+      "failed": "Дахяа оролдоорой",
+      "xpAwarded": "+{xp} XP",
+      "next": "Замдаа үргэлжэлхэ",
+      "retryLesson": "Хэшээлые дахяа хэхэ",
+      "done": "Гэртэ бусаха",
+      "match": {
+        "instruction": "Хосые нэгэдхэ"
+      },
+      "type": {
+        "instruction": "Оршуулга бэшэ",
+        "placeholder": "Харюугаа бэшэгты…",
+        "dontKnow": "Мэдэхэгүйб",
+        "keyboard": "Буряад гарынтабло"
+      },
+      "listenPick": {
+        "instruction": "Шагнажа, шэлэгты",
+        "replay": "Дахяа шагнаха",
+        "noAudio": "Аудио байхагүй"
+      },
+      "imagePick": {
+        "instruction": "Зураг шэлэгты"
+      }
     }
   },
   "quiz": {

@@ -300,6 +300,55 @@
       "startLearning": "Start learning",
       "guestCta": "Sign in to compete",
       "signIn": "Sign in"
+    },
+    "tree": {
+      "title": "Learning Path",
+      "loading": "Loading course…",
+      "error": "Couldn't load the course",
+      "retry": "Retry",
+      "empty": "The course is coming soon",
+      "locked": "Complete the previous lesson first",
+      "start": "Start",
+      "completed": "Completed",
+      "score": "{score}%",
+      "xpReward": "+{xp} XP",
+      "exercises": "{count} exercises"
+    },
+    "lesson": {
+      "loading": "Loading lesson…",
+      "error": "Couldn't load the lesson",
+      "retry": "Retry",
+      "exit": "← Exit",
+      "progress": "{current} of {total}",
+      "check": "Check",
+      "continue": "Continue",
+      "correct": "Correct!",
+      "wrong": "Wrong",
+      "resultTitle": "Lesson complete",
+      "score": "Accuracy: {score}%",
+      "passed": "Passed!",
+      "failed": "Try again",
+      "xpAwarded": "+{xp} XP",
+      "next": "Continue the path",
+      "retryLesson": "Retry lesson",
+      "done": "Go home",
+      "match": {
+        "instruction": "Match the pairs"
+      },
+      "type": {
+        "instruction": "Type the translation",
+        "placeholder": "Your answer…",
+        "dontKnow": "Don't know",
+        "keyboard": "Buryat keyboard"
+      },
+      "listenPick": {
+        "instruction": "Listen and pick",
+        "replay": "Replay",
+        "noAudio": "Audio unavailable"
+      },
+      "imagePick": {
+        "instruction": "Pick the image"
+      }
     }
   },
   "quiz": {
