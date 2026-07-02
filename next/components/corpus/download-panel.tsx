@@ -177,7 +177,7 @@ export function DownloadPanel(): ReactElement {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
           {release.manifest_url && (
             <a
-              href={release.manifest_url}
+              href={resolveApiUrl(release.manifest_url)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ fontSize: 13, color: 'var(--primary)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
@@ -188,7 +188,7 @@ export function DownloadPanel(): ReactElement {
           )}
           {release.readme_url && (
             <a
-              href={release.readme_url}
+              href={resolveApiUrl(release.readme_url)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ fontSize: 13, color: 'var(--primary)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
@@ -199,7 +199,7 @@ export function DownloadPanel(): ReactElement {
           )}
           {release.license_url && (
             <a
-              href={release.license_url}
+              href={resolveApiUrl(release.license_url)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ fontSize: 13, color: 'var(--primary)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
