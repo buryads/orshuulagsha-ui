@@ -162,15 +162,11 @@ export function CorpusExplorer(): ReactElement {
         loading={loading}
       />
 
-      {/* Main layout: filters sidebar + results */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr)',
-          gap: 24,
-        }}
-        className="corpus-layout"
-      >
+      {/* Main layout: filters sidebar + results.
+          Grid columns and display:grid are set exclusively by .corpus-layout
+          in globals.css (240px sidebar on desktop, 1fr on mobile). No inline
+          gridTemplateColumns — it would override the class and break the sidebar. */}
+      <div style={{ gap: 24 }} className="corpus-layout">
         {/* Filters — always rendered, visibility controlled via CSS classes in globals */}
         <Filters
           facets={facets}

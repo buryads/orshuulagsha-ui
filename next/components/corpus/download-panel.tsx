@@ -4,6 +4,7 @@ import { type ReactElement, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { getCorpusReleases } from '@/lib/api/corpus';
+import { resolveApiUrl } from '@/lib/api/client';
 import type { CorpusRelease } from '@/lib/api/corpus-types';
 
 function formatBytes(bytes: number): string {
@@ -96,66 +97,80 @@ export function DownloadPanel(): ReactElement {
       )}
 
       {/* Download buttons */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        <a
-          href="/corpus/download"
-          download
-          aria-label={t('downloadJsonl')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '12px 22px',
-            minHeight: 44,
-            background: 'var(--primary)',
-            color: 'white',
-            borderRadius: 10,
-            fontWeight: 700,
-            fontSize: 15,
-            textDecoration: 'none',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Icon name="download" size={16} />
-          {t('downloadJsonl')}
-          {release && (
-            <span style={{ opacity: 0.8, fontWeight: 400, fontSize: 12 }}>
-              ({formatBytes(release.formats.jsonl_gz.size_bytes ?? release.size_bytes)})
-            </span>
-          )}
-        </a>
+      {(() => {
+        // Prefer the URL from releases (may be absolute S3/CDN URL).
+        // Fall back to API-host-relative path so we never hit the Next.js host.
+        const jsonlHref = release?.formats.jsonl_gz.url
+          ? resolveApiUrl(release.formats.jsonl_gz.url)
+          : resolveApiUrl('/corpus/download');
+        const csvHref = release?.formats.csv_gz?.url
+          ? resolveApiUrl(release.formats.csv_gz.url)
+          : resolveApiUrl('/corpus/download?format=csv');
+        const showCsv = release?.formats.csv_gz != null || !release;
 
-        {(release?.formats.csv_gz || !release) && (
-          <a
-            href="/corpus/download?format=csv"
-            download
-            aria-label={t('downloadCsv')}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '12px 18px',
-              minHeight: 44,
-              background: 'var(--surface)',
-              color: 'var(--text)',
-              border: '1.5px solid var(--border)',
-              borderRadius: 10,
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <Icon name="file-text" size={15} />
-            {t('downloadCsv')}
-            {release?.formats.csv_gz && (
-              <span style={{ opacity: 0.6, fontWeight: 400, fontSize: 12 }}>
-                ({formatBytes(release.formats.csv_gz.size_bytes)})
-              </span>
+        return (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            <a
+              href={jsonlHref}
+              download
+              aria-label={t('downloadJsonl')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 22px',
+                minHeight: 44,
+                background: 'var(--primary)',
+                color: 'white',
+                borderRadius: 10,
+                fontWeight: 700,
+                fontSize: 15,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Icon name="download" size={16} />
+              {t('downloadJsonl')}
+              {release && (
+                <span style={{ opacity: 0.8, fontWeight: 400, fontSize: 12 }}>
+                  ({formatBytes(release.formats.jsonl_gz.size_bytes ?? release.size_bytes)})
+                </span>
+              )}
+            </a>
+
+            {showCsv && (
+              <a
+                href={csvHref}
+                download
+                aria-label={t('downloadCsv')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '12px 18px',
+                  minHeight: 44,
+                  background: 'var(--surface)',
+                  color: 'var(--text)',
+                  border: '1.5px solid var(--border)',
+                  borderRadius: 10,
+                  fontWeight: 600,
+                  fontSize: 14,
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <Icon name="file-text" size={15} />
+                {t('downloadCsv')}
+                {release?.formats.csv_gz && (
+                  <span style={{ opacity: 0.6, fontWeight: 400, fontSize: 12 }}>
+                    ({formatBytes(release.formats.csv_gz.size_bytes)})
+                  </span>
+                )}
+              </a>
             )}
-          </a>
-        )}
-      </div>
+          </div>
+        );
+      })()}
 
       {/* Aux links */}
       {release && (

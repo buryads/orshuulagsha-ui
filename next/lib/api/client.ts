@@ -52,6 +52,21 @@ api.interceptors.request.use((config) => {
  * body (typed as `T`) — callers are responsible for unwrapping any
  * `{ data: ... }` envelopes the backend wraps payloads in.
  */
+/** The API origin used by this client (resolved at module init time). */
+export const apiBaseUrl = baseURL;
+
+/**
+ * Resolve a path or URL against the API base.
+ * Absolute URLs (http/https) are returned as-is.
+ * Relative paths are joined with apiBaseUrl.
+ */
+export function resolveApiUrl(u: string): string {
+  if (/^https?:\/\//.test(u)) return u;
+  const base = apiBaseUrl.replace(/\/$/, '');
+  const path = u.startsWith('/') ? u : `/${u}`;
+  return `${base}${path}`;
+}
+
 export async function apiCall<T>(
   method: Method,
   url: string,

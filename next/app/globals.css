@@ -462,6 +462,7 @@ h2 { font-weight: 700; }
 
 /* Desktop: sidebar (240px) + results */
 .corpus-layout {
+  display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
 }
 
