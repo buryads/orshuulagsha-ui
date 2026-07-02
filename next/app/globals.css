@@ -457,3 +457,28 @@ h2 { font-weight: 700; }
 @media (max-width: 420px) {
   h1 { font-size: clamp(32px, 12vw, 48px) !important; }
 }
+
+/* ===== Corpus Explorer ===== */
+
+/* Desktop: sidebar (240px) + results */
+.corpus-layout {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+/* Skeleton pulse animation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Mobile: filters drawer visible, sidebar hidden */
+.corpus-filters-desktop { display: block; }
+.corpus-filters-mobile  { display: none; }
+
+@media (max-width: 720px) {
+  .corpus-layout {
+    grid-template-columns: 1fr;
+  }
+  .corpus-filters-desktop { display: none; }
+  .corpus-filters-mobile  { display: block; }
+}

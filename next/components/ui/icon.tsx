@@ -50,7 +50,18 @@ export type IconName =
   | 'trash'
   | 'more'
   | 'star'
-  | 'lock';
+  | 'lock'
+  | 'loader'
+  | 'chevron-down'
+  | 'chevron-up'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'download'
+  | 'sliders-horizontal'
+  | 'file-text'
+  | 'list'
+  | 'book-open'
+  | 'scale';
 
 export interface IconProps {
   name: IconName;
@@ -438,6 +449,91 @@ export function Icon({
         <svg {...props}>
           <rect x="4" y="11" width="16" height="10" rx="2" />
           <path d="M8 11V7a4 4 0 1 1 8 0v4" />
+        </svg>
+      );
+    case 'loader':
+      return (
+        <svg {...props}>
+          <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" strokeOpacity="0.2" />
+          <path d="M12 3a9 9 0 0 1 9 9" />
+        </svg>
+      );
+    case 'chevron-down':
+      return (
+        <svg {...props}>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      );
+    case 'chevron-up':
+      return (
+        <svg {...props}>
+          <path d="m18 15-6-6-6 6" />
+        </svg>
+      );
+    case 'chevron-left':
+      return (
+        <svg {...props}>
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      );
+    case 'chevron-right':
+      return (
+        <svg {...props}>
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      );
+    case 'download':
+      return (
+        <svg {...props}>
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <path d="m7 10 5 5 5-5" />
+          <path d="M12 15V3" />
+        </svg>
+      );
+    case 'sliders-horizontal':
+      return (
+        <svg {...props}>
+          <path d="M21 6H3" />
+          <path d="M10 6V3" />
+          <path d="M10 9v12" />
+          <path d="M21 12H3" />
+          <path d="M16 12V9" />
+          <path d="M16 15v6" />
+          <path d="M21 18H3" />
+          <path d="M6 18v-3" />
+          <path d="M6 12V3" />
+        </svg>
+      );
+    case 'file-text':
+      return (
+        <svg {...props}>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="9" y1="13" x2="15" y2="13" />
+          <line x1="9" y1="17" x2="15" y2="17" />
+        </svg>
+      );
+    case 'list':
+      return (
+        <svg {...props}>
+          <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+        </svg>
+      );
+    case 'book-open':
+      return (
+        <svg {...props}>
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>
+      );
+    case 'scale':
+      return (
+        <svg {...props}>
+          <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z" />
+          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z" />
+          <path d="M7 21h10" />
+          <path d="M12 3v18" />
+          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
         </svg>
       );
     default:
