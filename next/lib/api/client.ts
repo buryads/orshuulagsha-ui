@@ -67,6 +67,23 @@ export function resolveApiUrl(u: string): string {
   return `${base}${path}`;
 }
 
+/**
+ * Return u only when it is a safe http/https URL; otherwise return undefined.
+ * Blocks javascript:, data:, vbscript: and other non-web protocols that can
+ * execute code when placed in an href attribute.
+ */
+export function safeHref(u: string | undefined | null): string | undefined {
+  if (!u) return undefined;
+  try {
+    const url = new URL(u, apiBaseUrl || 'https://x');
+    return url.protocol === 'http:' || url.protocol === 'https:'
+      ? url.href
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function apiCall<T>(
   method: Method,
   url: string,

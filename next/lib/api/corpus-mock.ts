@@ -94,6 +94,12 @@ export function getMockSearchResponse(params: CorpusSearchParams): CorpusSearchR
   if (params.type && params.type.length > 0) {
     hits = hits.filter((h) => params.type!.includes(h.type));
   }
+  if (params.source && params.source.length > 0) {
+    hits = hits.filter((h) => params.source!.includes(h.source));
+  }
+  if (params.license && params.license.length > 0) {
+    hits = hits.filter((h) => params.license!.includes(h.license));
+  }
   if (params.has_translation) {
     hits = hits.filter((h) => h.text_ru !== null);
   }

@@ -2,6 +2,7 @@
 
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { safeHref } from '@/lib/api/client';
 import type { CorpusHit } from '@/lib/api/corpus-types';
 
 interface ResultCardProps {
@@ -148,25 +149,33 @@ export function ResultCard({ hit }: ResultCardProps): ReactElement {
         </p>
       )}
 
-      {/* Attribution */}
+      {/* Attribution — safeHref blocks javascript:/data:/vbscript: URLs */}
       <div style={{ marginTop: 'auto', paddingTop: 6, borderTop: '1px solid var(--border)' }}>
-        <a
-          href={hit.attribution.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${t('attribution')}: ${hit.attribution.name}`}
-          style={{
+        {(() => {
+          const href = safeHref(hit.attribution.url);
+          const label = `${t('attribution')}: ${hit.attribution.name}${hit.attribution.note ? ` (${hit.attribution.note})` : ''}`;
+          const sharedStyle: React.CSSProperties = {
             fontSize: 11,
             color: 'var(--text-soft)',
             textDecoration: 'none',
             display: 'inline-flex',
             alignItems: 'center',
             gap: 4,
-          }}
-        >
-          {t('attribution')}: {hit.attribution.name}
-          {hit.attribution.note && ` (${hit.attribution.note})`}
-        </a>
+          };
+          return href ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              style={sharedStyle}
+            >
+              {label}
+            </a>
+          ) : (
+            <span style={sharedStyle}>{label}</span>
+          );
+        })()}
       </div>
     </article>
   );
