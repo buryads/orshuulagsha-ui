@@ -38,12 +38,14 @@ export function CorpusExplorer(): ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
 
-  const abortRef = useRef<AbortController | null>(null);
+  // Monotonic counter — incremented on every search initiation.
+  // After awaiting, stale responses (counter mismatch) are silently dropped,
+  // preventing out-of-order state updates when the user changes filters quickly.
+  const reqRef = useRef(0);
 
   const doSearch = useCallback(
     async (p: number, q: string) => {
-      abortRef.current?.abort();
-      abortRef.current = new AbortController();
+      const reqId = ++reqRef.current;
 
       setLoading(true);
       setError(null);
@@ -60,17 +62,20 @@ export function CorpusExplorer(): ReactElement {
           per_page: PER_PAGE,
           sort: 'relevance',
         });
+        // Drop stale response — a newer request has already been issued.
+        if (reqId !== reqRef.current) return;
         setHits(result.hits);
         setTotal(result.total);
         setFacets(result.facets);
         setPage(result.page);
       } catch (err: unknown) {
-        if (err instanceof Error && err.name === 'AbortError') return;
+        if (reqId !== reqRef.current) return;
         setError(t('errorSearch'));
         setHits([]);
         setTotal(null);
       } finally {
-        setLoading(false);
+        // Only clear loading flag for the latest request.
+        if (reqId === reqRef.current) setLoading(false);
       }
     },
     [selectedTypes, selectedSources, selectedLicenses, hasTranslation, t],

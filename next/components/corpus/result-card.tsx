@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import type { CorpusHit } from '@/lib/api/corpus-types';
 
@@ -35,20 +35,59 @@ function Badge({ label, bg, color }: { label: string; bg: string; color: string 
   );
 }
 
-/** Render a highlight snippet with <em> tags as bold spans. */
+/**
+ * Split one ES highlight snippet (contains <em>…</em> markers) into React
+ * nodes: plain text segments auto-escape via JSX, matched segments go into
+ * <mark>. No dangerouslySetInnerHTML — corpus text is untrusted HTML.
+ */
+function renderSnippet(snippet: string): ReactNode[] {
+  // Split on <em> and </em>, keeping the delimiters so we can track state.
+  const parts = snippet.split(/(<em>|<\/em>)/);
+  const nodes: ReactNode[] = [];
+  let inMark = false;
+  let key = 0;
+  for (const part of parts) {
+    if (part === '<em>') {
+      inMark = true;
+    } else if (part === '</em>') {
+      inMark = false;
+    } else if (part) {
+      if (inMark) {
+        nodes.push(
+          <mark
+            key={key++}
+            style={{
+              background: 'var(--primary-50)',
+              color: 'var(--primary-700)',
+              borderRadius: 2,
+              padding: '0 2px',
+            }}
+          >
+            {part}
+          </mark>,
+        );
+      } else {
+        nodes.push(<span key={key++}>{part}</span>);
+      }
+    }
+  }
+  return nodes;
+}
+
+/** Render ES highlight snippets safely — no innerHTML, corpus text is untrusted. */
 function Highlighted({ snippets, fallback }: { snippets?: string[]; fallback: string }) {
   if (!snippets || snippets.length === 0) {
     return <>{fallback}</>;
   }
-  const html = snippets.join(' … ');
   return (
-    <span
-      // The server controls the highlight <em> tags; we trust our own API.
-      // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{
-        __html: html.replace(/<em>/g, '<mark style="background:var(--primary-50);color:var(--primary-700);border-radius:2px;padding:0 2px">').replace(/<\/em>/g, '</mark>'),
-      }}
-    />
+    <>
+      {snippets.map((snippet, i) => (
+        <span key={i}>
+          {i > 0 && <span style={{ color: 'var(--text-soft)' }}> … </span>}
+          {renderSnippet(snippet)}
+        </span>
+      ))}
+    </>
   );
 }
 
