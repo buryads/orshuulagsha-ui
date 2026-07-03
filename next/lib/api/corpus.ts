@@ -69,10 +69,9 @@ export async function searchCorpus(
     return { ...raw, facets: normalizeFacets(raw.facets) };
   } catch (err) {
     if (MOCK_ENABLED) {
-      // Mock already returns the right shape; run through normalizer for
-      // consistency (mock uses array-of-objects form to match prod wire format).
+      // Mock returns RawCorpusSearchResponse; normalize facets before returning.
       const mock = getMockSearchResponse(params);
-      return { ...mock, facets: normalizeFacets(mock.facets as RawCorpusFacets) };
+      return { ...mock, facets: normalizeFacets(mock.facets) };
     }
     throw err;
   }

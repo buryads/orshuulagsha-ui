@@ -5,11 +5,12 @@
  */
 import type {
   CorpusSearchParams,
-  CorpusSearchResponse,
+  CorpusHit,
+  RawCorpusSearchResponse,
   CorpusReleasesResponse,
 } from './corpus-types';
 
-const MOCK_HITS: CorpusSearchResponse['hits'] = [
+const MOCK_HITS: CorpusHit[] = [
   {
     id: 'mock-mono-1',
     text_bxr: 'Буряад хэлэн — монгол хэлэнэй бүлэгтэ ородог хэлэн юм.',
@@ -88,7 +89,7 @@ const MOCK_HITS: CorpusSearchResponse['hits'] = [
   },
 ];
 
-export function getMockSearchResponse(params: CorpusSearchParams): CorpusSearchResponse {
+export function getMockSearchResponse(params: CorpusSearchParams): RawCorpusSearchResponse {
   let hits = [...MOCK_HITS];
 
   if (params.type && params.type.length > 0) {
