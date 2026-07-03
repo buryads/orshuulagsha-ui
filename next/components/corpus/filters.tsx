@@ -43,7 +43,7 @@ export function Filters({
 
   const content = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Type facet */}
+      {/* Type facet — static list, count from FacetBucket[] via .find() */}
       <div>
         <p
           style={{
@@ -59,7 +59,7 @@ export function Filters({
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {ENTRY_TYPES.map((type) => {
-            const count = facets?.type[type] ?? 0;
+            const count = facets?.type.find((b) => b.key === type)?.count ?? 0;
             const checked = selectedTypes.includes(type);
             return (
               <label
@@ -135,8 +135,8 @@ export function Filters({
         </label>
       </div>
 
-      {/* Source facet (top 8) */}
-      {facets && Object.keys(facets.source).length > 0 && (
+      {/* Source facet — FacetBucket[], top 8 by count */}
+      {facets && facets.source.length > 0 && (
         <div>
           <p
             style={{
@@ -151,14 +151,14 @@ export function Filters({
             {t('filterSource')}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {Object.entries(facets.source)
-              .sort((a, b) => b[1] - a[1])
+            {[...facets.source]
+              .sort((a, b) => b.count - a.count)
               .slice(0, 8)
-              .map(([source, count]) => {
-                const checked = selectedSources.includes(source);
+              .map((bucket) => {
+                const checked = selectedSources.includes(bucket.key);
                 return (
                   <label
-                    key={source}
+                    key={bucket.key}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -175,13 +175,13 @@ export function Filters({
                     <input
                       type="checkbox"
                       checked={checked}
-                      onChange={() => onSourceToggle(source)}
+                      onChange={() => onSourceToggle(bucket.key)}
                       style={{ accentColor: 'var(--primary)', width: 14, height: 14, flexShrink: 0 }}
-                      aria-label={source}
+                      aria-label={bucket.key}
                     />
-                    <span style={{ flex: 1, wordBreak: 'break-all' }}>{source}</span>
+                    <span style={{ flex: 1, wordBreak: 'break-all' }}>{bucket.key}</span>
                     <span style={{ fontSize: 11, color: 'var(--text-soft)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                      {count.toLocaleString()}
+                      {bucket.count.toLocaleString()}
                     </span>
                   </label>
                 );
@@ -190,8 +190,8 @@ export function Filters({
         </div>
       )}
 
-      {/* License facet */}
-      {facets && Object.keys(facets.license).length > 0 && (
+      {/* License facet — FacetBucket[], sorted by count */}
+      {facets && facets.license.length > 0 && (
         <div>
           <p
             style={{
@@ -206,13 +206,13 @@ export function Filters({
             {t('filterLicense')}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {Object.entries(facets.license)
-              .sort((a, b) => b[1] - a[1])
-              .map(([license, count]) => {
-                const checked = selectedLicenses.includes(license);
+            {[...facets.license]
+              .sort((a, b) => b.count - a.count)
+              .map((bucket) => {
+                const checked = selectedLicenses.includes(bucket.key);
                 return (
                   <label
-                    key={license}
+                    key={bucket.key}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -229,13 +229,13 @@ export function Filters({
                     <input
                       type="checkbox"
                       checked={checked}
-                      onChange={() => onLicenseToggle(license)}
+                      onChange={() => onLicenseToggle(bucket.key)}
                       style={{ accentColor: 'var(--primary)', width: 14, height: 14, flexShrink: 0 }}
-                      aria-label={license}
+                      aria-label={bucket.key}
                     />
-                    <span style={{ flex: 1 }}>{license}</span>
+                    <span style={{ flex: 1 }}>{bucket.key}</span>
                     <span style={{ fontSize: 11, color: 'var(--text-soft)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                      {count.toLocaleString()}
+                      {bucket.count.toLocaleString()}
                     </span>
                   </label>
                 );

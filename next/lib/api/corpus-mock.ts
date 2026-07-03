@@ -121,23 +121,30 @@ export function getMockSearchResponse(params: CorpusSearchParams): CorpusSearchR
     total: hits.length,
     page,
     per_page: perPage,
+    // Array-of-objects form mirrors the real backend wire format so that the
+    // normalizeFacets() path is exercised in demo/mock mode as well.
     facets: {
-      type: { mono: 2, parallel: 2, lexicon: 1, toponym: 1 },
-      source: {
-        monocorpus: 1,
-        sarana_parallel: 1,
-        uniparser_lexicon: 1,
-        osm_toponyms_bxr: 1,
-        wiki_sentences: 1,
-        lingtrain_parallel: 1,
-      },
-      license: {
-        'CC BY 4.0': 2,
-        'CC BY-SA 4.0': 1,
-        'CC BY-SA 3.0': 1,
-        ODbL: 1,
-        MIT: 1,
-      },
+      type: [
+        { key: 'mono', doc_count: 2 },
+        { key: 'parallel', doc_count: 2 },
+        { key: 'lexicon', doc_count: 1 },
+        { key: 'toponym', doc_count: 1 },
+      ],
+      source: [
+        { key: 'monocorpus', doc_count: 1 },
+        { key: 'sarana_parallel', doc_count: 1 },
+        { key: 'uniparser_lexicon', doc_count: 1 },
+        { key: 'osm_toponyms_bxr', doc_count: 1 },
+        { key: 'wiki_sentences', doc_count: 1 },
+        { key: 'lingtrain_parallel', doc_count: 1 },
+      ],
+      license: [
+        { key: 'CC BY 4.0', doc_count: 2 },
+        { key: 'CC BY-SA 4.0', doc_count: 1 },
+        { key: 'CC BY-SA 3.0', doc_count: 1 },
+        { key: 'ODbL', doc_count: 1 },
+        { key: 'MIT', doc_count: 1 },
+      ],
     },
     hits: paged,
   };

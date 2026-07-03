@@ -3,11 +3,47 @@ import type {
   CorpusSearchParams,
   CorpusSearchResponse,
   CorpusReleasesResponse,
+  RawCorpusFacets,
+  RawFacet,
+  FacetBucket,
+  CorpusFacets,
+  RawCorpusSearchResponse,
 } from './corpus-types';
 import { getMockSearchResponse, MOCK_RELEASES_RESPONSE } from './corpus-mock';
 
-const MOCK_ENABLED =
-  process.env.NEXT_PUBLIC_CORPUS_MOCK === '1';
+const MOCK_ENABLED = process.env.NEXT_PUBLIC_CORPUS_MOCK === '1';
+
+// ---------------------------------------------------------------------------
+// Facet normalizer — tolerates Record<string,number> and array-of-objects with
+// varying field names (key/value/term/label, doc_count/count/n).
+// ---------------------------------------------------------------------------
+
+function normalizeFacet(raw: RawFacet | undefined): FacetBucket[] {
+  if (!raw) return [];
+  let buckets: FacetBucket[];
+  if (Array.isArray(raw)) {
+    buckets = raw.map((o) => ({
+      key: String(o.key ?? o.value ?? o.term ?? o.label ?? ''),
+      count: Number(o.doc_count ?? o.count ?? o.n ?? 0),
+    }));
+  } else {
+    buckets = Object.entries(raw).map(([key, count]) => ({
+      key,
+      count: Number(count),
+    }));
+  }
+  return buckets.filter((b) => b.key !== '');
+}
+
+export function normalizeFacets(raw: RawCorpusFacets | undefined): CorpusFacets {
+  return {
+    type: normalizeFacet(raw?.type),
+    source: normalizeFacet(raw?.source),
+    license: normalizeFacet(raw?.license),
+  };
+}
+
+// ---------------------------------------------------------------------------
 
 function buildSearchQuery(params: CorpusSearchParams): Record<string, unknown> {
   const query: Record<string, unknown> = {};
@@ -27,12 +63,16 @@ export async function searchCorpus(
   params: CorpusSearchParams,
 ): Promise<CorpusSearchResponse> {
   try {
-    return await apiCall<CorpusSearchResponse>('GET', '/api/corpus/search', {
+    const raw = await apiCall<RawCorpusSearchResponse>('GET', '/api/corpus/search', {
       params: buildSearchQuery(params),
     });
+    return { ...raw, facets: normalizeFacets(raw.facets) };
   } catch (err) {
     if (MOCK_ENABLED) {
-      return getMockSearchResponse(params);
+      // Mock already returns the right shape; run through normalizer for
+      // consistency (mock uses array-of-objects form to match prod wire format).
+      const mock = getMockSearchResponse(params);
+      return { ...mock, facets: normalizeFacets(mock.facets as RawCorpusFacets) };
     }
     throw err;
   }

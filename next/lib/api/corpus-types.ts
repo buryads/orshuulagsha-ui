@@ -24,12 +24,49 @@ export interface CorpusHit {
   };
 }
 
-export interface CorpusFacets {
-  type: Record<string, number>;
-  source: Record<string, number>;
-  license: Record<string, number>;
+// Normalized facet bucket — what components receive after normalization.
+export interface FacetBucket {
+  key: string;
+  count: number;
 }
 
+// Normalized facets — used everywhere in the UI layer.
+export interface CorpusFacets {
+  type: FacetBucket[];
+  source: FacetBucket[];
+  license: FacetBucket[];
+}
+
+// Wire-format facet: backend may send either a Record<string,number> OR
+// an array of objects with varying field names. Both are handled by
+// normalizeFacets() in corpus.ts before reaching the UI.
+type RawFacetBucket = {
+  key?: string;
+  value?: string;
+  term?: string;
+  label?: string;
+  doc_count?: number;
+  count?: number;
+  n?: number;
+};
+export type RawFacet = Record<string, number> | RawFacetBucket[];
+
+export interface RawCorpusFacets {
+  type?: RawFacet;
+  source?: RawFacet;
+  license?: RawFacet;
+}
+
+// Wire shape returned by the backend (facets still raw).
+export interface RawCorpusSearchResponse {
+  total: number;
+  page: number;
+  per_page: number;
+  facets: RawCorpusFacets;
+  hits: CorpusHit[];
+}
+
+// Normalized shape used by the application after normalizeFacets().
 export interface CorpusSearchResponse {
   total: number;
   page: number;
