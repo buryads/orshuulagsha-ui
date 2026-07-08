@@ -123,6 +123,38 @@ api.interceptors.response.use(
  * body (typed as `T`) — callers are responsible for unwrapping any
  * `{ data: ... }` envelopes the backend wraps payloads in.
  */
+/** The API origin used by this client (resolved at module init time). */
+export const apiBaseUrl = baseURL;
+
+/**
+ * Resolve a path or URL against the API base.
+ * Absolute URLs (http/https) are returned as-is.
+ * Relative paths are joined with apiBaseUrl.
+ */
+export function resolveApiUrl(u: string): string {
+  if (/^https?:\/\//.test(u)) return u;
+  const base = apiBaseUrl.replace(/\/$/, '');
+  const path = u.startsWith('/') ? u : `/${u}`;
+  return `${base}${path}`;
+}
+
+/**
+ * Return u only when it is a safe http/https URL; otherwise return undefined.
+ * Blocks javascript:, data:, vbscript: and other non-web protocols that can
+ * execute code when placed in an href attribute.
+ */
+export function safeHref(u: string | undefined | null): string | undefined {
+  if (!u) return undefined;
+  try {
+    const url = new URL(u, apiBaseUrl || 'https://x');
+    return url.protocol === 'http:' || url.protocol === 'https:'
+      ? url.href
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function apiCall<T>(
   method: Method,
   url: string,

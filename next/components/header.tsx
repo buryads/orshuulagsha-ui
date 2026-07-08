@@ -14,7 +14,7 @@ import { getGamificationMe } from '@/lib/api/gamification';
 import type { GamificationMe } from '@/lib/api/gamification';
 
 type NavItem = {
-  id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz';
+  id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus';
   href: string;
 };
 
@@ -23,6 +23,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { id: 'learn', href: '/learn' },
   { id: 'dictionary', href: '/explore' },
   { id: 'names', href: '/names' },
+  { id: 'corpus', href: '/corpus' },
   { id: 'packs', href: '/packs' },
   { id: 'quiz', href: '/quiz' },
 ];
