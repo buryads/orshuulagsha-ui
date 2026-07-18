@@ -35,15 +35,18 @@ const AI_STAGE_INTERVAL_MS = 1500;
 function AiToggleSwitch({
   checked,
   onClick,
+  label,
 }: {
   checked: boolean;
   onClick: () => void;
+  label: string;
 }): ReactElement {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
+      aria-label={label}
       onClick={onClick}
       style={{
         position: 'relative',
@@ -476,7 +479,11 @@ export function TranslatorPanel(): ReactElement {
           flexWrap: 'wrap',
         }}
       >
-        <AiToggleSwitch checked={aiEnabled} onClick={handleToggleAi} />
+        <AiToggleSwitch
+          checked={aiEnabled}
+          onClick={handleToggleAi}
+          label={tAi('toggleLabel')}
+        />
         <span
           style={{
             fontSize: 13,

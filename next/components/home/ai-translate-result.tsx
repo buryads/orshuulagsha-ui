@@ -31,7 +31,24 @@ export function AiTranslateResult({
   const [suggestion, setSuggestion] = useState('');
   const [sending, setSending] = useState(false);
 
-  const hasGloss = data.word_gloss.length > 0;
+  // Backend passes the LLM's `confidence` through with only a string cast
+  // (see final-fe-report.md must-fix #2) — no whitelist. Validate at the
+  // render boundary so an unexpected value can't produce a broken chip class
+  // or a missing i18n key.
+  const confidence = (['low', 'medium', 'high'] as const).includes(
+    data.confidence,
+  )
+    ? data.confidence
+    : 'low';
+
+  // word_gloss comes from an LLM response the backend only checks is an
+  // array (see final-fe-report.md must-fix #1) — individual entries may be
+  // malformed (string instead of object, `meanings` not an array). Normalize
+  // at the render boundary so a bad entry can't crash the whole route.
+  const validGloss = data.word_gloss.filter(
+    (g) => typeof g?.word === 'string' && Array.isArray(g?.meanings),
+  );
+  const hasGloss = validGloss.length > 0;
   const hasExamples = data.examples.length > 0;
   const hasGoogle = Boolean(data.google_candidate && data.google_candidate.trim());
 
@@ -72,8 +89,8 @@ export function AiTranslateResult({
           marginTop: 12,
         }}
       >
-        <span className={`chip ${CONFIDENCE_CHIP_CLASS[data.confidence]}`.trim()}>
-          {t(`confidence.${data.confidence}`)}
+        <span className={`chip ${CONFIDENCE_CHIP_CLASS[confidence]}`.trim()}>
+          {t(`confidence.${confidence}`)}
         </span>
         {data.degraded && (
           <span className="chip chip-rose">{t('degradedBadge')}</span>
@@ -97,7 +114,7 @@ export function AiTranslateResult({
           </summary>
           <table style={{ width: '100%', marginTop: 10, borderCollapse: 'collapse' }}>
             <tbody>
-              {data.word_gloss.map((g, i) => (
+              {validGloss.map((g, i) => (
                 <tr
                   key={`${g.word}-${i}`}
                   style={{
@@ -123,7 +140,7 @@ export function AiTranslateResult({
                       fontSize: 14,
                     }}
                   >
-                    {g.meanings.join(', ')}
+                    {g.meanings.map((m) => String(m)).join(', ')}
                   </td>
                 </tr>
               ))}
