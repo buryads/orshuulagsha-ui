@@ -30,10 +30,6 @@ function normalizeConfidence(
     : 'low';
 }
 
-function formatOrigin(origin: 'corpus' | 'translation_memory'): string {
-  return origin === 'corpus' ? 'corpus' : 'translation memory';
-}
-
 /**
  * Compact confidence chip + degraded badge + remaining-today count, rendered
  * next to the AI translation text in the form's right output panel. The rest
@@ -218,7 +214,7 @@ export function AiTranslateResult({
                     {target ? ` → ${target}` : ''}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 2 }}>
-                    {formatOrigin(ex.origin)}
+                    {t(ex.origin === 'corpus' ? 'origin.corpus' : 'origin.tm')}
                   </div>
                 </div>
               );

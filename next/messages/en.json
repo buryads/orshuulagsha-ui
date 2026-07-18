@@ -507,6 +507,10 @@
     "errors": {
       "unrecognized": "Couldn't recognize the text",
       "generic": "Couldn't get a translation. Try again later"
+    },
+    "origin": {
+      "tm": "translation memory",
+      "corpus": "corpus"
     }
   },
   "corpus": {
