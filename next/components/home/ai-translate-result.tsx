@@ -56,6 +56,9 @@ export function AiInlineMeta({ data }: { data: AiTranslateResponse }): ReactElem
       <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
         {t('remainingToday', { count: data.remaining_today })}
       </span>
+      <span style={{ fontSize: 11, color: 'var(--text-soft)', flexBasis: '100%' }}>
+        {t('disclaimer')}
+      </span>
     </div>
   );
 }

@@ -511,7 +511,8 @@
     "origin": {
       "tm": "translation memory",
       "corpus": "corpus"
-    }
+    },
+    "disclaimer": "AI translation may contain errors. Double-check anything important."
   },
   "corpus": {
     "title": "Buryat Language Corpus",
