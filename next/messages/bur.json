@@ -476,6 +476,7 @@
   },
   "aiTranslate": {
     "toggleLabel": "AI-оршуулга",
+    "translateCta": "Оршуулха",
     "signInCta": "AI-оршуулга хэрэглэхын тулада нэбтэрэгты",
     "translating": "Оршуулжа байна…",
     "stageGlossary": "Толи соо бэдэржэ байна",

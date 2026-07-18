@@ -477,6 +477,7 @@
   },
   "aiTranslate": {
     "toggleLabel": "AI-перевод",
+    "translateCta": "Перевести",
     "signInCta": "Войдите, чтобы использовать AI-перевод",
     "translating": "Перевожу…",
     "stageGlossary": "Ищу в словаре",

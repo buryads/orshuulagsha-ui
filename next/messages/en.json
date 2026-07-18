@@ -478,6 +478,7 @@
   },
   "aiTranslate": {
     "toggleLabel": "AI translation",
+    "translateCta": "Translate",
     "signInCta": "Sign in to use AI translation",
     "translating": "Translating…",
     "stageGlossary": "Searching the dictionary",
