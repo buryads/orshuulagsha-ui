@@ -512,7 +512,9 @@
       "tm": "translation memory",
       "corpus": "corpus"
     },
-    "disclaimer": "AI translation may contain errors. Double-check anything important."
+    "disclaimer": "AI translation may contain errors. Double-check anything important.",
+    "addToSrs": "Add to reviews",
+    "addedToSrs": "Added"
   },
   "corpus": {
     "title": "Buryat Language Corpus",
