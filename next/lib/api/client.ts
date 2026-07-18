@@ -41,10 +41,29 @@ if (!baseURL && typeof window !== 'undefined') {
 export const api: AxiosInstance = axios.create({
   baseURL,
   withCredentials: true,
+  // Sanctum treats browser requests from a stateful domain (localhost:3000)
+  // as session requests and enforces CSRF on mutations — axios must read the
+  // XSRF-TOKEN cookie and send X-XSRF-TOKEN (opt-in for cross-origin since 1.6).
+  withXSRFToken: true,
   headers: {
     Accept: 'application/json',
   },
 });
+
+// Lazily fetch Sanctum's CSRF cookie once before the first mutating request.
+let csrfReady: Promise<void> | null = null;
+function ensureCsrfCookie(): Promise<void> {
+  if (!csrfReady) {
+    csrfReady = axios
+      .get(`${baseURL}/sanctum/csrf-cookie`, { withCredentials: true })
+      .then(() => undefined)
+      .catch(() => {
+        // Allow a retry on the next mutation instead of caching the failure.
+        csrfReady = null;
+      }) as Promise<void>;
+  }
+  return csrfReady;
+}
 
 // Always attach the JWT when the cookie is present. Endpoints that do not
 // require auth simply ignore the header. SSR is a no-op (cookie unavailable).
@@ -160,6 +179,9 @@ export async function apiCall<T>(
   url: string,
   config: AxiosRequestConfig = {},
 ): Promise<T> {
+  if (typeof window !== 'undefined' && method.toUpperCase() !== 'GET') {
+    await ensureCsrfCookie();
+  }
   const response = await api.request<T>({ url, method, ...config });
   return response.data;
 }
