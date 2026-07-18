@@ -195,6 +195,8 @@ input, textarea { font-family: inherit; color: inherit; }
   background: var(--surface-2); color: var(--text-muted);
   border: 1px solid var(--border);
 }
+.gloss-word-link { text-decoration: none; }
+.gloss-word-link:hover { text-decoration: underline; }
 .chip-primary { background: var(--primary-50); color: var(--primary-700); border-color: transparent; }
 .chip-warm    { background: var(--accent-warm-soft); color: #8C5A1F; border-color: transparent; }
 .chip-green   { background: var(--accent-green-soft); color: #2D6448; border-color: transparent; }

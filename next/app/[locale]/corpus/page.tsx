@@ -4,13 +4,14 @@ import { CorpusExplorer } from '@/components/corpus/corpus-explorer';
 
 interface CorpusPageProps {
   params: { locale: string };
+  searchParams: { q?: string };
 }
 
-export default function CorpusPage({ params }: CorpusPageProps): ReactElement {
+export default function CorpusPage({ params, searchParams }: CorpusPageProps): ReactElement {
   setRequestLocale(params.locale);
   return (
     <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 48 }}>
-      <CorpusExplorer />
+      <CorpusExplorer initialQuery={searchParams.q} />
     </div>
   );
 }

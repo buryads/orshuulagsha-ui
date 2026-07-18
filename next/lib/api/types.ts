@@ -450,6 +450,7 @@ export interface ModerationListResponse {
 export interface AiWordGloss {
   word: string;
   meanings: string[];
+  burword_id?: number | null;
 }
 
 export interface AiExample {

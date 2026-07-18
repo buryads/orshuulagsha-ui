@@ -3,6 +3,7 @@
 import { useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
+import { Link } from '@/i18n/navigation';
 import type { AiTranslateResponse } from '@/lib/api/types';
 
 export interface AiTranslateResultProps {
@@ -167,7 +168,19 @@ export function AiTranslateResult({
                       verticalAlign: 'top',
                     }}
                   >
-                    {g.word}
+                    <Link
+                      href={
+                        g.burword_id
+                          ? `/words/${g.burword_id}`
+                          : `/corpus?q=${encodeURIComponent(g.word)}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gloss-word-link"
+                      style={{ color: 'inherit' }}
+                    >
+                      {g.word}
+                    </Link>
                   </td>
                   <td
                     style={{

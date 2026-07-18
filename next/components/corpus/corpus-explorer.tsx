@@ -16,12 +16,17 @@ import type {
 
 const PER_PAGE = 20;
 
-export function CorpusExplorer(): ReactElement {
+export interface CorpusExplorerProps {
+  /** Prefills and auto-runs the search from a `?q=` URL param (e.g. linked from a gloss word). */
+  initialQuery?: string;
+}
+
+export function CorpusExplorer({ initialQuery }: CorpusExplorerProps): ReactElement {
   const t = useTranslations('corpus');
 
   // Search state
-  const [query, setQuery] = useState('');
-  const [committedQuery, setCommittedQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery ?? '');
+  const [committedQuery, setCommittedQuery] = useState(initialQuery ?? '');
 
   // Filter state
   const [selectedTypes, setSelectedTypes] = useState<CorpusEntryType[]>([]);
@@ -88,6 +93,15 @@ export function CorpusExplorer(): ReactElement {
     doSearch(1, committedQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTypes, selectedSources, selectedLicenses, hasTranslation]);
+
+  // Auto-run the search once on mount when the page was opened with `?q=...`
+  // (e.g. a gloss word linked in from the AI translator).
+  useEffect(() => {
+    if (initialQuery) {
+      doSearch(1, initialQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleSubmit() {
     setCommittedQuery(query);
