@@ -18,10 +18,91 @@ const CONFIDENCE_CHIP_CLASS: Record<AiTranslateResponse['confidence'], string> =
   high: 'chip-green',
 };
 
+// Backend passes the LLM's `confidence` through with only a string cast (see
+// final-fe-report.md must-fix #2) — no whitelist. Validate at the render
+// boundary so an unexpected value can't produce a broken chip class or a
+// missing i18n key.
+function normalizeConfidence(
+  confidence: AiTranslateResponse['confidence'],
+): AiTranslateResponse['confidence'] {
+  return (['low', 'medium', 'high'] as const).includes(confidence)
+    ? confidence
+    : 'low';
+}
+
 function formatOrigin(origin: 'corpus' | 'translation_memory'): string {
   return origin === 'corpus' ? 'corpus' : 'translation memory';
 }
 
+/**
+ * Compact confidence chip + degraded badge + remaining-today count, rendered
+ * next to the AI translation text in the form's right output panel. The rest
+ * of the AI result (gloss, examples, Google variant, feedback) renders below
+ * the form via `AiTranslateResult`.
+ */
+export function AiInlineMeta({ data }: { data: AiTranslateResponse }): ReactElement {
+  const t = useTranslations('aiTranslate');
+  const confidence = normalizeConfidence(data.confidence);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        flexWrap: 'wrap',
+        marginTop: 10,
+      }}
+    >
+      <span className={`chip ${CONFIDENCE_CHIP_CLASS[confidence]}`.trim()}>
+        {t(`confidence.${confidence}`)}
+      </span>
+      {data.degraded && <span className="chip chip-rose">{t('degradedBadge')}</span>}
+      <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>
+        {t('remainingToday', { count: data.remaining_today })}
+      </span>
+    </div>
+  );
+}
+
+/** Staged "thinking" label shown in the right panel while an AI request is in flight. */
+export function AiStageText({ stage }: { stage: 0 | 1 | 2 }): ReactElement {
+  const t = useTranslations('aiTranslate');
+  const AI_STAGE_KEYS = ['stageGlossary', 'stageExamples', 'stageLlm'] as const;
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        color: 'var(--text-muted)',
+        fontSize: 16,
+        fontWeight: 600,
+      }}
+    >
+      <span style={{ display: 'inline-flex', animation: 'pulse-soft 1.2s ease-in-out infinite' }}>
+        <Icon name="sparkles" size={16} />
+      </span>
+      {t(AI_STAGE_KEYS[stage])}
+    </span>
+  );
+}
+
+/** Inline error text shown in the right panel in place of the translation. */
+export function AiInlineError({ messageKey }: { messageKey: string }): ReactElement {
+  const t = useTranslations('aiTranslate');
+  return (
+    <span style={{ fontSize: 15, fontWeight: 500, color: 'var(--text-muted)' }}>
+      {t(messageKey)}
+    </span>
+  );
+}
+
+/**
+ * The "kitchen" — пословный разбор, примеры, Google-вариант, фидбек. Renders
+ * BELOW the form as collapsible sections. The main translation + confidence
+ * chip render separately in the right output panel via `AiInlineMeta`
+ * (see `translator-panel.tsx`).
+ */
 export function AiTranslateResult({
   data,
   onFeedback,
@@ -30,16 +111,6 @@ export function AiTranslateResult({
   const [step, setStep] = useState<FeedbackStep>('idle');
   const [suggestion, setSuggestion] = useState('');
   const [sending, setSending] = useState(false);
-
-  // Backend passes the LLM's `confidence` through with only a string cast
-  // (see final-fe-report.md must-fix #2) — no whitelist. Validate at the
-  // render boundary so an unexpected value can't produce a broken chip class
-  // or a missing i18n key.
-  const confidence = (['low', 'medium', 'high'] as const).includes(
-    data.confidence,
-  )
-    ? data.confidence
-    : 'low';
 
   // word_gloss comes from an LLM response the backend only checks is an
   // array (see final-fe-report.md must-fix #1) — individual entries may be
@@ -66,42 +137,8 @@ export function AiTranslateResult({
 
   return (
     <div className="card fade-up" style={{ marginTop: 20, padding: 24 }}>
-      <div
-        style={{
-          fontSize: 28,
-          fontWeight: 700,
-          letterSpacing: '-0.02em',
-          color: 'var(--text)',
-          fontFamily: 'var(--font-display)',
-          lineHeight: 1.3,
-          wordBreak: 'break-word',
-        }}
-      >
-        {data.translation}
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          flexWrap: 'wrap',
-          marginTop: 12,
-        }}
-      >
-        <span className={`chip ${CONFIDENCE_CHIP_CLASS[confidence]}`.trim()}>
-          {t(`confidence.${confidence}`)}
-        </span>
-        {data.degraded && (
-          <span className="chip chip-rose">{t('degradedBadge')}</span>
-        )}
-        <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--text-soft)' }}>
-          {t('remainingToday', { count: data.remaining_today })}
-        </span>
-      </div>
-
       {hasGloss && (
-        <details style={{ marginTop: 18 }}>
+        <details style={{ marginTop: 0 }}>
           <summary
             style={{
               cursor: 'pointer',

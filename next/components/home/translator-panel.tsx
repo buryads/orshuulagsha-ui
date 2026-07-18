@@ -17,7 +17,12 @@ import { usePathname, useRouter, Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
 import { Translator, type FromLang, type ToLang } from './translator';
 import { TranslationResults } from './translation-results';
-import { AiTranslateResult } from './ai-translate-result';
+import {
+  AiTranslateResult,
+  AiInlineMeta,
+  AiStageText,
+  AiInlineError,
+} from './ai-translate-result';
 import { translateWord } from '@/lib/api/translate';
 import { aiTranslate, sendAiTranslateFeedback } from '@/lib/api/ai-translate';
 import { getAuthToken } from '@/lib/api/cookies';
@@ -29,8 +34,15 @@ import type {
 import { isNoTranslation, splitEnumerated, splitRemark } from './translation-text';
 
 const AI_ENABLED_STORAGE_KEY = 'ai-translate-enabled';
-const AI_STAGE_KEYS = ['stageGlossary', 'stageExamples', 'stageLlm'] as const;
 const AI_STAGE_INTERVAL_MS = 1500;
+// Debounce before an AI-translate request auto-fires while typing. Longer
+// than the dictionary's 400ms — each AI call costs money and eats into the
+// per-day limit. Enter (no Shift) still submits immediately (see
+// `handleTranslatorKeyDown`).
+const AI_DEBOUNCE_MS = 1200;
+// Below this length an AI request is almost certainly not useful yet — don't
+// fire on the first keystroke or two.
+const AI_MIN_LENGTH = 2;
 
 function AiToggleSwitch({
   checked,
@@ -75,48 +87,6 @@ function AiToggleSwitch({
         }}
       />
     </button>
-  );
-}
-
-function AiTranslateSkeleton({ stage }: { stage: 0 | 1 | 2 }): ReactElement {
-  const t = useTranslations('aiTranslate');
-  return (
-    <div className="card fade-up" style={{ marginTop: 20, padding: 24, textAlign: 'center' }}>
-      <div
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          color: 'var(--text-muted)',
-          fontSize: 14,
-          fontWeight: 600,
-        }}
-      >
-        <span style={{ display: 'inline-flex', animation: 'pulse-soft 1.2s ease-in-out infinite' }}>
-          <Icon name="sparkles" size={16} />
-        </span>
-        {t(AI_STAGE_KEYS[stage])}
-      </div>
-    </div>
-  );
-}
-
-function AiTranslateErrorCard({ messageKey }: { messageKey: string }): ReactElement {
-  const t = useTranslations('aiTranslate');
-  return (
-    <div
-      className="card fade-up"
-      style={{
-        marginTop: 20,
-        padding: 22,
-        textAlign: 'center',
-        color: 'var(--text-muted)',
-        fontSize: 14,
-        borderStyle: 'dashed',
-      }}
-    >
-      {t(messageKey)}
-    </div>
   );
 }
 
@@ -320,6 +290,7 @@ export function TranslatorPanel(): ReactElement {
     if (!trimmed) {
       setAiResult(null);
       setAiErrorKey(null);
+      setTgt('');
       return;
     }
     const reqId = ++aiRequestIdRef.current;
@@ -329,6 +300,9 @@ export function TranslatorPanel(): ReactElement {
       const result = await aiTranslate(trimmed, type);
       if (reqId !== aiRequestIdRef.current) return;
       setAiResult(result);
+      // Feeds the right output panel (via `tgt`) and the speak/copy toolbar
+      // there, same as the dictionary path does with its own picked result.
+      setTgt(result.translation);
     } catch (err: unknown) {
       if (reqId !== aiRequestIdRef.current) return;
       setAiResult(null);
@@ -365,21 +339,33 @@ export function TranslatorPanel(): ReactElement {
     [aiResult],
   );
 
-  // Explicit AI submit — the ONLY thing allowed to fire aiTranslate. Never
-  // called from the typing debounce: each call costs money and eats into the
-  // per-day limit, so it only fires on Enter or the "Перевести" button.
-  // Dedupes: re-submitting the same trimmed text while a request for it is
-  // still in flight, or after it already succeeded, is a no-op — a failed
-  // request may be retried with the same text.
+  // The only thing allowed to fire aiTranslate — from the auto-translate
+  // debounce below or from Enter. Cost guards: minimum length, and dedup on
+  // identical trimmed text (re-submitting text a request is already in
+  // flight for, or already succeeded for, is a no-op — a failed request may
+  // be retried with the same text).
   const submitAiTranslate = useCallback(() => {
     if (!direction || !aiEnabled || !signedIn) return;
     const trimmed = src.trim();
-    if (!trimmed) return;
+    if (trimmed.length < AI_MIN_LENGTH) return;
     const sameAsLast = trimmed === lastAiQueryRef.current;
     if (sameAsLast && (aiLoading || (aiResult && !aiErrorKey))) return;
     lastAiQueryRef.current = trimmed;
     void runAiTranslate(trimmed, direction);
   }, [direction, aiEnabled, signedIn, src, aiLoading, aiResult, aiErrorKey, runAiTranslate]);
+
+  // Auto-translate in AI mode after typing pauses — mirrors the dictionary's
+  // debounce but at a longer interval (AI_DEBOUNCE_MS) since each call costs
+  // money and counts against the per-day limit. `submitAiTranslate`'s dedup
+  // guard makes this a no-op when the text hasn't actually changed (e.g.
+  // right after an Enter-triggered submit fires this same debounce).
+  useEffect(() => {
+    if (!aiEnabled || !signedIn || !direction) return;
+    const id = setTimeout(() => {
+      submitAiTranslate();
+    }, AI_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [src, direction, aiEnabled, signedIn, submitAiTranslate]);
 
   // A new direction (language swap) invalidates the dedupe cache — same text
   // translated the other way is a different request.
@@ -429,11 +415,15 @@ export function TranslatorPanel(): ReactElement {
   );
 
   // Debounced translate on src change. Empty input skips the API call via
-  // runTranslate's own guard. This ALWAYS drives the dictionary search,
-  // regardless of AI mode — AI translation never fires on typing debounce
-  // (see `submitAiTranslate`), it costs money and is limited per day.
+  // runTranslate's own guard. Suppressed entirely in AI mode — AI mode owns
+  // the right panel, and firing the legacy dictionary lookup there wastes a
+  // request and used to leak its own crappy AI-fallback text into the right
+  // pane, competing with the real AI result.
   useEffect(() => {
-    if (!direction) return;
+    if (!direction || (aiEnabled && signedIn)) {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      return;
+    }
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       void runTranslate(src, direction);
@@ -441,12 +431,12 @@ export function TranslatorPanel(): ReactElement {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [src, direction, runTranslate]);
+  }, [src, direction, runTranslate, aiEnabled, signedIn]);
 
   const handleCommit = useCallback(() => {
-    if (!direction) return;
+    if (!direction || (aiEnabled && signedIn)) return;
     void runTranslate(src, direction);
-  }, [direction, runTranslate, src]);
+  }, [direction, runTranslate, src, aiEnabled, signedIn]);
 
   // Mirror src/from/to into the URL so the page is shareable and back/forward
   // navigation restores the translator state. Skips first run to avoid
@@ -497,17 +487,6 @@ export function TranslatorPanel(): ReactElement {
           <Icon name="ai" size={14} />
           {tAi('toggleLabel')}
         </span>
-        {aiEnabled && signedIn && (
-          <button
-            type="button"
-            className="btn btn-secondary"
-            disabled={aiLoading || !src.trim()}
-            onClick={submitAiTranslate}
-            style={{ padding: '6px 14px', fontSize: 13 }}
-          >
-            {tAi('translateCta')}
-          </button>
-        )}
         {showSignInCta && !signedIn && (
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             {tAi('signInCta')}{' '}
@@ -532,18 +511,28 @@ export function TranslatorPanel(): ReactElement {
           loading={loading}
           onSwap={swap}
           onCommit={handleCommit}
-          tgtSlug={tgtSlug}
+          tgtSlug={aiEnabled && signedIn ? undefined : tgtSlug}
+          targetOverride={
+            aiEnabled && signedIn
+              ? aiLoading
+                ? <AiStageText stage={aiStage} />
+                : aiErrorKey
+                  ? <AiInlineError messageKey={aiErrorKey} />
+                  : undefined
+              : undefined
+          }
+          targetMeta={
+            aiEnabled && signedIn && !aiLoading && !aiErrorKey && aiResult
+              ? <AiInlineMeta data={aiResult} />
+              : undefined
+          }
         />
       </div>
 
       {aiEnabled && signedIn ? (
-        <>
-          {aiLoading && <AiTranslateSkeleton stage={aiStage} />}
-          {!aiLoading && aiErrorKey && <AiTranslateErrorCard messageKey={aiErrorKey} />}
-          {!aiLoading && !aiErrorKey && aiResult && (
-            <AiTranslateResult data={aiResult} onFeedback={handleAiFeedback} />
-          )}
-        </>
+        !aiLoading && !aiErrorKey && aiResult && (
+          <AiTranslateResult data={aiResult} onFeedback={handleAiFeedback} />
+        )
       ) : (
         <TranslationResults
           response={response}
