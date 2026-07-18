@@ -476,6 +476,38 @@
       "more": "More"
     }
   },
+  "aiTranslate": {
+    "toggleLabel": "AI translation",
+    "signInCta": "Sign in to use AI translation",
+    "translating": "Translating…",
+    "stageGlossary": "Searching the dictionary",
+    "stageExamples": "Finding examples",
+    "stageLlm": "Generating translation",
+    "confidence": {
+      "low": "Low confidence",
+      "medium": "Medium confidence",
+      "high": "High confidence"
+    },
+    "degradedBadge": "fallback translation",
+    "remainingToday": "Remaining today: {count}",
+    "limitReached": "Daily AI translation limit reached",
+    "sections": {
+      "gloss": "Word-by-word breakdown",
+      "examples": "Examples",
+      "google": "Google Translate"
+    },
+    "feedback": {
+      "helpful": "Helpful",
+      "notHelpful": "Not helpful",
+      "suggestPlaceholder": "Suggest your own translation",
+      "send": "Send",
+      "thanks": "Thanks for the feedback!"
+    },
+    "errors": {
+      "unrecognized": "Couldn't recognize the text",
+      "generic": "Couldn't get a translation. Try again later"
+    }
+  },
   "corpus": {
     "title": "Buryat Language Corpus",
     "subtitle": "Search across 700,000+ records: sentences, translations, lexicon, toponyms. Search in Buryat or Russian.",
