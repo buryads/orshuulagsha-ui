@@ -55,6 +55,17 @@ export interface TranslatorProps {
   onCommit?: () => void;
   /** Slug of the Bur dictionary entry that matches the rendered target text. */
   tgtSlug?: string;
+  /**
+   * When set, replaces the default `<TranslationText text={tgt} />` render
+   * in the right pane — used by AI-translate mode to show a staged loading
+   * skeleton or an error message in place of the target text.
+   */
+  targetOverride?: ReactElement | null;
+  /**
+   * Optional row rendered under the target text (e.g. AI confidence chip +
+   * degraded badge + remaining-today count).
+   */
+  targetMeta?: ReactElement | null;
 }
 
 export function Translator({
@@ -68,6 +79,8 @@ export function Translator({
   onSwap,
   onCommit,
   tgtSlug,
+  targetOverride,
+  targetMeta,
 }: TranslatorProps): ReactElement {
   const t = useTranslations('home.translator');
   const [showKb, setShowKb] = useState(false);
@@ -362,7 +375,7 @@ export function Translator({
               transition: 'opacity 0.15s',
             }}
           >
-            <TranslationText text={tgt} />
+            {targetOverride ?? <TranslationText text={tgt} />}
             {recording && (
               <span
                 style={{
@@ -390,6 +403,7 @@ export function Translator({
               </span>
             )}
           </div>
+          {targetMeta}
           <div
             style={{
               display: 'flex',
