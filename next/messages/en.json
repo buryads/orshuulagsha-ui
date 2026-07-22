@@ -8,7 +8,8 @@
     "search": "Search",
     "theme": "Toggle theme",
     "notifications": "Notifications",
-    "menu": "Navigation"
+    "menu": "Navigation",
+    "corpus": "Corpus"
   },
   "auth": {
     "signIn": "Sign in to your account",
@@ -259,5 +260,85 @@
     "wrongTotal": "Wrong: {count}",
     "yourAnswer": "Your answer",
     "correctAnswer": "Correct answer"
+  },
+  "aiTranslate": {
+    "toggleLabel": "AI translation",
+    "translateCta": "Translate",
+    "signInCta": "Sign in to use AI translation",
+    "translating": "Translating…",
+    "stageGlossary": "Searching the dictionary",
+    "stageExamples": "Finding examples",
+    "stageLlm": "Generating translation",
+    "confidence": {
+      "low": "Low confidence",
+      "medium": "Medium confidence",
+      "high": "High confidence"
+    },
+    "degradedBadge": "fallback translation",
+    "remainingToday": "Remaining today: {count}",
+    "limitReached": "Daily AI translation limit reached",
+    "sections": {
+      "gloss": "Word-by-word breakdown",
+      "examples": "Examples",
+      "google": "Google Translate"
+    },
+    "feedback": {
+      "helpful": "Helpful",
+      "notHelpful": "Not helpful",
+      "suggestPlaceholder": "Suggest your own translation",
+      "send": "Send",
+      "thanks": "Thanks for the feedback!"
+    },
+    "errors": {
+      "unrecognized": "Couldn't recognize the text",
+      "generic": "Couldn't get a translation. Try again later"
+    },
+    "origin": {
+      "tm": "translation memory",
+      "corpus": "corpus"
+    },
+    "disclaimer": "AI translation may contain errors. Double-check anything important.",
+    "addToSrs": "Add to reviews",
+    "addedToSrs": "Added"
+  },
+  "corpus": {
+    "title": "Buryat Language Corpus",
+    "subtitle": "Search across 700,000+ records: sentences, translations, lexicon, toponyms. Search in Buryat or Russian.",
+    "searchPlaceholder": "Search in Buryat or Russian…",
+    "searchAriaLabel": "Search the corpus",
+    "searchButton": "Search",
+    "searchHint": "Search in Buryat OR Russian — finds any word form (morphology-independent)",
+    "clearSearch": "Clear search",
+    "filters": "Filters",
+    "filterType": "Entry type",
+    "filterSource": "Source",
+    "filterLicense": "License",
+    "filterOther": "More options",
+    "filterHasTranslation": "With translation only",
+    "filterReset": "Reset filters",
+    "type": {
+      "mono": "Monocorpus",
+      "parallel": "Parallel",
+      "lexicon": "Lexicon",
+      "toponym": "Toponyms"
+    },
+    "resultCount": "{count} results",
+    "attribution": "Source",
+    "errorSearch": "Search failed. Check your connection.",
+    "retry": "Try again",
+    "empty": "No results found. Try a different query or reset filters.",
+    "searchPrompt": "Enter a query in Buryat or Russian and press Search",
+    "downloadTitle": "Download corpus",
+    "downloadVersion": "Version",
+    "downloadDate": "Date",
+    "downloadRecords": "Records",
+    "downloadSize": "Size",
+    "downloadJsonl": "Download JSONL.GZ",
+    "downloadCsv": "CSV",
+    "downloadMetaUnavailable": "Release metadata temporarily unavailable",
+    "licenseTitle": "Licenses",
+    "licenseSummary": "The corpus contains data from many sources under different licenses: CC0, CC BY, CC BY-SA, ODbL, MIT and others. Each record has a license field with the exact license.",
+    "licenseDisclaimer": "The corpus includes sources with different terms of use. Some data may be under restricted licenses (including © materials). Each record specifies a license — please respect the applicable license when using the data.",
+    "licenseCitation": "Citation: when using this corpus, please credit buryads.com/corpus and the specific sources listed in the attribution field of each record."
   }
 }

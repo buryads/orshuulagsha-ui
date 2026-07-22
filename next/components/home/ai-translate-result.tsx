@@ -4,7 +4,6 @@ import { useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { Link } from '@/i18n/navigation';
-import { addWordToSrs } from '@/lib/api/reader';
 import type { AiTranslateResponse } from '@/lib/api/types';
 
 export interface AiTranslateResultProps {
@@ -112,21 +111,6 @@ export function AiTranslateResult({
   const [step, setStep] = useState<FeedbackStep>('idle');
   const [suggestion, setSuggestion] = useState('');
   const [sending, setSending] = useState(false);
-  // burword_id-шники, уже отправленные в SRS в рамках этого результата.
-  const [srsAdded, setSrsAdded] = useState<Set<number>>(new Set());
-  const [srsBusy, setSrsBusy] = useState<number | null>(null);
-
-  const addToSrs = async (burwordId: number) => {
-    setSrsBusy(burwordId);
-    try {
-      await addWordToSrs(burwordId);
-      setSrsAdded((prev) => new Set(prev).add(burwordId));
-    } catch {
-      // Оставляем кнопку активной — можно повторить.
-    } finally {
-      setSrsBusy(null);
-    }
-  };
 
   // word_gloss comes from an LLM response the backend only checks is an
   // array (see final-fe-report.md must-fix #1) — individual entries may be
@@ -206,24 +190,6 @@ export function AiTranslateResult({
                     }}
                   >
                     {g.meanings.map((m) => String(m)).join(', ')}
-                  </td>
-                  <td style={{ padding: '8px 0 8px 10px', textAlign: 'right', whiteSpace: 'nowrap', verticalAlign: 'top' }}>
-                    {g.burword_id != null &&
-                      (srsAdded.has(g.burword_id) ? (
-                        <span className="chip chip-green" style={{ fontSize: 11 }}>
-                          {t('addedToSrs')}
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          className="chip"
-                          style={{ cursor: 'pointer', fontSize: 11 }}
-                          disabled={srsBusy === g.burword_id}
-                          onClick={() => void addToSrs(g.burword_id as number)}
-                        >
-                          + {t('addToSrs')}
-                        </button>
-                      ))}
                   </td>
                 </tr>
               ))}
