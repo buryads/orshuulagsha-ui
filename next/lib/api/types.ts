@@ -334,3 +334,61 @@ export interface LeaderboardResponse {
   rows: LeaderboardRow[];
   me: LeaderboardMe | null;
 }
+
+// --- Contributions (Learn-2, Phase 5) ---
+// POST /api/contributions [auth]
+// GET  /api/contributions/mine [auth]
+// GET  /api/moderation/contributions?status=pending&limit [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/approve [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/reject  [auth:admin|moderator]
+
+export type ContributionType = 'new_word' | 'translation' | 'correction';
+export type ContributionStatus = 'pending' | 'approved' | 'rejected';
+
+/** Payload for type=translation — suggest a missing translation (always bur→ru) */
+export interface ContribPayloadTranslation {
+  burword_id?: number | null;
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
+}
+
+/** Payload for type=new_word — add a word not yet in the dictionary (always bur→ru) */
+export interface ContribPayloadNewWord {
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
+  example?: string;
+}
+
+/** Payload for type=correction — suggest a fix to existing entry */
+export interface ContribPayloadCorrection {
+  burword_id?: number | null;
+  target: 'translation' | 'word' | 'example';
+  suggested: string;
+  note?: string;
+}
+
+export type ContribPayload =
+  | ContribPayloadTranslation
+  | ContribPayloadNewWord
+  | ContribPayloadCorrection;
+
+/** Single contribution item (mine + moderation queue) */
+export interface Contribution {
+  id: number;
+  type: ContributionType;
+  status: ContributionStatus;
+  payload: ContribPayload;
+  moderation_note?: string | null;
+  created_at: string;
+}
+
+/** Moderation-queue item — includes submitter info */
+export interface ModerationContribution extends Contribution {
+  user_id: number;
+  user_name: string;
+}
+
+export interface ModerationListResponse {
+  data: ModerationContribution[];
+  meta: { count: number };
+}
