@@ -226,3 +226,220 @@ export interface UploadedImage {
 export interface DataEnvelope<T> {
   data: T;
 }
+
+// --- SRS (Spaced Repetition System) ---
+// Контракт: GET /api/srs/due, POST /api/srs/grade [auth:sanctum]
+
+/** Элемент из GET /api/srs/due */
+export interface SrsDueItem {
+  word_id: number;
+  word: string;
+  slug: string;
+  due_at: string | null;
+  reps: number;
+  interval: number;
+  ease: number;
+  lapses: number;
+  is_new: boolean;
+}
+
+export interface SrsDueResponse {
+  items: SrsDueItem[];
+  count: number;
+}
+
+// --- Reader (Learn-2, Phase 4) ---
+// Контракт: GET /api/texts, GET /api/texts/{slug},
+//           POST /api/known-words, DELETE /api/known-words/{burword_id},
+//           POST /api/srs/words [auth:sanctum]
+
+/** Элемент списка текстов из GET /api/texts */
+export interface TextListItem {
+  id: number;
+  slug: string;
+  title: string;
+  level: string | null;
+  word_count: number;
+}
+
+/** Токен тела текста из GET /api/texts/{slug} */
+export interface TextToken {
+  token: string;
+  burword_id: number | null;
+  slug: string | null;
+  known: boolean;
+}
+
+/** Полный текст из GET /api/texts/{slug} */
+export interface TextDetail {
+  id: number;
+  slug: string;
+  title: string;
+  body: string;
+  tokens: TextToken[];
+}
+
+/** Статус слова в читалке (вычисляется на клиенте по токену) */
+export type WordStatus = 'known' | 'new' | 'ignored';
+
+/** Токен с вычисленным статусом для рендера */
+export interface ReaderToken extends TextToken {
+  status: WordStatus;
+}
+
+/** Ответ POST /api/srs/words */
+export interface SrsAddWordResponse {
+  word_id: number;
+  added: boolean;
+}
+
+/** Ответ POST /api/known-words */
+export interface KnownWordResponse {
+  burword_id: number;
+  known: true;
+}
+
+// --- Gamification (Learn-2, Phase 2) ---
+// TODO(8795-Ф2): сверить с финальным контрактом backend-tl
+
+/** GET /api/stats/me [auth:sanctum] */
+export interface GamificationMe {
+  xp: number;
+  level: number;
+  streak: number;
+  longest_streak: number;
+  last_active_date: string | null;
+  daily_goal_xp: number;
+  xp_today: number;
+  goal_met: boolean;
+}
+
+/** Строка лидерборда из GET /api/leaderboard */
+export interface LeaderboardRow {
+  rank: number;
+  user_id: number;
+  name: string;
+  xp: number;
+  level: number;
+}
+
+/** Мета «своей» позиции из GET /api/leaderboard */
+export interface LeaderboardMe {
+  rank: number;
+  xp: number;
+}
+
+/** GET /api/leaderboard?period=all|week&limit=20 [auth:sanctum] */
+export interface LeaderboardResponse {
+  rows: LeaderboardRow[];
+  me: LeaderboardMe | null;
+}
+
+// --- Lessons / Skill-tree (Learn-2, Phase 3) ---
+// TODO(8795-Ф3): сверить с финальным контрактом backend-tl
+
+export interface LessonListItem {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  position: number;
+  xp_reward: number;
+  exercise_count: number;
+  status: 'locked' | 'available' | 'completed';
+  score: number | null;
+  prerequisite_id: number | null;
+}
+
+export type ExerciseType = 'match' | 'type' | 'listen-pick' | 'image-pick';
+
+export interface Exercise {
+  id: number;
+  type: ExerciseType;
+  prompt: string;
+  payload: Record<string, unknown>;
+}
+
+export interface LessonDetail {
+  id: number;
+  slug: string;
+  title: string;
+  exercises: Exercise[];
+}
+
+export interface CheckAnswer {
+  exercise_id: number;
+  // string for type/listen-pick/image-pick; [left,right][] for match
+  answer: unknown;
+}
+
+export interface CheckResult {
+  exercise_id: number;
+  correct: boolean;
+}
+
+export interface CheckResponse {
+  results: CheckResult[];
+  score: number;
+  passed: boolean;
+  xp_awarded: number;
+  stats: GamificationMe;
+}
+
+// --- Contributions (Learn-2, Phase 5) ---
+// POST /api/contributions [auth]
+// GET  /api/contributions/mine [auth]
+// GET  /api/moderation/contributions?status=pending&limit [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/approve [auth:admin|moderator]
+// POST /api/moderation/contributions/{id}/reject  [auth:admin|moderator]
+
+export type ContributionType = 'new_word' | 'translation' | 'correction';
+export type ContributionStatus = 'pending' | 'approved' | 'rejected';
+
+/** Payload for type=translation — suggest a missing translation (always bur→ru) */
+export interface ContribPayloadTranslation {
+  burword_id?: number | null;
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
+}
+
+/** Payload for type=new_word — add a word not yet in the dictionary (always bur→ru) */
+export interface ContribPayloadNewWord {
+  bur: string; // буряатское слово
+  ru: string;  // перевод на русский
+  example?: string;
+}
+
+/** Payload for type=correction — suggest a fix to existing entry */
+export interface ContribPayloadCorrection {
+  burword_id?: number | null;
+  target: 'translation' | 'word' | 'example';
+  suggested: string;
+  note?: string;
+}
+
+export type ContribPayload =
+  | ContribPayloadTranslation
+  | ContribPayloadNewWord
+  | ContribPayloadCorrection;
+
+/** Single contribution item (mine + moderation queue) */
+export interface Contribution {
+  id: number;
+  type: ContributionType;
+  status: ContributionStatus;
+  payload: ContribPayload;
+  moderation_note?: string | null;
+  created_at: string;
+}
+
+/** Moderation-queue item — includes submitter info */
+export interface ModerationContribution extends Contribution {
+  user_id: number;
+  user_name: string;
+}
+
+export interface ModerationListResponse {
+  data: ModerationContribution[];
+  meta: { count: number };
+}

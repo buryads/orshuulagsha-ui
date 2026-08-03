@@ -4,7 +4,13 @@ import { routing } from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin)(\/|$)/;
+// Public (own guest-CTA): /learn (hub), /learn/srs, /learn/reader (+/[slug]), /learn/leaderboard.
+// Protected (no guest-CTA / submit requires auth):
+//   profile, packs, admin (incl. /admin/moderation — also gated by bэк 403 without a role),
+//   /learn/path, /learn/lesson/*, /learn/contribute (skill-tree / exercise-player have no guest-CTA;
+//   contribute form requires auth to submit — hub card leads guest to signin).
+// Authed requests with an expired token hit the API → 401 → global handler → signin.
+const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|learn\/(path|lesson|contribute))(\/|$)/;
 const AUTH_COOKIE = 'token';
 
 export default function middleware(req: NextRequest) {

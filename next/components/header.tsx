@@ -9,14 +9,18 @@ import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
+import { GamificationHud, GamificationHudMobile } from '@/components/learn/gamification-hud';
+import { getGamificationMe } from '@/lib/api/gamification';
+import type { GamificationMe } from '@/lib/api/gamification';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
+  id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz';
   href: string;
 };
 
 const NAV_ITEMS: readonly NavItem[] = [
   { id: 'home', href: '/' },
+  { id: 'learn', href: '/learn' },
   { id: 'dictionary', href: '/explore' },
   { id: 'names', href: '/names' },
   { id: 'packs', href: '/packs' },
@@ -37,6 +41,9 @@ export function Header() {
   const [signedIn, setSignedIn] = useState(false);
   const [initials, setInitials] = useState('У');
   const [menuOpen, setMenuOpen] = useState(false);
+  // Single gamification fetch — shared by both HUD variants to avoid duplicate requests.
+  const [gamification, setGamification] = useState<GamificationMe | null>(null);
+  const [gamificationLoading, setGamificationLoading] = useState(true);
 
   // Close drawer when route changes — otherwise tapping a link leaves the
   // drawer hanging open over the new page.
@@ -68,6 +75,27 @@ export function Header() {
         // ignore — keep default initials
       });
   }, []);
+
+  // One gamification fetch feeds both desktop and mobile HUD variants.
+  // Re-fires on pathname change so XP/streak are fresh after /learn sessions
+  // without a full page reload. Shows the loading skeleton only on the very
+  // first load (gamification === null); subsequent navigations update silently
+  // in the background to avoid a jarring flicker.
+  useEffect(() => {
+    if (!signedIn) {
+      setGamificationLoading(false);
+      return;
+    }
+    // Show skeleton only while we have no data yet.
+    if (gamification === null) setGamificationLoading(true);
+    getGamificationMe()
+      .then(setGamification)
+      .catch(() => {
+        // silently hide on error — HUD is non-critical
+      })
+      .finally(() => setGamificationLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn, pathname]);
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
@@ -135,6 +163,17 @@ export function Header() {
         </button>
 
         <div style={{ flex: 1 }} />
+
+        {/* Gamification HUD — streak / XP / level, hidden for guests.
+            Both variants share the same fetched data to avoid duplicate requests. */}
+        {/* Desktop strip (≥720px): streak · XP · CEFR badge */}
+        <span className="hide-sm" style={{ display: 'inline-flex' }}>
+          <GamificationHud signedIn={signedIn} stats={gamification} loading={gamificationLoading} />
+        </span>
+        {/* Mobile chip (≤720px): 🔥streak · XP in one compact chip */}
+        <span className="show-sm">
+          <GamificationHudMobile signedIn={signedIn} stats={gamification} />
+        </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
