@@ -275,6 +275,78 @@
         "good": "Good",
         "easy": "Easy"
       }
+    },
+    "hud": {
+      "ariaLabel": "{streak}-day streak · {xp} XP · {level}",
+      "streakAtRisk": "Practice today to keep your streak",
+      "streakGained": "Streak +1! {streak} days in a row 🔥",
+      "xpAwarded": "+{xp} XP",
+      "dailyGoalBar": "Daily goal: {current} of {goal} XP",
+      "goalMet": "Goal reached!"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "periodWeek": "This week",
+      "periodAll": "All time",
+      "scopeGlobal": "Global rankings",
+      "podiumLabel": "Top 3 leaders",
+      "you": "You",
+      "deltaUp": "moved up {n} places",
+      "deltaDown": "moved down {n} places",
+      "deltaStable": "no change",
+      "error": "Couldn't load the leaderboard",
+      "retry": "Retry",
+      "empty": "No data yet — start learning to make the top",
+      "startLearning": "Start learning",
+      "guestCta": "Sign in to compete",
+      "signIn": "Sign in"
+    },
+    "reader": {
+      "title": "Reader",
+      "subtitle": "Read Buryat texts and learn words in context",
+      "filterAll": "All levels",
+      "filterA1": "A1",
+      "filterA2": "A2",
+      "filterB1": "B1",
+      "filterB2": "B2",
+      "wordCount": "~{count} words",
+      "loading": "Loading…",
+      "loadError": "Failed to load texts",
+      "retry": "Retry",
+      "empty": "No texts yet",
+      "back": "Back",
+      "fontSmall": "S",
+      "fontMedium": "M",
+      "fontLarge": "L",
+      "fontSizeLabel": "Font size",
+      "footerKnown": "{pct}% known",
+      "footerNew": "{count} new",
+      "textLoading": "Loading text…",
+      "textError": "Failed to load text",
+      "popup": {
+        "loading": "Loading…",
+        "noTranslation": "No translation found yet",
+        "saveToSrs": "Save to SRS",
+        "savedToSrs": "In SRS ✓",
+        "markKnown": "I know this",
+        "markUnknown": "Mark as unknown",
+        "openDictionary": "Open in dictionary",
+        "playAudio": "Play audio",
+        "close": "Close",
+        "error": "Failed to load. Retry?",
+        "authRequired": "Sign in to save your progress",
+        "signIn": "Sign in",
+        "retry": "Retry"
+      },
+      "statusNew": "new",
+      "statusKnown": "known",
+      "statusIgnored": "ignored",
+      "legend": {
+        "title": "Word highlighting",
+        "new": "New — tap to study",
+        "known": "Known — you already know this word",
+        "ignored": "Not tracked (names, numbers, punctuation)"
+      }
     }
   },
   "quiz": {

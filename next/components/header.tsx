@@ -9,6 +9,7 @@ import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
+import { GamificationHud, GamificationHudMobile } from '@/components/learn/gamification-hud';
 
 type NavItem = {
   id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz';
@@ -135,6 +136,16 @@ export function Header() {
         </button>
 
         <div style={{ flex: 1 }} />
+
+        {/* Gamification HUD — streak / XP / level, hidden for guests */}
+        {/* Desktop strip (≥720px): streak · XP · CEFR badge */}
+        <span className="hide-sm" style={{ display: 'inline-flex' }}>
+          <GamificationHud signedIn={signedIn} />
+        </span>
+        {/* Mobile chip (≤720px): 🔥streak · XP in one compact chip */}
+        <span className="show-sm">
+          <GamificationHudMobile signedIn={signedIn} />
+        </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button

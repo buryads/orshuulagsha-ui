@@ -4,7 +4,8 @@ import { routing } from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|learn)(\/|$)/;
+// /learn/leaderboard is public (shows top without auth, guest sees sign-in CTA)
+const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|learn(?!\/leaderboard))(\/|$)/;
 const AUTH_COOKIE = 'token';
 
 export default function middleware(req: NextRequest) {

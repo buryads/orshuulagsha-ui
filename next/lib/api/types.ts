@@ -247,3 +247,90 @@ export interface SrsDueResponse {
   items: SrsDueItem[];
   count: number;
 }
+
+// --- Reader (Learn-2, Phase 4) ---
+// Контракт: GET /api/texts, GET /api/texts/{slug},
+//           POST /api/known-words, DELETE /api/known-words/{burword_id},
+//           POST /api/srs/words [auth:sanctum]
+
+/** Элемент списка текстов из GET /api/texts */
+export interface TextListItem {
+  id: number;
+  slug: string;
+  title: string;
+  level: string | null;
+  word_count: number;
+}
+
+/** Токен тела текста из GET /api/texts/{slug} */
+export interface TextToken {
+  token: string;
+  burword_id: number | null;
+  slug: string | null;
+  known: boolean;
+}
+
+/** Полный текст из GET /api/texts/{slug} */
+export interface TextDetail {
+  id: number;
+  slug: string;
+  title: string;
+  body: string;
+  tokens: TextToken[];
+}
+
+/** Статус слова в читалке (вычисляется на клиенте по токену) */
+export type WordStatus = 'known' | 'new' | 'ignored';
+
+/** Токен с вычисленным статусом для рендера */
+export interface ReaderToken extends TextToken {
+  status: WordStatus;
+}
+
+/** Ответ POST /api/srs/words */
+export interface SrsAddWordResponse {
+  word_id: number;
+  added: boolean;
+}
+
+/** Ответ POST /api/known-words */
+export interface KnownWordResponse {
+  burword_id: number;
+  known: true;
+}
+
+// --- Gamification (Learn-2, Phase 2) ---
+// TODO(8795-Ф2): сверить с финальным контрактом backend-tl
+
+/** GET /api/stats/me [auth:sanctum] */
+export interface GamificationMe {
+  xp: number;
+  level: number;
+  streak: number;
+  longest_streak: number;
+  last_active_date: string | null;
+  daily_goal_xp: number;
+  xp_today: number;
+  goal_met: boolean;
+}
+
+/** Строка лидерборда из GET /api/leaderboard */
+export interface LeaderboardRow {
+  rank: number;
+  user_id: number;
+  name: string;
+  xp: number;
+  level: number;
+}
+
+/** Мета «своей» позиции из GET /api/leaderboard */
+export interface LeaderboardMe {
+  rank: number;
+  xp: number;
+}
+
+/** GET /api/leaderboard?period=all|week&limit=20 [auth:sanctum] */
+export interface LeaderboardResponse {
+  rows: LeaderboardRow[];
+  me: LeaderboardMe | null;
+}
