@@ -226,3 +226,24 @@ export interface UploadedImage {
 export interface DataEnvelope<T> {
   data: T;
 }
+
+// --- SRS (Spaced Repetition System) ---
+// Контракт: GET /api/srs/due, POST /api/srs/grade [auth:sanctum]
+
+/** Элемент из GET /api/srs/due */
+export interface SrsDueItem {
+  word_id: number;
+  word: string;
+  slug: string;
+  due_at: string | null;
+  reps: number;
+  interval: number;
+  ease: number;
+  lapses: number;
+  is_new: boolean;
+}
+
+export interface SrsDueResponse {
+  items: SrsDueItem[];
+  count: number;
+}
