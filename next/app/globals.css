@@ -24,6 +24,8 @@
   --accent-warm-soft: #FFF4B8;
   --accent-green: #2D8659;     /* приглушённый, для success */
   --accent-green-soft: #D4ECD9;
+  --bronze: #CD7F32;           /* подиум — бронза (лидерборд) */
+  --bronze-soft: #F5E6D3;
 
   --neutral-1000: #0E1013;
   --neutral-900: #1A1C1E;
@@ -109,6 +111,8 @@
   --tertiary-soft: #4A2A2A;
   --accent-warm-soft: #3D2E15;
   --accent-green-soft: #1F3D2F;
+  --bronze: #D4924A;           /* подиум — бронза (лидерборд, тёмная тема) */
+  --bronze-soft: #2E1F0A;
 }
 
 * { box-sizing: border-box; }
@@ -297,6 +301,8 @@ h2 { font-weight: 700; }
 
 /* Hide on small */
 .hide-sm { display: initial; }
+/* Complement: hidden by default, visible on small (≤720px) — same breakpoint as .hide-sm */
+.show-sm { display: none !important; }
 
 /* Buryat keyboard adapts on narrow screens: tighter padding, smaller keys,
    and the special-key labels (tab/caps/shift/enter/backspace) get clipped
@@ -444,6 +450,7 @@ h2 { font-weight: 700; }
   .phrase-row > div:nth-child(3) { justify-content: flex-start !important; }
 
   .hide-sm { display: none !important; }
+  .show-sm { display: inline-flex !important; }
 
   .card { padding: 16px !important; }
 
