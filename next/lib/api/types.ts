@@ -226,3 +226,30 @@ export interface UploadedImage {
 export interface DataEnvelope<T> {
   data: T;
 }
+
+// --- AI Translate ---
+// Контракт: POST /api/ai-translate, POST /api/ai-translate/{id}/feedback
+
+export interface AiWordGloss {
+  word: string;
+  meanings: string[];
+  burword_id?: number | null;
+}
+
+export interface AiExample {
+  source: string;
+  target: string | null;
+  origin: 'corpus' | 'translation_memory';
+}
+
+export interface AiTranslateResponse {
+  id: number;
+  translation: string;
+  word_gloss: AiWordGloss[];
+  examples: AiExample[];
+  google_candidate: string | null;
+  notes: string;
+  confidence: 'low' | 'medium' | 'high';
+  degraded: boolean;
+  remaining_today: number;
+}

@@ -4,6 +4,9 @@
 
 /* ===== Buryad Portal — Design Tokens ===== */
 :root {
+  /* Layout tokens */
+  --header-h: 66px;            /* sticky global header: 14px top + 38px content + 14px bottom */
+
   /* Buryad flag palette
      синий #0066B3 (небо/вечность) · жёлтый #FFD200 (солнце/буддизм) · белый #FFFFFF (чистота)
      плюс акценты для UI-нужд (red/green) — ультра-сдержанно */
@@ -24,6 +27,8 @@
   --accent-warm-soft: #FFF4B8;
   --accent-green: #2D8659;     /* приглушённый, для success */
   --accent-green-soft: #D4ECD9;
+  --bronze: #CD7F32;           /* подиум — бронза (лидерборд) */
+  --bronze-soft: #F5E6D3;
 
   --neutral-1000: #0E1013;
   --neutral-900: #1A1C1E;
@@ -109,6 +114,8 @@
   --tertiary-soft: #4A2A2A;
   --accent-warm-soft: #3D2E15;
   --accent-green-soft: #1F3D2F;
+  --bronze: #D4924A;           /* подиум — бронза (лидерборд, тёмная тема) */
+  --bronze-soft: #2E1F0A;
 }
 
 * { box-sizing: border-box; }
@@ -188,6 +195,8 @@ input, textarea { font-family: inherit; color: inherit; }
   background: var(--surface-2); color: var(--text-muted);
   border: 1px solid var(--border);
 }
+.gloss-word-link { text-decoration: none; }
+.gloss-word-link:hover { text-decoration: underline; }
 .chip-primary { background: var(--primary-50); color: var(--primary-700); border-color: transparent; }
 .chip-warm    { background: var(--accent-warm-soft); color: #8C5A1F; border-color: transparent; }
 .chip-green   { background: var(--accent-green-soft); color: #2D6448; border-color: transparent; }
@@ -209,6 +218,10 @@ h2 { font-weight: 700; }
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(8px); }
 }
 @keyframes pulse-soft {
   0%, 100% { transform: scale(1); opacity: 1; }
@@ -297,6 +310,10 @@ h2 { font-weight: 700; }
 
 /* Hide on small */
 .hide-sm { display: initial; }
+/* Complement: hidden by default, visible on small (≤720px) — same breakpoint as .hide-sm */
+.show-sm { display: none !important; }
+/* Mobile-only flex container (e.g. bottom nav bars) */
+.show-sm-flex { display: none !important; }
 
 /* Buryat keyboard adapts on narrow screens: tighter padding, smaller keys,
    and the special-key labels (tab/caps/shift/enter/backspace) get clipped
@@ -444,6 +461,8 @@ h2 { font-weight: 700; }
   .phrase-row > div:nth-child(3) { justify-content: flex-start !important; }
 
   .hide-sm { display: none !important; }
+  .show-sm { display: inline-flex !important; }
+  .show-sm-flex { display: flex !important; }
 
   .card { padding: 16px !important; }
 
@@ -456,4 +475,30 @@ h2 { font-weight: 700; }
 /* ===== Tiny (≤420px) ===== */
 @media (max-width: 420px) {
   h1 { font-size: clamp(32px, 12vw, 48px) !important; }
+}
+
+/* ===== Corpus Explorer ===== */
+
+/* Desktop: sidebar (240px) + results */
+.corpus-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+/* Skeleton pulse animation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Mobile: filters drawer visible, sidebar hidden */
+.corpus-filters-desktop { display: block; }
+.corpus-filters-mobile  { display: none; }
+
+@media (max-width: 720px) {
+  .corpus-layout {
+    grid-template-columns: 1fr;
+  }
+  .corpus-filters-desktop { display: none; }
+  .corpus-filters-mobile  { display: block; }
 }
