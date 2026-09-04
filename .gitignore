@@ -90,3 +90,7 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# local tooling artifacts
+.serena/
+.next-stale-prodbuild/
