@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "nuxi start",
-    "docker-start": "npm i && npm run build && npm run start"
+    "docker-start": "npm ci && npm run build && npm run start"
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.5.6",
