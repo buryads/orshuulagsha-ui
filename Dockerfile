@@ -1,4 +1,4 @@
-FROM node:18.17-buster as builder
+FROM node:22-bookworm-slim as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN npm ci
 
 RUN npm run build
 
-FROM node:18.17-buster
+FROM node:22-bookworm-slim
 
 ENV APP_PORT 3000
 ENV APP_HOST 0.0.0.0
