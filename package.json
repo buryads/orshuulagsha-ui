@@ -34,7 +34,6 @@
     "burlang-keyboard": "^1.0.2",
     "dateformat": "^5.0.3",
     "device-detector-js": "^3.0.3",
-    "ohmyfetch": "^0.4.21",
     "pinia": "^2.3.1",
     "subtitle": "^4.2.1",
     "vue": "^3.5.44",
