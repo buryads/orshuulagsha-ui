@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # ---------- deps ----------
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 
 # libc6-compat helps some native deps on Alpine
@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
 # ---------- builder ----------
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Build-time public env (baked into the client bundle).
@@ -28,7 +28,7 @@ COPY . .
 RUN npm run build
 
 # ---------- runner ----------
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
