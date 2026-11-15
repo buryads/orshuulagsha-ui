@@ -46,6 +46,8 @@ const TOOLS = [
   'review_due',
   'review_grade',
   'suggest_translation',
+  'decompose_word',
+  'build_word',
 ] as const;
 
 function Snippet({ title, code }: { title: string; code: string }) {

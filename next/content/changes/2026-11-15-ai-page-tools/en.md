@@ -7,6 +7,7 @@ bur_reviewed: false
 ## What's new
 
 - The "AI" page now lists every tool available to the assistant.
+- The assistant can now analyse Buryat word forms and build word forms (beta, may be inaccurate).
 - If you signed in through the "Sign in to enable it" hint, AI translation is already on.
 - Sign-up and sign-in pass the page you will return to between each other.
 

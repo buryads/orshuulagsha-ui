@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import * as admin from '@/lib/api/admin';
 import type {
   Paginated,
@@ -29,32 +30,42 @@ export function SuggestionsTable() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<number | null>(null);
 
-  const load = useCallback(
-    () =>
-      admin
-        .getTranslationSuggestions(status, page)
-        .then((res) => {
-          setData(res);
-          setError(null);
-        })
-        .catch(() => {
-          setData({ data: [], current_page: 1, last_page: 1 });
-          setError('Не удалось загрузить. Нужны права администратора.');
-        }),
-    [status, page],
-  );
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
+    let ignore = false;
     setData(null);
-    load();
-  }, [load]);
+    admin
+      .getTranslationSuggestions(status, page)
+      .then((res) => {
+        if (ignore) return;
+        if (res.data.length === 0 && page > 1) {
+          setPage(page - 1);
+          return;
+        }
+        setData(res);
+        setError(null);
+      })
+      .catch((e) => {
+        if (ignore) return;
+        setData({ data: [], current_page: page, last_page: page });
+        setError(
+          axios.isAxiosError(e) && e.response?.status === 403
+            ? 'Нужны права администратора.'
+            : 'Не удалось загрузить список.',
+        );
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [status, page, reload]);
 
   async function decide(id: number, next: 'approved' | 'rejected') {
     if (busy !== null) return;
     setBusy(id);
     try {
       await admin.setTranslationSuggestionStatus(id, next);
-      await load();
+      setReload((n) => n + 1);
     } catch {
       setError('Не удалось сохранить решение');
     } finally {

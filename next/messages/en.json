@@ -406,7 +406,9 @@
       "check_text": "Buryat text check: dictionary plus AI remarks (may be wrong)",
       "review_due": "words due for spaced-repetition review",
       "review_grade": "grade how well you recalled a word and schedule the next review",
-      "suggest_translation": "suggest a translation for the dictionary (added only after review)"
+      "suggest_translation": "suggest a translation for the dictionary (added only after review)",
+      "decompose_word": "morphological analysis of a Buryat word form: lemma, part of speech, case or verb form (beta, may be inaccurate)",
+      "build_word": "builds a word form: case (singular), verb tense and person, participles, converbs (beta, may be inaccurate)"
     },
     "limitsTitle": "Limits",
     "limitWords": "30 words per minute",
