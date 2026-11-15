@@ -7,7 +7,14 @@ export type OAuthProvider = 'google' | 'apple';
 const PENDING_KEY = 'oauth_pending';
 
 export function isSafeNext(next: string | null): next is string {
-  return Boolean(next) && next!.startsWith('/') && !next!.startsWith('//') && !next!.startsWith('/\\');
+  if (!next || !next.startsWith('/') || /[\\\u0000-\u001f]/.test(next)) {
+    return false;
+  }
+  try {
+    return new URL(next, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }
 
 function base64url(bytes: Uint8Array): string {
@@ -19,10 +26,7 @@ function base64url(bytes: Uint8Array): string {
 
 export async function getOAuthProviders(): Promise<OAuthProvider[]> {
   try {
-    const body = await apiCall<DataEnvelope<OAuthProvider[]>>(
-      'GET',
-      '/api/auth/providers',
-    );
+    const body = await apiCall<DataEnvelope<OAuthProvider[]>>('GET', '/api/auth/providers');
     return body.data.filter((p) => p === 'google' || p === 'apple');
   } catch {
     return [];
@@ -35,12 +39,12 @@ export async function startOAuth(
   next: string | null,
 ): Promise<void> {
   const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
-  const digest = await crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(verifier),
-  );
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
   const challenge = base64url(new Uint8Array(digest));
-  sessionStorage.setItem(PENDING_KEY, JSON.stringify({ verifier, next }));
+  sessionStorage.setItem(
+    PENDING_KEY,
+    JSON.stringify({ verifier, next: isSafeNext(next) ? next : null }),
+  );
   const base = apiBaseUrl.replace(/\/$/, '');
   window.location.assign(
     `${base}/api/auth/${provider}/redirect?locale=${locale}&challenge=${challenge}`,
@@ -55,11 +59,9 @@ export async function exchangeOAuthCode(code: string): Promise<string | null> {
     verifier: string;
     next: string | null;
   };
-  const body = await apiCall<DataEnvelope<TokenResponse>>(
-    'POST',
-    '/api/jwt/oauth/exchange',
-    { data: { code, verifier, remember_me: true } },
-  );
+  const body = await apiCall<DataEnvelope<TokenResponse>>('POST', '/api/jwt/oauth/exchange', {
+    data: { code, verifier, remember_me: true },
+  });
   setAuthToken(body.data.token, body.data.expires_at);
   return isSafeNext(next) ? next : null;
 }

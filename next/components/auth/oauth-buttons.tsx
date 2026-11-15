@@ -4,12 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
-import {
-  getOAuthProviders,
-  isSafeNext,
-  startOAuth,
-  type OAuthProvider,
-} from '@/lib/api/oauth';
+import { getOAuthProviders, startOAuth, type OAuthProvider } from '@/lib/api/oauth';
 
 const ERROR_KEYS = ['cancelled', 'no_email', 'email_conflict'];
 
@@ -24,10 +19,7 @@ const LOGOS: Record<OAuthProvider, ReactNode> = {
         fill="#34A853"
         d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z"
       />
-      <path
-        fill="#FBBC05"
-        d="M5.4 14.4a7.2 7.2 0 0 1 0-4.8V6.5H1.4a12 12 0 0 0 0 11l4-3.1z"
-      />
+      <path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.8V6.5H1.4a12 12 0 0 0 0 11l4-3.1z" />
       <path
         fill="#EA4335"
         d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.5l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"
@@ -48,8 +40,7 @@ export function OAuthButtons() {
   const t = useTranslations('oauth');
   const locale = useLocale();
   const searchParams = useSearchParams();
-  const nextRaw = searchParams.get('next');
-  const next = isSafeNext(nextRaw) ? nextRaw : null;
+  const next = searchParams.get('next');
   const errorCode = searchParams.get('error');
   const error = errorCode
     ? t(`errors.${ERROR_KEYS.includes(errorCode) ? errorCode : 'failed'}`)

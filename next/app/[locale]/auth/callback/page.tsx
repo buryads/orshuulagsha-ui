@@ -16,8 +16,7 @@ function Callback() {
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-    const fail = () =>
-      window.location.assign(`/${locale}/signin?error=failed`);
+    const fail = () => window.location.assign(`/${locale}/signin?error=failed`);
     if (!code) return fail();
     exchangeOAuthCode(code)
       .then(async (next) => {
@@ -28,9 +27,7 @@ function Callback() {
   }, [code, locale]);
 
   return (
-    <p style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>
-      {t('signingIn')}
-    </p>
+    <p style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>{t('signingIn')}</p>
   );
 }
 
