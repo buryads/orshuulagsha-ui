@@ -253,3 +253,19 @@ export interface AiTranslateResponse {
   degraded: boolean;
   remaining_today: number;
 }
+
+// --- MCP tokens ---
+
+export interface McpToken {
+  id: number;
+  name: string;
+  created_at: string;
+  last_used_at: string | null;
+}
+
+export interface McpTokenCreated {
+  id: number;
+  name: string;
+  created_at: string;
+  token: string;
+}

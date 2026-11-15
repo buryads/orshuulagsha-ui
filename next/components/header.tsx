@@ -157,6 +157,17 @@ export function Header() {
             <LocaleSwitcher />
           </span>
           {signedIn && (
+            <Link
+              href="/profile/mcp"
+              className="btn-icon"
+              title={t('mcp')}
+              aria-label={t('mcp')}
+              style={{ width: 38, height: 38 }}
+            >
+              <Icon name="lock" size={18} />
+            </Link>
+          )}
+          {signedIn && (
             <button
               type="button"
               className="btn-icon"
@@ -274,6 +285,15 @@ export function Header() {
             }}
           >
             <LocaleSwitcher />
+            {signedIn && (
+              <Link
+                href="/profile/mcp"
+                className="btn btn-secondary"
+                style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
+              >
+                {t('mcp')}
+              </Link>
+            )}
             {!signedIn && (
               <Link
                 href="/signin"

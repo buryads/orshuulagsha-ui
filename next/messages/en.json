@@ -9,7 +9,8 @@
     "theme": "Toggle theme",
     "notifications": "Notifications",
     "menu": "Navigation",
-    "corpus": "Corpus"
+    "corpus": "Corpus",
+    "mcp": "MCP access"
   },
   "auth": {
     "signIn": "Sign in to your account",
@@ -340,5 +341,39 @@
     "licenseSummary": "The corpus contains data from many sources under different licenses: CC0, CC BY, CC BY-SA, ODbL, MIT and others. Each record has a license field with the exact license.",
     "licenseDisclaimer": "The corpus includes sources with different terms of use. Some data may be under restricted licenses (including © materials). Each record specifies a license — please respect the applicable license when using the data.",
     "licenseCitation": "Citation: when using this corpus, please credit buryads.com/corpus and the specific sources listed in the attribution field of each record."
+  },
+  "mcp": {
+    "title": "MCP access",
+    "intro": "Connect AI assistants to the Buryad MCP server for Russian↔Buryad translation. Tools: translate_word (dictionary lookup) and translate_text (AI translation).",
+    "nameLabel": "Token name",
+    "namePlaceholder": "e.g. Claude Code on laptop",
+    "create": "Create token",
+    "creating": "Creating…",
+    "createdTitle": "Token “{name}” created",
+    "createdWarning": "Copy this token now. It will not be shown again.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyToken": "Copy token",
+    "dismiss": "I saved it",
+    "listTitle": "Your tokens",
+    "loading": "Loading…",
+    "empty": "You have no tokens yet.",
+    "retry": "Try again",
+    "createdAt": "Created {date}",
+    "lastUsed": "last used {date}",
+    "neverUsed": "never used",
+    "revoke": "Revoke",
+    "revokeAria": "Revoke token {name}",
+    "confirmRevoke": "Revoke token “{name}”? Clients using it will lose access.",
+    "connectTitle": "Connect a client",
+    "connectHint": "Replace <token> with your token if it is not filled in automatically.",
+    "snippetCli": "Claude Code",
+    "snippetJson": "JSON config (other clients)",
+    "errors": {
+      "limit": "Token limit reached (10). Revoke an unused token first.",
+      "create": "Could not create the token. Try again.",
+      "load": "Could not load tokens.",
+      "revoke": "Could not revoke the token."
+    }
   }
 }
