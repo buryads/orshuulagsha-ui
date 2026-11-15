@@ -60,7 +60,7 @@
       "resetLinkInvalid": "Ссылка недействительна или устарела"
     },
     "forgotPasswordLink": "Забыли пароль?",
-    "forgotPasswordTitle": "Восстановление пароля",
+    "forgotPasswordTitle": "Сброс пароля",
     "forgotPasswordSubtitle": "Введите email, и мы отправим ссылку для сброса",
     "sendResetLink": "Отправить ссылку",
     "sendingResetLink": "Отправляем...",
