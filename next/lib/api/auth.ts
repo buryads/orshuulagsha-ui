@@ -1,4 +1,4 @@
-import { apiCall } from './client';
+import { apiCall, suppress401Redirect } from './client';
 import { clearAuthToken, setAuthToken } from '@/lib/api/cookies';
 import type { DataEnvelope, TokenResponse } from '@/lib/api/types';
 
@@ -56,10 +56,7 @@ export async function resetPassword(
   );
 }
 
-/**
- * Client-side logout: drops the auth cookie. The JWT itself is not revoked
- * server-side and stays valid until it expires.
- */
+/** Client-side logout: drops the auth cookie. */
 export function logout(): void {
   clearAuthToken();
 }
@@ -69,6 +66,7 @@ export function logout(): void {
  * so all in-memory client state is reset.
  */
 export async function signOut(locale: string): Promise<void> {
+  suppress401Redirect();
   try {
     await apiCall<void>('GET', RESOURCE_LOGOUT, { timeout: 4000 });
   } catch {

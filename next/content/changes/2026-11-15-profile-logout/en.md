@@ -10,7 +10,7 @@ There is now a profile page: name, email, MCP access, password change and a Log 
 
 ## How to use
 
-Tap your avatar in the header and choose Log out. On a phone, open the menu.
+Press Log out in the header. On a phone the button is in the menu, and it is also on the profile page (the avatar in the header).
 
 ## How it works
 

@@ -17,6 +17,10 @@ const AUTH_ENDPOINT_PATTERNS = ['/api/jwt/login', '/api/jwt/signup', '/api/jwt/l
 // Module-level guard: redirect only once even if multiple requests 401 at the same time.
 let redirecting401 = false;
 
+export function suppress401Redirect(): void {
+  redirecting401 = true;
+}
+
 /** Extract the locale prefix from window.location.pathname (always-prefix mode). */
 function currentLocale(): string {
   if (typeof window === 'undefined') return DEFAULT_LOCALE;
