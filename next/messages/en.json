@@ -367,7 +367,7 @@
     "revokeAria": "Revoke token {name}",
     "confirmRevoke": "Revoke token “{name}”? Clients using it will lose access.",
     "connectTitle": "Connect a client",
-    "connectHint": "Replace <token> with your token if it is not filled in automatically.",
+    "connectHint": "Replace '<token>' with your token if it is not filled in automatically.",
     "snippetCli": "Claude Code",
     "snippetJson": "JSON config (other clients)",
     "errors": {
