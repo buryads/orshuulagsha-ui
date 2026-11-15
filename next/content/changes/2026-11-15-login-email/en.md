@@ -14,4 +14,4 @@ You don't need to do anything. If it wasn't you, follow the link in the email an
 
 ## How it works
 
-The email is sent after signing in with email and password or with Google or Apple. If you sign in again from the same device within 10 minutes, you won't get a second email.
+The email is sent after signing in with email and password. If you sign in again from the same device within 10 minutes, you won't get a second email.
