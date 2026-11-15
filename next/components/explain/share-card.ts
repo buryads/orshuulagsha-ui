@@ -7,7 +7,7 @@ export interface ShareCardData {
   moreWords: string | null;
   wordsTitle: string;
   aiLabel: string | null;
-  warning?: string | null;
+  warning: string | null;
 }
 
 const W = 1080;
