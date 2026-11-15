@@ -103,7 +103,8 @@
       "home": "Home",
       "dictionary": "Dictionary",
       "names": "Names",
-      "packs": "Flashcards"
+      "packs": "Flashcards",
+      "changes": "What's new"
     },
     "tools": {
       "keyboard": "Keyboard layouts (GitHub)",
@@ -412,5 +413,11 @@
       "no_email": "The provider did not share your email",
       "email_conflict": "An account with this email already exists; sign in with your password"
     }
+  },
+  "changes": {
+    "title": "What's new",
+    "subtitle": "Site updates for users.",
+    "aiNote": "AI translation, being checked by a native speaker",
+    "empty": "No entries yet"
   }
 }

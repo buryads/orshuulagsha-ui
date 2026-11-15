@@ -41,6 +41,7 @@ RUN addgroup --system --gid 1001 nodejs \
 
 # Standalone output trims node_modules to only what's needed.
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/content ./content
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
