@@ -107,6 +107,12 @@ function AiContent() {
             <li>
               <code>translate_text</code> — {t('toolText')}
             </li>
+            <li>
+              <code>lookup_word</code> — {t('toolLookup')}
+            </li>
+            <li>
+              <code>pronounce</code> — {t('toolPronounce')}
+            </li>
           </ul>
         </div>
 

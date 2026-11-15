@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter, Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
 import { Translator, type FromLang, type ToLang } from './translator';
@@ -34,6 +34,7 @@ import type {
 import { isNoTranslation, splitEnumerated, splitRemark } from './translation-text';
 
 const AI_ENABLED_STORAGE_KEY = 'ai-translate-enabled';
+const GUEST_HINT_DISMISSED_KEY = 'ai-guest-hint-dismissed';
 const AI_STAGE_INTERVAL_MS = 1500;
 // Debounce before an AI-translate request auto-fires while typing. Longer
 // than the dictionary's 400ms — each AI call costs money and eats into the
@@ -198,6 +199,7 @@ export function TranslatorPanel(): ReactElement {
   const [aiEnabled, setAiEnabled] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const [showSignInCta, setShowSignInCta] = useState(false);
+  const [hintDismissed, setHintDismissed] = useState(false);
   const [aiResult, setAiResult] = useState<AiTranslateResponse | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiErrorKey, setAiErrorKey] = useState<string | null>(null);
@@ -260,11 +262,27 @@ export function TranslatorPanel(): ReactElement {
   useEffect(() => {
     const isSignedIn = Boolean(getAuthToken());
     setSignedIn(isSignedIn);
-    if (!isSignedIn) return;
+    if (!isSignedIn) {
+      try {
+        setHintDismissed(localStorage.getItem(GUEST_HINT_DISMISSED_KEY) === 'true');
+      } catch {
+        // localStorage unavailable — hint stays visible
+      }
+      return;
+    }
     try {
       setAiEnabled(localStorage.getItem(AI_ENABLED_STORAGE_KEY) === 'true');
     } catch {
       // localStorage unavailable — keep default off
+    }
+  }, []);
+
+  const dismissHint = useCallback(() => {
+    setHintDismissed(true);
+    try {
+      localStorage.setItem(GUEST_HINT_DISMISSED_KEY, 'true');
+    } catch {
+      // ignore — hint is hidden for this session
     }
   }, []);
 
@@ -457,6 +475,20 @@ export function TranslatorPanel(): ReactElement {
   }, [src, from, to, pathname, router, sp]);
 
   const tAi = useTranslations('aiTranslate');
+  const locale = useLocale();
+
+  const showGuestHint =
+    !signedIn &&
+    !hintDismissed &&
+    !showSignInCta &&
+    !loading &&
+    !error &&
+    Boolean(response) &&
+    tgt.trim() !== '' &&
+    src.trim() !== '';
+  const signInHref = `/signin?next=${encodeURIComponent(
+    `/${locale}?${new URLSearchParams({ q: src, from, to }).toString()}`,
+  )}`;
 
   return (
     <>
@@ -542,6 +574,48 @@ export function TranslatorPanel(): ReactElement {
           direction={direction ?? 'ru2bur'}
           error={error}
         />
+      )}
+
+      {showGuestHint && !(aiEnabled && signedIn) && (
+        <p
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 8,
+            margin: '12px 0 0',
+            fontSize: 13,
+            color: 'var(--text-muted)',
+          }}
+        >
+          <Icon name="ai" size={14} />
+          <span>
+            {tAi('guestHint')}{' '}
+            <Link
+              href={signInHref}
+              style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}
+            >
+              {tAi('guestHintLink')}
+            </Link>
+          </span>
+          <button
+            type="button"
+            onClick={dismissHint}
+            aria-label={tAi('guestHintDismiss')}
+            style={{
+              marginLeft: 'auto',
+              border: 'none',
+              background: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              color: 'var(--text-muted)',
+              fontSize: 16,
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+        </p>
       )}
     </>
   );
