@@ -12,14 +12,14 @@ const API_BASE = (
 ).replace(/\/$/, '');
 const MCP_URL = `${API_BASE}/mcp`;
 
-const CLI_SNIPPET = `claude mcp add --transport http buryads ${MCP_URL} --header "Authorization: Bearer <token>"`;
+const CLI_SNIPPET = `claude mcp add --scope user --transport http buryads ${MCP_URL} --header "Authorization: Bearer YOUR_TOKEN"`;
 const JSON_SNIPPET = JSON.stringify(
   {
     mcpServers: {
       buryads: {
         type: 'http',
         url: MCP_URL,
-        headers: { Authorization: 'Bearer <token>' },
+        headers: { Authorization: 'Bearer YOUR_TOKEN' },
       },
     },
   },
@@ -124,6 +124,9 @@ function AiContent() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700 }}>{t('connectTitle')}</h3>
           <Snippet title={t('snippetCli')} code={CLI_SNIPPET} />
+          <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: -4 }}>
+            {t('scopeHint')}
+          </p>
           <Snippet title={t('snippetJson')} code={JSON_SNIPPET} />
         </div>
 

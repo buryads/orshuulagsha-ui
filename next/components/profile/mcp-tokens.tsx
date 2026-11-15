@@ -15,7 +15,7 @@ const API_BASE = (
 ).replace(/\/$/, '');
 const MCP_URL = `${API_BASE}/mcp`;
 const NAME_MAX = 60;
-const PLACEHOLDER = '<token>';
+const PLACEHOLDER = 'YOUR_TOKEN';
 
 function CopyButton({ text, label }: { text: string; label: string }) {
   const t = useTranslations('mcp');
@@ -156,7 +156,7 @@ export function McpTokens() {
   }
 
   const shownToken = created?.token ?? PLACEHOLDER;
-  const cliSnippet = `claude mcp add --transport http buryads ${MCP_URL} --header "Authorization: Bearer ${shownToken}"`;
+  const cliSnippet = `claude mcp add --scope user --transport http buryads ${MCP_URL} --header "Authorization: Bearer ${shownToken}"`;
   const jsonSnippet = JSON.stringify(
     {
       mcpServers: {
@@ -364,6 +364,9 @@ export function McpTokens() {
           </p>
         </div>
         <Snippet title={t('snippetCli')} code={cliSnippet} />
+        <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: -8 }}>
+          {t('scopeHint')}
+        </p>
         <Snippet title={t('snippetJson')} code={jsonSnippet} />
       </section>
     </div>

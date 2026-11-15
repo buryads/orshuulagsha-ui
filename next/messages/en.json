@@ -367,7 +367,7 @@
     "revokeAria": "Revoke token {name}",
     "confirmRevoke": "Revoke token “{name}”? Clients using it will lose access.",
     "connectTitle": "Connect a client",
-    "connectHint": "Replace '<token>' with your token if it is not filled in automatically.",
+    "connectHint": "Replace YOUR_TOKEN with your token if it is not filled in automatically.",
     "snippetCli": "Claude Code",
     "snippetJson": "JSON config (other clients)",
     "errors": {
@@ -375,7 +375,8 @@
       "create": "Could not create the token. Try again.",
       "load": "Could not load tokens.",
       "revoke": "Could not revoke the token."
-    }
+    },
+    "scopeHint": "--scope user — the server is available in all projects; without it, only in the current folder"
   },
   "ai": {
     "title": "AI",
@@ -392,6 +393,7 @@
     "connectTitle": "How to connect",
     "snippetCli": "Claude Code",
     "snippetJson": "Claude Desktop / Cursor (JSON config)",
-    "cta": "Get a token"
+    "cta": "Get a token",
+    "scopeHint": "--scope user — the server is available in all projects; without it, only in the current folder"
   }
 }
