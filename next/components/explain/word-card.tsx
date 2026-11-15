@@ -9,8 +9,8 @@ export function WordCard({ word }: { word: ExplainWord }) {
   const [expanded, setExpanded] = useState(false);
   const shown = expanded ? word.readings : word.readings.slice(0, 1);
 
-  const tag = (code: string, i: number, labels: string[]) =>
-    t.has(`tags.${code}`) ? t(`tags.${code}`) : (labels[i] ?? code);
+  const tag = (code: string) =>
+    t.has(`tags.${code}`) ? t(`tags.${code}`) : code;
 
   return (
     <div
@@ -32,7 +32,7 @@ export function WordCard({ word }: { word: ExplainWord }) {
               <b>{r.lemma}</b>
               <span style={{ color: 'var(--text-muted)' }}>
                 {' — '}
-                {r.tags.map((c, i) => tag(c, i, r.labels)).join(', ')}
+                {r.tags.map(tag).join(', ')}
               </span>
             </li>
           ))}
