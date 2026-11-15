@@ -4,6 +4,7 @@ import type { DataEnvelope, TokenResponse } from '@/lib/api/types';
 
 const RESOURCE_LOGIN = '/api/jwt/login';
 const RESOURCE_REGISTER = '/api/jwt/signup';
+const RESOURCE_PASSWORD_RESET = '/api/password/reset';
 
 async function persistToken(token: TokenResponse): Promise<void> {
   setAuthToken(token.token, token.expires_at);
@@ -29,6 +30,29 @@ export async function register(
     { data: { name, email, password } },
   );
   await persistToken(body.data);
+}
+
+export async function requestPasswordReset(
+  email: string,
+  locale: string,
+): Promise<void> {
+  await apiCall<void>('POST', RESOURCE_PASSWORD_RESET, {
+    data: { email, locale },
+  });
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+  passwordConfirmation: string,
+): Promise<void> {
+  await apiCall<void>(
+    'POST',
+    `${RESOURCE_PASSWORD_RESET}/${encodeURIComponent(token)}`,
+    {
+      data: { password, password_confirmation: passwordConfirmation },
+    },
+  );
 }
 
 /**

@@ -53,8 +53,27 @@
       "registerEmailTaken": "Не удалось создать аккаунт. Возможно, email уже занят",
       "registerConflict": "Аккаунт с таким email уже существует",
       "registerFailed": "Не удалось зарегистрироваться. Попробуйте позже",
-      "generic": "Произошла ошибка. Попробуйте позже"
-    }
+      "generic": "Произошла ошибка. Попробуйте позже",
+      "confirmRequired": "Повторите пароль",
+      "passwordMismatch": "Пароли не совпадают",
+      "tooManyAttempts": "Слишком много попыток. Попробуйте позже",
+      "resetLinkInvalid": "Ссылка недействительна или устарела"
+    },
+    "forgotPasswordLink": "Забыли пароль?",
+    "forgotPasswordTitle": "Восстановление пароля",
+    "forgotPasswordSubtitle": "Введите email, и мы отправим ссылку для сброса",
+    "sendResetLink": "Отправить ссылку",
+    "sendingResetLink": "Отправляем...",
+    "resetLinkSent": "Если аккаунт с таким email существует, мы отправили на него ссылку. Она действует 60 минут.",
+    "backToSignIn": "Вернуться ко входу",
+    "resetPasswordTitle": "Новый пароль",
+    "resetPasswordSubtitle": "Придумайте новый пароль для входа",
+    "newPassword": "Новый пароль",
+    "confirmPassword": "Повторите пароль",
+    "savePassword": "Сохранить пароль",
+    "savingPassword": "Сохраняем...",
+    "passwordResetSuccess": "Пароль изменён. Войдите с новым паролем.",
+    "requestNewLink": "Запросить новую ссылку"
   },
   "home": {
     "hero": {

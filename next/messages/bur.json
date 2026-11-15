@@ -53,8 +53,27 @@
       "registerEmailTaken": "Аккаунт нээгдээгүй. Энэ email хэрэглээтэй байжа болохо",
       "registerConflict": "Энэ email-тэй аккаунт хэдыжэ байна",
       "registerFailed": "Бүртгүүлхэ боломжогүй. Дараа дахин оролдогты",
-      "generic": "Алдаа гараа. Дараа дахин оролдогты"
-    }
+      "generic": "Алдаа гараа. Дараа дахин оролдогты",
+      "confirmRequired": "Нюуса үгэ дахин бэшэгты",
+      "passwordMismatch": "Нюуса үгэнүүд тааранагүй",
+      "tooManyAttempts": "Хэтэ олон оролдолго. Һүүлдэ оролдожо үзэгты",
+      "resetLinkInvalid": "Холбоос хүсэтэй бэшэ, али хугасаа үнгэрөө"
+    },
+    "forgotPasswordLink": "Нюуса үгэеэ мартаа гүт?",
+    "forgotPasswordTitle": "Нюуса үгэ сэргээхэ",
+    "forgotPasswordSubtitle": "Email-ээ бэшээд, шэнэ нюуса үгэ табиха холбоос хүлээн абаарай",
+    "sendResetLink": "Холбоос эльгээхэ",
+    "sendingResetLink": "Эльгээжэ байнабди...",
+    "resetLinkSent": "Хэрбээ энэ email-тэй аккаунт байгаа бол, бидэ холбоос эльгээгээбди. Тэрэ 60 минутын туршада хүсэтэй.",
+    "backToSignIn": "Орохо хуудаһан руу бусаха",
+    "resetPasswordTitle": "Шэнэ нюуса үгэ",
+    "resetPasswordSubtitle": "Орохын тулада шэнэ нюуса үгэ зохёогты",
+    "newPassword": "Шэнэ нюуса үгэ",
+    "confirmPassword": "Нюуса үгэ дахин бэшэгты",
+    "savePassword": "Нюуса үгэ хадгалха",
+    "savingPassword": "Хадгалжа байнабди...",
+    "passwordResetSuccess": "Нюуса үгэ һэлгэгдэбэ. Шэнэ нюуса үгөөрөө ороорой.",
+    "requestNewLink": "Шэнэ холбоос эрихэ"
   },
   "home": {
     "hero": {

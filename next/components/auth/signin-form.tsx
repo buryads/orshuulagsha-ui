@@ -28,6 +28,7 @@ export function SigninForm() {
   const t = useTranslations('auth');
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next');
+  const justReset = searchParams.get('reset') === '1';
   // Match the legacy Nuxt flow: when the user came from a guarded page we
   // honour `?next=`, otherwise drop them on /packs (their personal space).
   const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
@@ -143,6 +144,22 @@ export function SigninForm() {
         </p>
       </div>
 
+      {justReset ? (
+        <div
+          role="status"
+          style={{
+            padding: '10px 12px',
+            borderRadius: 'var(--r-md)',
+            background: 'var(--accent-green-soft)',
+            color: 'var(--accent-green)',
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+        >
+          {t('passwordResetSuccess')}
+        </div>
+      ) : null}
+
       <form
         noValidate
         onSubmit={handleSubmit}
@@ -184,6 +201,15 @@ export function SigninForm() {
             </button>
           }
         />
+
+        <div style={{ textAlign: 'right', marginTop: -8 }}>
+          <Link
+            href="/forgot-password"
+            style={{ color: 'var(--primary)', fontSize: 13, fontWeight: 600 }}
+          >
+            {t('forgotPasswordLink')}
+          </Link>
+        </div>
 
         {submitError ? (
           <div

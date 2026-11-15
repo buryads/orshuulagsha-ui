@@ -53,8 +53,27 @@
       "registerEmailTaken": "Failed to create account. Email may already be taken",
       "registerConflict": "An account with this email already exists",
       "registerFailed": "Failed to register. Try again later",
-      "generic": "Something went wrong. Try again later"
-    }
+      "generic": "Something went wrong. Try again later",
+      "confirmRequired": "Repeat the password",
+      "passwordMismatch": "Passwords do not match",
+      "tooManyAttempts": "Too many attempts. Try again later",
+      "resetLinkInvalid": "The link is invalid or has expired"
+    },
+    "forgotPasswordLink": "Forgot password?",
+    "forgotPasswordTitle": "Password recovery",
+    "forgotPasswordSubtitle": "Enter your email and we'll send a reset link",
+    "sendResetLink": "Send link",
+    "sendingResetLink": "Sending...",
+    "resetLinkSent": "If an account with this email exists, we've sent a link. It is valid for 60 minutes.",
+    "backToSignIn": "Back to sign in",
+    "resetPasswordTitle": "New password",
+    "resetPasswordSubtitle": "Choose a new password to sign in",
+    "newPassword": "New password",
+    "confirmPassword": "Repeat password",
+    "savePassword": "Save password",
+    "savingPassword": "Saving...",
+    "passwordResetSuccess": "Password changed. Sign in with your new password.",
+    "requestNewLink": "Request a new link"
   },
   "home": {
     "hero": {
