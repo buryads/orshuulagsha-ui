@@ -14,6 +14,7 @@ import { Link } from '@/i18n/navigation';
 
 import { AuthCard } from './auth-card';
 import { AuthInput } from './auth-input';
+import { OAuthButtons } from './oauth-buttons';
 
 interface FieldErrors {
   email?: string;
@@ -223,6 +224,8 @@ export function SigninForm() {
 
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </form>
+
+      <OAuthButtons />
 
       <div
         style={{

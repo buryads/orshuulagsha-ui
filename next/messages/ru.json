@@ -394,5 +394,17 @@
     "snippetJson": "Claude Desktop / Cursor (JSON-конфиг)",
     "cta": "Получить токен",
     "scopeHint": "--scope user — сервер доступен во всех проектах; без него — только в текущей папке"
+  },
+  "oauth": {
+    "google": "Войти через Google",
+    "apple": "Войти через Apple",
+    "or": "или",
+    "signingIn": "Входим...",
+    "errors": {
+      "cancelled": "Вход отменён",
+      "failed": "Не удалось войти. Попробуйте ещё раз",
+      "no_email": "Провайдер не передал ваш email",
+      "email_conflict": "Аккаунт с таким email уже существует. Войдите с паролем"
+    }
   }
 }

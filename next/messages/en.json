@@ -395,5 +395,17 @@
     "snippetJson": "Claude Desktop / Cursor (JSON config)",
     "cta": "Get a token",
     "scopeHint": "--scope user — the server is available in all projects; without it, only in the current folder"
+  },
+  "oauth": {
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "or": "or",
+    "signingIn": "Signing in...",
+    "errors": {
+      "cancelled": "Sign-in was cancelled",
+      "failed": "Could not sign in, please try again",
+      "no_email": "The provider did not share your email",
+      "email_conflict": "An account with this email already exists; sign in with your password"
+    }
   }
 }
