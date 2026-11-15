@@ -11,7 +11,7 @@ import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus';
+  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai';
   href: string;
 };
 
@@ -22,6 +22,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { id: 'corpus', href: '/corpus' },
   { id: 'packs', href: '/packs' },
   { id: 'quiz', href: '/quiz' },
+  { id: 'ai', href: '/ai' },
 ];
 
 function isActive(pathname: string, href: string): boolean {

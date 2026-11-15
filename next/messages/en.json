@@ -10,7 +10,8 @@
     "notifications": "Notifications",
     "menu": "Navigation",
     "corpus": "Corpus",
-    "mcp": "MCP access"
+    "mcp": "MCP access",
+    "ai": "AI"
   },
   "auth": {
     "signIn": "Sign in to your account",
@@ -375,5 +376,22 @@
       "load": "Could not load tokens.",
       "revoke": "Could not revoke the token."
     }
+  },
+  "ai": {
+    "title": "AI",
+    "subtitle": "Tools for working with the Buryat language through AI agents.",
+    "mcpTitle": "MCP server for AI agents",
+    "mcpWhat": "MCP is a way to connect an AI assistant (Claude, Cursor, etc.) to external tools. Through our MCP server the assistant translates ru↔bur using the buryads dictionary and AI.",
+    "toolsTitle": "Tools",
+    "toolWord": "dictionary lookup (ru2bur / bur2ru)",
+    "toolText": "AI text translation",
+    "limitsTitle": "Limits",
+    "limitWords": "30 words per minute",
+    "limitTexts": "20 texts per hour (AI translation also counts toward the daily AI limit)",
+    "limitTokens": "At most 10 tokens per user",
+    "connectTitle": "How to connect",
+    "snippetCli": "Claude Code",
+    "snippetJson": "Claude Desktop / Cursor (JSON config)",
+    "cta": "Get a token"
   }
 }
