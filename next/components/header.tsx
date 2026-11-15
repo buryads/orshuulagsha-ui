@@ -11,8 +11,9 @@ import { getAuthToken } from '@/lib/api/cookies';
 import * as user from '@/lib/api/user';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai';
+  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai' | 'explain';
   href: string;
+  authOnly?: boolean;
 };
 
 const NAV_ITEMS: readonly NavItem[] = [
@@ -23,6 +24,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { id: 'packs', href: '/packs' },
   { id: 'quiz', href: '/quiz' },
   { id: 'ai', href: '/ai' },
+  { id: 'explain', href: '/explain', authOnly: true },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -71,6 +73,8 @@ export function Header() {
       });
   }, []);
 
+  const navItems = NAV_ITEMS.filter((item) => !item.authOnly || signedIn);
+
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
   return (
@@ -102,7 +106,7 @@ export function Header() {
           className="nav-desktop"
           style={{ display: 'flex', gap: 2, marginLeft: 8 }}
         >
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = isActive(pathname, item.href);
             return (
               <Link
@@ -251,7 +255,7 @@ export function Header() {
             gap: 4,
           }}
         >
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = isActive(pathname, item.href);
             return (
               <Link

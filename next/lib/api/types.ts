@@ -272,6 +272,37 @@ export interface AiTranslateResponse {
   remaining_today: number;
 }
 
+export type ExplainFrom = 'bur' | 'ru' | 'en';
+
+export interface ExplainReading {
+  analysis: string;
+  lemma: string;
+  tags: string[];
+  labels: string[];
+}
+
+export interface ExplainWord {
+  surface: string;
+  known: boolean | null;
+  check: boolean;
+  readings: ExplainReading[];
+  more: number;
+  meanings: string[];
+}
+
+export interface ExplainResponse {
+  from: ExplainFrom;
+  phrase: string | null;
+  words: ExplainWord[];
+  morph_status: 'ok' | 'unavailable';
+  explanation: string | null;
+  ai_status: 'ok' | 'limit' | 'unavailable';
+  omitted: number;
+  ai: boolean;
+  beta: boolean;
+  source: string;
+}
+
 // --- MCP tokens ---
 
 export interface McpToken {
