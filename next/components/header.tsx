@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { Link, usePathname } from '@/i18n/navigation';
 import { Logo } from '@/components/brand/logo';
 import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
+import { signOut } from '@/lib/api/auth';
 import * as user from '@/lib/api/user';
 
 type NavItem = {
@@ -35,6 +36,8 @@ function isActive(pathname: string, href: string): boolean {
 export function Header() {
   const t = useTranslations('nav');
   const tAuth = useTranslations('auth');
+  const tAccount = useTranslations('account');
+  const locale = useLocale();
   const pathname = usePathname() ?? '/';
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -196,6 +199,17 @@ export function Header() {
             </button>
           )}
 
+          {signedIn && (
+            <button
+              type="button"
+              className="btn btn-secondary hide-md"
+              onClick={() => signOut(locale)}
+              style={{ padding: '8px 14px', fontSize: 13 }}
+            >
+              {tAuth('logout')}
+            </button>
+          )}
+
           {signedIn ? (
             <Link
               href="/profile"
@@ -292,12 +306,31 @@ export function Header() {
             <LocaleSwitcher />
             {signedIn && (
               <Link
+                href="/profile"
+                className="btn btn-secondary"
+                style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
+              >
+                {tAccount('title')}
+              </Link>
+            )}
+            {signedIn && (
+              <Link
                 href="/profile/mcp"
                 className="btn btn-secondary"
                 style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
               >
                 {t('mcp')}
               </Link>
+            )}
+            {signedIn && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => signOut(locale)}
+                style={{ padding: '8px 14px', fontSize: 14, marginLeft: 'auto' }}
+              >
+                {tAuth('logout')}
+              </button>
             )}
             {!signedIn && (
               <Link

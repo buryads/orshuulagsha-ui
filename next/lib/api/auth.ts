@@ -3,6 +3,7 @@ import { clearAuthToken, setAuthToken } from '@/lib/api/cookies';
 import type { DataEnvelope, TokenResponse } from '@/lib/api/types';
 
 const RESOURCE_LOGIN = '/api/jwt/login';
+const RESOURCE_LOGOUT = '/api/jwt/logout';
 const RESOURCE_REGISTER = '/api/jwt/signup';
 const RESOURCE_PASSWORD_RESET = '/api/password/reset';
 
@@ -56,9 +57,28 @@ export async function resetPassword(
 }
 
 /**
- * Client-side logout: drops the auth cookie. The backend has no JWT
- * invalidation endpoint in the legacy client either.
+ * Client-side logout: drops the auth cookie. The JWT itself is not revoked
+ * server-side and stays valid until it expires.
  */
 export function logout(): void {
   clearAuthToken();
+}
+
+/**
+ * Best-effort backend session logout, then drop the cookie and hard-navigate
+ * so all in-memory client state is reset.
+ */
+export async function signOut(locale: string): Promise<void> {
+  try {
+    await apiCall<void>('GET', RESOURCE_LOGOUT, { timeout: 4000 });
+  } catch {
+    // the cookie is dropped regardless
+  }
+  logout();
+  try {
+    localStorage.removeItem('user');
+  } catch {
+    // storage unavailable
+  }
+  window.location.replace(`/${locale}`);
 }

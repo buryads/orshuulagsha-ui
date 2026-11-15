@@ -12,7 +12,7 @@ const DEFAULT_LOCALE = 'ru';
 
 // Auth endpoints that must NOT trigger the global 401 handler — their callers
 // need to receive the error directly (e.g. to show a "wrong password" message).
-const AUTH_ENDPOINT_PATTERNS = ['/api/jwt/login', '/api/jwt/signup'];
+const AUTH_ENDPOINT_PATTERNS = ['/api/jwt/login', '/api/jwt/signup', '/api/jwt/logout'];
 
 // Module-level guard: redirect only once even if multiple requests 401 at the same time.
 let redirecting401 = false;

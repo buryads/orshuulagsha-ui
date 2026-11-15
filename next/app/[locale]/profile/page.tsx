@@ -1,12 +1,22 @@
-import { redirect } from '@/i18n/navigation';
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ProfileAccount } from '@/components/profile/profile-account';
 
 interface ProfilePageProps {
   params: { locale: string };
 }
 
-// Profile UI is unfinished — bounce to /packs which is the actual landing
-// page after sign-in. Restore the real profile when ProfileCover/Stats/Tabs
-// are wired to backend data.
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
+  const t = await getTranslations({
+    locale: params.locale,
+    namespace: 'account',
+  });
+  return { title: t('title'), robots: { index: false } };
+}
+
 export default function ProfilePage({ params }: ProfilePageProps) {
-  redirect({ href: '/packs', locale: params.locale });
+  setRequestLocale(params.locale);
+  return <ProfileAccount />;
 }

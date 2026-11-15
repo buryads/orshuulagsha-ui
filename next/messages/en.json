@@ -367,6 +367,17 @@
     "licenseDisclaimer": "The corpus includes sources with different terms of use. Some data may be under restricted licenses (including © materials). Each record specifies a license — please respect the applicable license when using the data.",
     "licenseCitation": "Citation: when using this corpus, please credit buryads.com/corpus and the specific sources listed in the attribution field of each record."
   },
+  "account": {
+    "title": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "mcpTitle": "MCP access",
+    "mcpHint": "Tokens to connect AI assistants",
+    "changePassword": "Change password",
+    "changePasswordHint": "We will email you a reset link",
+    "logout": "Log out",
+    "logoutHint": "Sign out of your account on this device"
+  },
   "mcp": {
     "title": "MCP access",
     "intro": "Connect AI assistants to the Buryad MCP server for Russian↔Buryad translation. Tools: translate_word (dictionary lookup), translate_text (AI translation), lookup_word (word card) and pronounce (pronunciation audio).",
