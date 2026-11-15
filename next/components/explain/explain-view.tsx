@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useLocale, useTranslations } from 'next-intl';
 import { explainText } from '@/lib/api/explain';
 import type { ExplainFrom, ExplainResponse } from '@/lib/api/types';
+import { ShareBar } from './share-bar';
 import { WordCard } from './word-card';
 
 const MAX_LEN = 300;
@@ -22,6 +23,7 @@ export function ExplainView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ExplainResponse | null>(null);
+  const [submitted, setSubmitted] = useState('');
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ export function ExplainView() {
     setError(null);
     try {
       setResult(await explainText(value, from, locale));
+      setSubmitted(value);
     } catch (err) {
       setResult(null);
       setError(
@@ -106,6 +109,7 @@ export function ExplainView() {
       )}
 
       {result && <ExplainResult result={result} />}
+      {result && <ShareBar result={result} source={submitted} />}
     </div>
   );
 }
