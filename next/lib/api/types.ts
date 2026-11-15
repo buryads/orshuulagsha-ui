@@ -296,6 +296,8 @@ export interface ExplainResponse {
   words: ExplainWord[];
   morph_status: 'ok' | 'unavailable';
   explanation: string | null;
+  explanation_meaning?: string | null;
+  explanation_points?: string[];
   ai_status: 'ok' | 'limit' | 'unavailable';
   omitted: number;
   ai: boolean;

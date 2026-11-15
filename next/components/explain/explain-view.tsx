@@ -156,8 +156,21 @@ function ExplainResult({ result }: { result: ExplainResponse }) {
         </div>
         {result.ai_status === 'limit' && <p style={{ fontSize: 14 }}>{t('aiLimit')}</p>}
         {result.ai_status === 'unavailable' && <p style={{ fontSize: 14 }}>{t('aiUnavailable')}</p>}
-        {result.ai_status === 'ok' && result.explanation && (
-          <p style={{ fontSize: 15, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{result.explanation}</p>
+        {result.ai_status === 'ok' && (result.explanation_meaning ?? result.explanation) && (
+          <>
+            <p style={{ fontSize: 16, fontWeight: 600, overflowWrap: 'anywhere' }}>
+              {result.explanation_meaning ?? result.explanation}
+            </p>
+            {!!result.explanation_points?.length && (
+              <ul style={{ margin: 0, paddingLeft: 20, listStyle: 'disc', display: 'flex', flexDirection: 'column', gap: 6, fontSize: 15 }}>
+                {result.explanation_points.map((point, i) => (
+                  <li key={i} style={{ overflowWrap: 'anywhere' }}>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </section>
 
