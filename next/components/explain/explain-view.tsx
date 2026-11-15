@@ -120,6 +120,12 @@ function ExplainResult({ result }: { result: ExplainResponse }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {aiBuilt && result.reliability === 'low' && (
+        <div role="alert" className="card" style={{ padding: 14, fontSize: 15, fontWeight: 600, color: 'var(--tertiary-700)', borderColor: 'var(--tertiary)', background: 'var(--tertiary-soft)' }}>
+          {t('lowReliability')}
+        </div>
+      )}
+
       {aiBuilt && (
         <section className="card" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>

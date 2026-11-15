@@ -299,6 +299,7 @@ export interface ExplainResponse {
   explanation_meaning?: string | null;
   explanation_points?: string[];
   ai_status: 'ok' | 'limit' | 'unavailable';
+  reliability?: 'ok' | 'low';
   omitted: number;
   ai: boolean;
   beta: boolean;

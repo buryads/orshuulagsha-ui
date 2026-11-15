@@ -469,6 +469,7 @@
     "loading": "Analysing…",
     "phrase": "Buryat phrase",
     "phraseNote": "Built by AI (beta), may contain mistakes",
+    "lowReliability": "Unreliable phrase: the analyzer did not confirm some of the words. Do not use it without checking.",
     "aiBeta": "AI, beta",
     "words": "Words",
     "check": "check",

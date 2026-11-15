@@ -7,6 +7,7 @@ export interface ShareCardData {
   moreWords: string | null;
   wordsTitle: string;
   aiLabel: string | null;
+  warning?: string | null;
 }
 
 const W = 1080;
@@ -24,6 +25,7 @@ const C = {
   primary50: '#E5F0F9',
   primary700: '#004B85',
   primary900: '#002E54',
+  warning: '#B82F2F',
 };
 
 export const shareCardLimits = { words: MAX_WORDS, points: MAX_POINTS };
@@ -98,6 +100,7 @@ function paint(ctx: CanvasRenderingContext2D, d: ShareCardData, family: string, 
   }
   y += d.aiLabel ? 80 : 0;
 
+  if (d.warning) block(d.warning, 700, 32, C.warning, 4, 24);
   if (d.source) block(d.source, 500, 34, C.muted, 3, 20);
   block(d.phrase, 800, 62, C.primary900, 6, 28);
   if (d.meaning) block(d.meaning, 600, 38, C.text, 4, 36);

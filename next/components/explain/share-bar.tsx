@@ -39,6 +39,7 @@ export function ShareBar({ result, source }: { result: ExplainResponse; source: 
       moreWords: hidden > 0 ? t('more', { n: hidden }) : null,
       wordsTitle: t('words'),
       aiLabel: r.ai_status === 'ok' || r.from !== 'bur' ? t('aiBeta') : null,
+      warning: r.reliability === 'low' ? t('lowReliability') : null,
     };
     setFile(null);
     setFailed(false);
