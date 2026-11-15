@@ -10,6 +10,7 @@ import * as user from '@/lib/api/user';
 import { Logo } from '@/components/brand/logo';
 import { Soyombo } from '@/components/ui/soyombo';
 import { Icon } from '@/components/ui/icon';
+import { isSafeNext } from '@/lib/api/oauth';
 import { Link } from '@/i18n/navigation';
 
 import { AuthCard } from './auth-card';
@@ -24,15 +25,15 @@ interface FieldErrors {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function isSafeNext(next: string | null): next is string {
-  return Boolean(next) && next!.startsWith('/') && !next!.startsWith('//');
-}
-
 export function SignupForm() {
   const t = useTranslations('auth');
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next');
   const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
+
+  const otherHref = isSafeNext(nextRaw)
+    ? `/signin?next=${encodeURIComponent(nextRaw)}`
+    : '/signin';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -247,7 +248,7 @@ export function SignupForm() {
       >
         {t('haveAccount')}{' '}
         <Link
-          href="/signin"
+          href={otherHref}
           style={{ color: 'var(--primary)', fontWeight: 600 }}
         >
           {t('signInLink')}

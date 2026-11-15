@@ -203,6 +203,24 @@ export interface TranslationLog {
   user_agent: string;
 }
 
+export type TranslationSuggestionStatus = 'pending' | 'approved' | 'rejected';
+
+export interface TranslationSuggestion {
+  id: number;
+  direction: TranslationType;
+  word: string;
+  translation: string;
+  note: string | null;
+  status: TranslationSuggestionStatus;
+  created_at: string;
+}
+
+export interface Paginated<T> {
+  data: T[];
+  current_page: number;
+  last_page: number;
+}
+
 export interface TranslationLogParams {
   limit?: number;
   offset?: number;

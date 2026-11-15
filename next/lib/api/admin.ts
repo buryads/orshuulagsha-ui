@@ -3,6 +3,9 @@ import type {
   TranslationLanguage,
   TranslationLog,
   TranslationLogParams,
+  Paginated,
+  TranslationSuggestion,
+  TranslationSuggestionStatus,
   TranslationType,
   Word,
 } from '@/lib/api/types';
@@ -42,6 +45,28 @@ export async function getTranslationsCount(
     { params: { method } },
   );
   return body.count;
+}
+
+export async function getTranslationSuggestions(
+  status: TranslationSuggestionStatus,
+  page: number,
+): Promise<Paginated<TranslationSuggestion>> {
+  return apiCall<Paginated<TranslationSuggestion>>(
+    'GET',
+    `${RESOURCE}/translation-suggestions`,
+    { params: { status, page } },
+  );
+}
+
+export async function setTranslationSuggestionStatus(
+  id: number,
+  status: 'approved' | 'rejected',
+): Promise<TranslationSuggestion> {
+  return apiCall<TranslationSuggestion>(
+    'PUT',
+    `${RESOURCE}/translation-suggestions/${id}/status`,
+    { data: { status } },
+  );
 }
 
 /**

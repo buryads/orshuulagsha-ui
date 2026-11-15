@@ -10,6 +10,7 @@ import * as user from '@/lib/api/user';
 import { Logo } from '@/components/brand/logo';
 import { Soyombo } from '@/components/ui/soyombo';
 import { Icon } from '@/components/ui/icon';
+import { isSafeNext } from '@/lib/api/oauth';
 import { Link } from '@/i18n/navigation';
 
 import { AuthCard } from './auth-card';
@@ -23,10 +24,6 @@ interface FieldErrors {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function isSafeNext(next: string | null): next is string {
-  return Boolean(next) && next!.startsWith('/') && !next!.startsWith('//');
-}
-
 export function SigninForm() {
   const t = useTranslations('auth');
   const searchParams = useSearchParams();
@@ -34,6 +31,10 @@ export function SigninForm() {
   // Match the legacy Nuxt flow: when the user came from a guarded page we
   // honour `?next=`, otherwise drop them on /packs (their personal space).
   const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
+
+  const otherHref = isSafeNext(nextRaw)
+    ? `/signup?next=${encodeURIComponent(nextRaw)}`
+    : '/signup';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -237,7 +238,7 @@ export function SigninForm() {
       >
         {t('noAccount')}{' '}
         <Link
-          href="/signup"
+          href={otherHref}
           style={{ color: 'var(--primary)', fontWeight: 600 }}
         >
           {t('createAccountLink')}

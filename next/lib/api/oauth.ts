@@ -6,12 +6,14 @@ export type OAuthProvider = 'google' | 'apple';
 
 const PENDING_KEY = 'oauth_pending';
 
+const SAFE_ORIGIN = 'http://safe-next.invalid';
+
 export function isSafeNext(next: string | null): next is string {
   if (!next || !next.startsWith('/') || /[\\\u0000-\u001f]/.test(next)) {
     return false;
   }
   try {
-    return new URL(next, window.location.origin).origin === window.location.origin;
+    return new URL(next, SAFE_ORIGIN).origin === SAFE_ORIGIN;
   } catch {
     return false;
   }

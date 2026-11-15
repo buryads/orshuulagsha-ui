@@ -27,6 +27,27 @@ const JSON_SNIPPET = JSON.stringify(
   2,
 );
 
+const TOOLS = [
+  'translate_word',
+  'translate_text',
+  'lookup_word',
+  'pronounce',
+  'corpus_examples',
+  'list_packs',
+  'get_pack',
+  'quiz',
+  'word_of_the_day',
+  'my_history',
+  'favorites_list',
+  'favorites_add',
+  'favorites_remove',
+  'create_pack',
+  'check_text',
+  'review_due',
+  'review_grade',
+  'suggest_translation',
+] as const;
+
 function Snippet({ title, code }: { title: string; code: string }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -101,18 +122,11 @@ function AiContent() {
             {t('toolsTitle')}
           </h3>
           <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14 }}>
-            <li>
-              <code>translate_word</code> — {t('toolWord')}
-            </li>
-            <li>
-              <code>translate_text</code> — {t('toolText')}
-            </li>
-            <li>
-              <code>lookup_word</code> — {t('toolLookup')}
-            </li>
-            <li>
-              <code>pronounce</code> — {t('toolPronounce')}
-            </li>
+            {TOOLS.map((name) => (
+              <li key={name}>
+                <code>{name}</code> — {t(`tools.${name}`)}
+              </li>
+            ))}
           </ul>
         </div>
 

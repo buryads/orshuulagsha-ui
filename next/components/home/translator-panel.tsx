@@ -286,6 +286,14 @@ export function TranslatorPanel(): ReactElement {
     }
   }, []);
 
+  const rememberAiIntent = useCallback(() => {
+    try {
+      localStorage.setItem(AI_ENABLED_STORAGE_KEY, 'true');
+    } catch {
+      // ignore — toggle can be enabled manually after sign-in
+    }
+  }, []);
+
   const handleToggleAi = useCallback(() => {
     if (!signedIn) {
       setShowSignInCta(true);
@@ -524,6 +532,7 @@ export function TranslatorPanel(): ReactElement {
             {tAi('signInCta')}{' '}
             <Link
               href="/signin"
+              onClick={rememberAiIntent}
               style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}
             >
               →
@@ -593,6 +602,7 @@ export function TranslatorPanel(): ReactElement {
             {tAi('guestHint')}{' '}
             <Link
               href={signInHref}
+              onClick={rememberAiIntent}
               style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}
             >
               {tAi('guestHintLink')}
