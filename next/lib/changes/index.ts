@@ -12,6 +12,7 @@ export type ChangeEntry = {
 };
 
 function parse(raw: string): { meta: Record<string, string>; body: string } {
+  raw = raw.replace(/\r\n/g, '\n');
   const m = /^---\n([\s\S]*?)\n---\n?([\s\S]*)$/.exec(raw);
   if (!m) return { meta: {}, body: raw };
   const meta: Record<string, string> = {};
