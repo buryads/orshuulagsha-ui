@@ -20,4 +20,4 @@ The assistant (Claude and others) can now run a review of words from your packs 
 
 ## How it works
 
-Based on your rating, the system decides when to show the word again. The harder the word, the sooner it returns.
+Based on your rating, the system decides when to show the word again. The harder the word, the sooner it returns. The assistant can be wrong, so double-check anything important.
