@@ -69,6 +69,7 @@ export interface Recording {
   text: string | null;
   source: 'tts' | 'user';
   updated_at: string;
+  text_key?: string | null;
 }
 
 export interface VocabItem {
@@ -91,6 +92,7 @@ export interface StudioExercise {
   payload: Record<string, unknown>;
   position: number;
   recording: Recording | null;
+  text_key?: string | null;
 }
 
 export interface LineRecording {

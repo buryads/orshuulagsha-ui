@@ -754,6 +754,9 @@
       "voicing": "Озвучка",
       "voicingHint": "V — начать озвучку, ↑/↓ — выбрать реплику, R — запись, Enter — сохранить",
       "nothingToVoice": "Нет реплик и аудио-упражнений.",
+      "alreadyRecorded": "Уже записано",
+      "usedTimes": "Используется {count} раз",
+      "voiceProgress": "Озвучено {done} из {total}",
       "reviewNote": "Заметка для проверки"
     },
     "exercise": {

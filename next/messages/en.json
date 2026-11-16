@@ -756,6 +756,9 @@
       "voicing": "Voicing",
       "voicingHint": "V to start voicing, Up/Down to pick a line, R to record, Enter to save",
       "nothingToVoice": "No lines or listening exercises.",
+      "alreadyRecorded": "Already recorded",
+      "usedTimes": "Used {count} times",
+      "voiceProgress": "Voiced {done} of {total}",
       "reviewNote": "Note for the reviewer"
     },
     "exercise": {

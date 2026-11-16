@@ -20,6 +20,7 @@ import {
 } from '@/lib/api/studio';
 import { neighbourId } from '@/lib/studio/board';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
+import { buildVoiceList, nextUnrecorded, voiceProgress, type VoiceItem } from '@/lib/studio/voice';
 import { ExerciseCard, type ExerciseItem } from './exercise-card';
 import { Field } from './field';
 import { PairList, StringList } from './list-editors';
@@ -28,15 +29,6 @@ import { LAST_LESSON_KEY } from './studio-board';
 import { isForbidden } from './use-studio-access';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
-
-interface VoiceItem {
-  key: string;
-  kind: 'line' | 'exercise';
-  ownerId: number;
-  lineKey?: string;
-  text: string;
-  recording: Recording | null;
-}
 
 function Section({ title, children, testId }: { title: string; children: ReactNode; testId?: string }): ReactElement {
   return (
@@ -227,27 +219,18 @@ export function LessonEditor({ id }: { id: number }): ReactElement {
     }
   }, [flushAll, id, router, t]);
 
-  const voice = useMemo<VoiceItem[]>(() => {
-    if (!lesson) return [];
-    const lines: VoiceItem[] = lesson.line_recordings.map((r) => ({
-      key: `l:${r.line_key}`,
-      kind: 'line',
-      ownerId: lesson.id,
-      lineKey: r.line_key,
-      text: r.line,
-      recording: r.recording,
-    }));
-    const exs: VoiceItem[] = items
-      .filter((it) => it.type === 'listen-pick' && it.ex)
-      .map((it) => ({
-        key: `e:${it.ex!.id}`,
-        kind: 'exercise',
-        ownerId: it.ex!.id,
-        text: String(it.ex!.payload.audio_text ?? ''),
-        recording: it.ex!.recording,
-      }));
-    return [...lines, ...exs];
-  }, [lesson, items]);
+  const voice = useMemo<VoiceItem[]>(
+    () =>
+      lesson
+        ? buildVoiceList(
+            lesson.id,
+            lesson.line_recordings,
+            items.flatMap((it) => (it.ex ? [it.ex] : [])),
+          )
+        : [],
+    [lesson, items],
+  );
+  const progress = useMemo(() => voiceProgress(voice), [voice]);
   const activeKeyRef = useRef<string | null>(null);
   activeKeyRef.current = activeKey;
   const voiceRef = useRef(voice);
@@ -259,44 +242,37 @@ export function LessonEditor({ id }: { id: number }): ReactElement {
       .catch(() => undefined);
   }, [id, mergeServer]);
 
-  const advance = useCallback((fromKey: string) => {
-    const list = voiceRef.current;
-    const idx = list.findIndex((v) => v.key === fromKey);
-    const next = list.slice(idx + 1).find((v) => !v.recording) ?? list[idx + 1];
-    setActiveKey(next ? next.key : fromKey);
+  const advance = useCallback((fromKey: string, rec: Recording) => {
+    const list = voiceRef.current.map((x) => (x.key === fromKey ? { ...x, recording: rec } : x));
+    setActiveKey(nextUnrecorded(list, fromKey)?.key ?? fromKey);
   }, []);
 
+  const applyVoice = (v: VoiceItem, key: string | null, rec: Recording | null) => {
+    setLesson((l) =>
+      l && key !== null
+        ? { ...l, line_recordings: l.line_recordings.map((r) => (r.line_key === key ? { ...r, recording: rec } : r)) }
+        : l,
+    );
+    setItems((list) =>
+      list.map((it) => {
+        if (!it.ex || it.type !== 'listen-pick') return it;
+        if (!(it.ex.id === v.ownerId && v.kind === 'exercise') && !(key !== null && it.ex.text_key === key)) return it;
+        const payload = { ...it.ex.payload };
+        if (rec) payload.audio_uuid = rec.uuid;
+        else delete payload.audio_uuid;
+        return { ...it, ex: { ...it.ex, recording: rec, payload } };
+      }),
+    );
+  };
+
   const onVoiceSaved = (v: VoiceItem, rec: Recording) => {
-    if (v.kind === 'line') {
-      setLesson((l) =>
-        l ? { ...l, line_recordings: l.line_recordings.map((r) => (r.line_key === v.lineKey ? { ...r, recording: rec } : r)) } : l,
-      );
-    } else {
-      setItems((list) =>
-        list.map((it) =>
-          it.ex?.id === v.ownerId ? { ...it, ex: { ...it.ex, recording: rec, payload: { ...it.ex.payload, audio_uuid: rec.uuid } } } : it,
-        ),
-      );
-    }
-    advance(v.key);
+    applyVoice(v, rec.text_key ?? v.textKey, rec);
+    advance(v.key, rec);
     refreshMeta();
   };
 
   const onVoiceDeleted = (v: VoiceItem) => {
-    if (v.kind === 'line') {
-      setLesson((l) =>
-        l ? { ...l, line_recordings: l.line_recordings.map((r) => (r.line_key === v.lineKey ? { ...r, recording: null } : r)) } : l,
-      );
-    } else {
-      setItems((list) =>
-        list.map((it) => {
-          if (it.ex?.id !== v.ownerId) return it;
-          const payload = { ...it.ex.payload };
-          delete payload.audio_uuid;
-          return { ...it, ex: { ...it.ex, recording: null, payload } };
-        }),
-      );
-    }
+    applyVoice(v, v.textKey, null);
     refreshMeta();
   };
 
@@ -517,6 +493,11 @@ export function LessonEditor({ id }: { id: number }): ReactElement {
 
       <Section title={t('editor.voicing')} testId="section-voicing">
         <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)' }}>{t('editor.voicingHint')}</p>
+        {progress.total > 0 && (
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 600 }} data-testid="voice-progress">
+            {t('editor.voiceProgress', { done: progress.done, total: progress.total })}
+          </p>
+        )}
         {voice.length === 0 && <p style={{ margin: 0, color: 'var(--text-soft)' }}>{t('editor.nothingToVoice')}</p>}
         {voice.map((v) => (
           <div key={v.key} data-voice-key={v.key} data-testid="voice-item" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -524,6 +505,16 @@ export function LessonEditor({ id }: { id: number }): ReactElement {
               {v.kind === 'exercise' && <span className="chip" style={{ marginRight: 8 }}>{t('exercise.types.listen-pick')}</span>}
               {v.text || '—'}
             </div>
+            {(v.recording || v.uses > 1) && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)' }}>
+                {v.recording && (
+                  <span className="chip chip-green" data-testid="voice-recorded">
+                    ✓ {t('editor.alreadyRecorded')}
+                  </span>
+                )}
+                {v.uses > 1 && <span data-testid="voice-uses">{t('editor.usedTimes', { count: v.uses })}</span>}
+              </div>
+            )}
             <AudioRecorder
               ownerType={v.kind === 'line' ? 'lesson' : 'exercise'}
               ownerId={v.ownerId}
