@@ -606,7 +606,7 @@
       "loading": "Loading lesson…",
       "error": "Couldn't load the lesson",
       "retry": "Retry",
-      "exit": "← Exit",
+      "exit": "Exit",
       "progress": "{current} of {total}",
       "check": "Check",
       "continue": "Continue",

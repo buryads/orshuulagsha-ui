@@ -147,6 +147,7 @@ export function GamificationHudMobile({ signedIn, stats }: GamificationHudMobile
         fontSize: 13,
         fontWeight: 700,
         gap: 6,
+        whiteSpace: 'nowrap',
       }}
     >
       <Icon name="flame" size={13} />
