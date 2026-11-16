@@ -131,3 +131,36 @@ export async function syncWord(
     { params: { ...word } },
   );
 }
+
+export type VolunteerStatus = 'new' | 'contacted' | 'rejected';
+
+export interface VolunteerApplication {
+  id: number;
+  name: string;
+  telegram: string;
+  help_types: string[];
+  about: string | null;
+  locale: string | null;
+  status: VolunteerStatus;
+  created_at: string;
+}
+
+export async function getVolunteerApplications(
+  status: VolunteerStatus | null,
+  page: number,
+): Promise<Paginated<VolunteerApplication>> {
+  return apiCall<Paginated<VolunteerApplication>>(
+    'GET',
+    `${RESOURCE}/volunteer-applications`,
+    { params: { status: status ?? undefined, page } },
+  );
+}
+
+export async function setVolunteerApplicationStatus(
+  id: number,
+  status: VolunteerStatus,
+): Promise<void> {
+  await apiCall('PATCH', `${RESOURCE}/volunteer-applications/${id}`, {
+    data: { status },
+  });
+}

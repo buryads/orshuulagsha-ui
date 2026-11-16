@@ -126,7 +126,8 @@
       "dictionary": "Dictionary",
       "names": "Names",
       "packs": "Flashcards",
-      "changes": "What's new"
+      "changes": "What's new",
+      "help": "Help the project"
     },
     "tools": {
       "keyboard": "Keyboard layouts (GitHub)",
@@ -464,6 +465,81 @@
       "no_email": "The provider did not share your email",
       "email_conflict": "An account with this email already exists; sign in with your password"
     }
+  },
+  "pomoch": {
+    "metaTitle": "Looking for Buryat language experts",
+    "metaDescription": "Record phrases · check lessons · share words — t.bur.mn",
+    "title": "Looking for Buryat language experts",
+    "headline": "Буряад хэлэн — хэлэмнай!",
+    "posterAlt": "Looking for Buryat language experts — t.bur.mn",
+    "why": "We are building a free app for learning the Buryat language. We don't ask for money — we ask for your voice and your knowledge of the language. Without experts the lessons won't have a voice and won't be accurate.",
+    "download": "Download the image",
+    "postTitle": "Text for a post",
+    "copy": "Copy text",
+    "copied": "Copied",
+    "copyFail": "Selected — press Cmd/Ctrl+C",
+    "post": [
+      "🌾 Буряад хэлэн — хэлэмнай!",
+      "",
+      "We are building a free app for learning the Buryat language: lessons, voice recordings, a dictionary and a translator.",
+      "",
+      "We don't ask for money — we ask for your voice and your knowledge of the language:",
+      "🎙 record phrases — 10 minutes a day",
+      "✅ check lessons — swipe \"correct / mistake\"",
+      "📖 share words and examples",
+      "",
+      "All helpers go on the wall of honor 🏆",
+      "Write in the comments or send a message, and we will give you access to the studio.",
+      "",
+      "t.bur.mn"
+    ],
+    "aboutTitle": "About the project",
+    "aboutIntro": "t.bur.mn is a free website about the Buryat language. The goal is simple: to make Buryat possible to learn, hear and use every day.",
+    "worksTitle": "What already works",
+    "works": [
+      "Buryat-Russian and Russian-Buryat dictionary with tens of thousands of words",
+      "Translator between Buryat and Russian",
+      "Explainer — breaks down a Buryat phrase: what a word consists of, which case it is in, why the word order is what it is",
+      "Buryat keyboard with ү, ө, һ right on the site"
+    ],
+    "doingTitle": "What we are doing now",
+    "doing": [
+      "A lesson course from the alphabet to fluent speech — more than 1000 lessons",
+      "Live voice recordings — every phrase read by a native speaker",
+      "Studio for experts — checking and recording card by card, wall of honor"
+    ],
+    "helpTitle": "How you can help",
+    "help": [
+      "Record phrases from the lessons with your voice — about 10 minutes a day",
+      "Check lessons by swipe: correct or mistake",
+      "Share words, dialects and examples"
+    ],
+    "helpNote": "All you need is a phone or a computer. Even 10 minutes a day helps.",
+  "form": {
+    "title": "I want to help",
+    "text": "Leave a request — we will message you on Telegram and give you access to the studio.",
+    "name": "What should we call you",
+    "telegram": "Your Telegram",
+    "telegramHint": "For example, @username",
+    "helpTypes": "How you want to help",
+    "voice": "Record phrases",
+    "review": "Check lessons",
+    "words": "Share words and examples",
+    "other": "Other",
+    "about": "About you (optional)",
+    "aboutHint": "Where you are from, which dialect you know",
+    "privacy": "We use this only to contact you on Telegram.",
+    "submit": "Send request",
+    "sending": "Sending...",
+    "successTitle": "Thank you, you are wonderful!",
+    "successText": "Request received. We will message you on Telegram soon.",
+    "errName": "Enter your name",
+    "errTelegram": "Enter Telegram: 4 to 32 characters, Latin letters, digits and _",
+    "errHelp": "Choose at least one option",
+    "errAbout": "No more than 1000 characters",
+    "errServer": "Could not send the request. Please try later",
+    "errThrottle": "Too many attempts. Please try later"
+  }
   },
   "changes": {
     "title": "What's new",
