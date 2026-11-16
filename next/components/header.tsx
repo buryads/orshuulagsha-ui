@@ -7,13 +7,13 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { Logo } from '@/components/brand/logo';
 import { Icon } from '@/components/ui/icon';
 import { LocaleSwitcher } from '@/components/locale-switcher';
-import { getAuthToken } from '@/lib/api/cookies';
 import { signOut } from '@/lib/api/auth';
-import * as user from '@/lib/api/user';
 import { GamificationHud, GamificationHudMobile } from '@/components/learn/gamification-hud';
 import { getGamificationMe } from '@/lib/api/gamification';
 import type { GamificationMe } from '@/lib/api/gamification';
 import { LEARN_ENABLED } from '@/lib/learn-enabled';
+import { isLearnVisible } from '@/lib/learn-access';
+import { useCurrentUser } from '@/lib/use-current-user';
 
 type NavItem = {
   id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai' | 'explain';
@@ -47,9 +47,7 @@ export function Header() {
   const pathname = usePathname() ?? '/';
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-  const [initials, setInitials] = useState('У');
-  const [isTeacher, setIsTeacher] = useState(false);
+  const { signedIn, user: currentUser, isTeacher } = useCurrentUser();
   const [menuOpen, setMenuOpen] = useState(false);
   const [gamification, setGamification] = useState<GamificationMe | null>(null);
   const [gamificationLoading, setGamificationLoading] = useState(true);
@@ -64,30 +62,18 @@ export function Header() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const token = getAuthToken();
-    if (!token) {
-      setSignedIn(false);
-      return;
-    }
-    setSignedIn(true);
-    user
-      .getUser()
-      .then((u) => {
-        setIsTeacher(Boolean(u?.roles?.some((r) => r.slug === 'teacher' || r.slug === 'admin')));
-        if (!u?.name) return;
-        const parts = u.name.trim().split(/\s+/);
-        const init = (parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '');
-        const fallback = u.name.charAt(0).toUpperCase() || 'У';
-        setInitials(init.toUpperCase() || fallback);
-      })
-      .catch(() => {
-        // ignore — keep default initials
-      });
-  }, []);
+  const initials = (() => {
+    const name = currentUser?.name?.trim();
+    if (!name) return 'У';
+    const parts = name.split(/\s+/);
+    const init = (parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '');
+    return init.toUpperCase() || name.charAt(0).toUpperCase() || 'У';
+  })();
+
+  const learnVisible = isLearnVisible(LEARN_ENABLED, isTeacher);
 
   useEffect(() => {
-    if (!LEARN_ENABLED || !signedIn) {
+    if (!learnVisible || !signedIn) {
       setGamificationLoading(false);
       return;
     }
@@ -97,10 +83,10 @@ export function Header() {
         // HUD is non-critical
       })
       .finally(() => setGamificationLoading(false));
-  }, [signedIn, pathname]);
+  }, [signedIn, learnVisible, pathname]);
 
   const navItems = NAV_ITEMS.filter(
-    (item) => (!item.authOnly || signedIn) && (!item.learnOnly || LEARN_ENABLED),
+    (item) => (!item.authOnly || signedIn) && (!item.learnOnly || learnVisible),
   );
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
@@ -170,7 +156,7 @@ export function Header() {
 
         <div style={{ flex: 1 }} />
 
-        {LEARN_ENABLED && (
+        {learnVisible && (
           <>
             <span className="hide-sm" style={{ display: 'inline-flex' }}>
               <GamificationHud

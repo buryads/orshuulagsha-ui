@@ -392,6 +392,15 @@ export function LessonEditor({ id }: { id: number }): ReactElement {
         <button type="button" className="btn btn-primary" style={{ padding: '6px 12px', fontSize: 13 }} onClick={() => void goNextUnfilled()} data-testid="save-next">
           {t('editor.saveNext')} <kbd>Ctrl+Enter</kbd>
         </button>
+        {published ? (
+          <Link href={`/learn/lesson/${lesson.slug}`} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: 13, textDecoration: 'none' }} data-testid="play-lesson">
+            ▶ {t('editor.play')}
+          </Link>
+        ) : (
+          <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: 13 }} disabled title={t('editor.playUnpublished')} data-testid="play-lesson">
+            ▶ {t('editor.play')}
+          </button>
+        )}
         <span style={{ marginLeft: 'auto', fontSize: 12, color: saveState === 'error' ? 'var(--tertiary-700)' : 'var(--text-soft)' }} role="status" data-testid="save-state">
           {saveState === 'idle' ? '' : t(`editor.save.${saveState}`)}
         </span>

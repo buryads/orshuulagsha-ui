@@ -740,6 +740,8 @@
       "markReviewed": "Mark reviewed",
       "publish": "Publish",
       "unpublish": "Unpublish",
+      "play": "Play lesson",
+      "playUnpublished": "Available once the lesson is published",
       "title": "Title",
       "titleBur": "Buryat title",
       "goal": "Lesson goal",
