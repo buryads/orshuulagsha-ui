@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPayload, draftFromPayload, emptyDraft, validatePayload } from './payload';
+import { buildPayload, columnPrompt, draftFromPayload, emptyDraft, validatePayload } from './payload';
 
 describe('buildPayload', () => {
   it('match trims pairs', () => {
@@ -94,5 +94,21 @@ describe('validatePayload', () => {
     const opts = [{ label: 'a', image_url: null }, { label: 'b', image_url: null }];
     expect(validatePayload('image-pick', { options: opts, correct_answer: 'b' })).toEqual([]);
     expect(validatePayload('image-pick', { options: opts, correct_answer: 'c' })).toContain('answerNotInOptions');
+  });
+});
+
+describe('columnPrompt', () => {
+  it('keeps the existing instruction for type exercises', () => {
+    expect(columnPrompt('type', 'Здравствуйте!', '  Напиши по-бурятски ')).toBe('Напиши по-бурятски');
+  });
+
+  it('falls back to the default instruction for new type exercises', () => {
+    expect(columnPrompt('type', 'Здравствуйте!', undefined)).toBe('Переведите');
+    expect(columnPrompt('type', 'Здравствуйте!', '  ')).toBe('Переведите');
+  });
+
+  it('uses the field value for other types', () => {
+    expect(columnPrompt('match', ' Соедините ', 'old')).toBe('Соедините');
+    expect(columnPrompt('match', '', undefined)).toBe('Соедините пары');
   });
 });

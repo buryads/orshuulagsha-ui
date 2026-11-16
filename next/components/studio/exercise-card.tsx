@@ -11,8 +11,8 @@ import {
 } from '@/lib/api/studio';
 import {
   buildPayload,
+  columnPrompt,
   draftFromPayload,
-  effectivePrompt,
   MAX_OPTIONS,
   validatePayload,
   type ExerciseDraft,
@@ -109,7 +109,7 @@ export function ExerciseCard({ lessonId, item, onSaved, onRemoved, registerFlush
     setErrors([]);
     const run = (async () => {
       try {
-        const prompt = effectivePrompt(cur.type, s.prompt);
+        const prompt = columnPrompt(cur.type, s.prompt, cur.ex?.prompt);
         const ex = cur.ex
           ? await updateExercise(cur.ex.id, { prompt, payload })
           : await createExercise(lessonId, { type: cur.type, prompt, payload });

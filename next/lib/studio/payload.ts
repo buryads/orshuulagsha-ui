@@ -183,3 +183,8 @@ export const DEFAULT_PROMPTS: Record<ExerciseType, string> = {
 export function effectivePrompt(type: ExerciseType, prompt: string): string {
   return prompt.trim() || DEFAULT_PROMPTS[type];
 }
+
+export function columnPrompt(type: ExerciseType, fieldValue: string, existingPrompt: string | undefined): string {
+  if (type === 'type') return existingPrompt?.trim() || DEFAULT_PROMPTS.type;
+  return effectivePrompt(type, fieldValue);
+}
