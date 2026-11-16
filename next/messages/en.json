@@ -13,7 +13,8 @@
     "mcp": "MCP access",
     "ai": "AI",
     "explain": "Explain",
-    "learn": "Learn"
+    "learn": "Learn",
+    "studio": "Studio"
   },
   "auth": {
     "signIn": "Sign in to your account",
@@ -632,7 +633,8 @@
       "listenPick": {
         "instruction": "Listen and pick",
         "replay": "Replay",
-        "noAudio": "Audio unavailable"
+        "noAudio": "Audio unavailable",
+        "humanVoiced": "voiced by a person"
       },
       "imagePick": {
         "instruction": "Pick the image"
@@ -641,6 +643,178 @@
     "subnav": {
       "path": "Course",
       "leaderboard": "Rating"
+    }
+  },
+  "studio": {
+    "gate": {
+      "loading": "Loading…",
+      "guest": "Sign in to open the studio.",
+      "signin": "Sign in",
+      "denied": "No access. The studio is for teachers and admins.",
+      "error": "Could not check access. Reload the page."
+    },
+    "common": {
+      "burKeyboard": "Buryat keyboard",
+      "remove": "Remove",
+      "add": "Add",
+      "close": "Close"
+    },
+    "status": {
+      "draft": "Draft",
+      "text_ready": "Text ready",
+      "audio_ready": "Voiced",
+      "review": "In review",
+      "published": "Published"
+    },
+    "board": {
+      "title": "Lesson studio",
+      "next": "Next unfilled",
+      "voiced": "{done}/{total} voiced",
+      "search": "Search lessons",
+      "filterStatus": "Status",
+      "anyStatus": "Any status",
+      "filterMissing": "Missing",
+      "anyMissing": "Everything",
+      "missingAudio": "No audio",
+      "missingExercises": "No exercises",
+      "missingReview": "Not reviewed",
+      "quickAdd": "New lesson: title and Enter",
+      "quickAddGlobal": "Quick add lesson (to selected unit): title and Enter",
+      "quickAddUnit": "New unit: title and Enter",
+      "noUnit": "No unit",
+      "lessonsCount": "lessons: {count}",
+      "empty": "No lessons here yet.",
+      "loadFailed": "Could not load data.",
+      "saveFailed": "Could not save.",
+      "nothingLeft": "All lessons are filled.",
+      "addBur": "+ Buryat title",
+      "badgeNoExercises": "no exercises",
+      "badgeAudio": "audio {done}/{total}",
+      "badgeReview": "not reviewed",
+      "status": "Status",
+      "open": "Open"
+    },
+    "help": {
+      "title": "Keyboard shortcuts",
+      "keys": {
+        "jk": "j / k",
+        "enter": "Enter / o",
+        "n": "n",
+        "slash": "/",
+        "e": "e",
+        "b": "b",
+        "a": "a",
+        "levels": "1–5",
+        "help": "?"
+      },
+      "desc": {
+        "jk": "select next / previous lesson",
+        "enter": "open lesson",
+        "n": "open next unfilled",
+        "slash": "search",
+        "e": "edit title",
+        "b": "edit Buryat title",
+        "a": "add lesson",
+        "levels": "switch level",
+        "help": "this help"
+      }
+    },
+    "teachers": {
+      "title": "Teachers",
+      "revoke": "Revoke",
+      "grant": "Grant access",
+      "emailPlaceholder": "User email",
+      "loadFailed": "Could not load teachers.",
+      "grantFailed": "Could not grant access (does the user exist?).",
+      "revokeFailed": "Could not revoke access."
+    },
+    "editor": {
+      "back": "Back to board",
+      "saveNext": "Save and next",
+      "loadFailed": "Could not load the lesson.",
+      "save": {
+        "saving": "Saving…",
+        "saved": "Saved",
+        "error": "Save failed"
+      },
+      "markReviewed": "Mark reviewed",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "title": "Title",
+      "titleBur": "Buryat title",
+      "goal": "Lesson goal",
+      "description": "Description",
+      "audioLines": "Lines to voice",
+      "audioLine": "Buryat line",
+      "vocab": "Vocabulary",
+      "phrases": "Phrases",
+      "grammar": "Grammar",
+      "grammarItem": "Grammar point",
+      "bur": "Buryat",
+      "ru": "Russian",
+      "exercises": "Exercises",
+      "voicing": "Voicing",
+      "voicingHint": "V to start voicing, Up/Down to pick a line, R to record, Enter to save",
+      "nothingToVoice": "No lines or listening exercises.",
+      "reviewNote": "Note for the reviewer"
+    },
+    "exercise": {
+      "types": {
+        "match": "Matching",
+        "type": "Type translation",
+        "listen-pick": "Listening",
+        "image-pick": "Pick image"
+      },
+      "saved": "saved",
+      "remove": "Remove",
+      "confirmDelete": "Delete this exercise?",
+      "promptRu": "Russian text to translate",
+      "promptOptional": "Prompt (optional)",
+      "bur": "Buryat",
+      "ru": "Russian",
+      "correctAnswer": "Correct answer",
+      "accept": "Other accepted answers",
+      "acceptPlaceholder": "Accepted variant",
+      "audioText": "Spoken text",
+      "option": "Option {n}",
+      "addOption": "Add option",
+      "markCorrect": "Correct answer",
+      "imageUrl": "Image URL",
+      "imageHint": "Image hint",
+      "saveFailed": "Could not save the exercise.",
+      "errors": {
+        "pairsMin": "At least two pairs are needed.",
+        "pairEmpty": "Fill both sides of every pair.",
+        "answerEmpty": "Enter the correct answer.",
+        "optionsRange": "2 to 6 options are needed.",
+        "optionEmpty": "Fill in all options.",
+        "optionDup": "Options must be different.",
+        "answerNotInOptions": "Mark the correct option.",
+        "audioTextEmpty": "Enter the spoken text."
+      }
+    },
+    "audio": {
+      "record": "Record",
+      "rerecord": "Re-record",
+      "stop": "Stop",
+      "play": "Play",
+      "pause": "Pause",
+      "save": "Save",
+      "saving": "Uploading…",
+      "discard": "Redo",
+      "delete": "Delete",
+      "confirmDelete": "Delete this recording?",
+      "pending": "new recording",
+      "uploadFile": "Upload file",
+      "sourceUser": "voiced by a person",
+      "sourceTts": "TTS",
+      "errors": {
+        "micDenied": "Microphone access denied. Allow it in the browser.",
+        "unsupported": "Recording is not supported here. Upload a file.",
+        "tooLarge": "File is larger than 2 MB.",
+        "recordFailed": "Could not record audio.",
+        "uploadFailed": "Could not upload the recording."
+      }
     }
   }
 }
