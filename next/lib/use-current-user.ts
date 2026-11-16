@@ -11,6 +11,7 @@ export interface CurrentUser {
   user: IUser | null;
   isTeacher: boolean;
   ready: boolean;
+  error: boolean;
 }
 
 export function useCurrentUser(): CurrentUser {
@@ -19,17 +20,18 @@ export function useCurrentUser(): CurrentUser {
     user: null,
     isTeacher: false,
     ready: false,
+    error: false,
   });
   useEffect(() => {
     if (!getAuthToken()) {
-      setState({ signedIn: false, user: null, isTeacher: false, ready: true });
+      setState({ signedIn: false, user: null, isTeacher: false, ready: true, error: false });
       return;
     }
     setState((s) => ({ ...s, signedIn: true }));
     user
       .getUser()
-      .then((u) => setState({ signedIn: true, user: u, isTeacher: isTeacherUser(u), ready: true }))
-      .catch(() => setState((s) => ({ ...s, ready: true })));
+      .then((u) => setState({ signedIn: true, user: u, isTeacher: isTeacherUser(u), ready: true, error: false }))
+      .catch(() => setState((s) => ({ ...s, ready: true, error: true })));
   }, []);
   return state;
 }

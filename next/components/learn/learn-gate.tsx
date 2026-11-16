@@ -8,9 +8,16 @@ import { useCurrentUser } from '@/lib/use-current-user';
 
 export function LearnGate({ children }: { children: ReactNode }): ReactElement | null {
   const t = useTranslations('common');
-  const { isTeacher, ready } = useCurrentUser();
+  const { isTeacher, ready, error } = useCurrentUser();
   if (LEARN_ENABLED) return <>{children}</>;
   if (!ready) return null;
+  if (error) {
+    return (
+      <div className="container" style={{ paddingTop: 64, paddingBottom: 64, textAlign: 'center' }} data-testid="learn-gate-error">
+        <p style={{ color: 'var(--text-muted)' }}>{t('tryAgain')}</p>
+      </div>
+    );
+  }
   if (!isLearnVisible(LEARN_ENABLED, isTeacher)) {
     return (
       <div className="container" style={{ paddingTop: 64, paddingBottom: 64, textAlign: 'center' }} data-testid="learn-not-found">

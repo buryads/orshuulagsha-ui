@@ -77,6 +77,7 @@ export function Header() {
       setGamificationLoading(false);
       return;
     }
+    setGamificationLoading(true);
     getGamificationMe()
       .then(setGamification)
       .catch(() => {
