@@ -4,7 +4,7 @@ import { routing } from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|explain)(\/|$)/;
+const PROTECTED = /^\/(ru|bur|en)\/(profile|packs|admin|explain|learn\/(path|lesson))(\/|$)/;
 const AUTH_COOKIE = 'token';
 
 export default function middleware(req: NextRequest) {

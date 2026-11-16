@@ -10,15 +10,21 @@ import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAuthToken } from '@/lib/api/cookies';
 import { signOut } from '@/lib/api/auth';
 import * as user from '@/lib/api/user';
+import { GamificationHud, GamificationHudMobile } from '@/components/learn/gamification-hud';
+import { getGamificationMe } from '@/lib/api/gamification';
+import type { GamificationMe } from '@/lib/api/gamification';
+import { LEARN_ENABLED } from '@/lib/learn-enabled';
 
 type NavItem = {
-  id: 'home' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai' | 'explain';
+  id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai' | 'explain';
   href: string;
   authOnly?: boolean;
+  learnOnly?: boolean;
 };
 
 const NAV_ITEMS: readonly NavItem[] = [
   { id: 'home', href: '/' },
+  { id: 'learn', href: '/learn/path', authOnly: true, learnOnly: true },
   { id: 'dictionary', href: '/explore' },
   { id: 'names', href: '/names' },
   { id: 'corpus', href: '/corpus' },
@@ -44,6 +50,8 @@ export function Header() {
   const [signedIn, setSignedIn] = useState(false);
   const [initials, setInitials] = useState('У');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [gamification, setGamification] = useState<GamificationMe | null>(null);
+  const [gamificationLoading, setGamificationLoading] = useState(true);
 
   // Close drawer when route changes — otherwise tapping a link leaves the
   // drawer hanging open over the new page.
@@ -76,7 +84,22 @@ export function Header() {
       });
   }, []);
 
-  const navItems = NAV_ITEMS.filter((item) => !item.authOnly || signedIn);
+  useEffect(() => {
+    if (!LEARN_ENABLED || !signedIn) {
+      setGamificationLoading(false);
+      return;
+    }
+    getGamificationMe()
+      .then(setGamification)
+      .catch(() => {
+        // HUD is non-critical
+      })
+      .finally(() => setGamificationLoading(false));
+  }, [signedIn, pathname]);
+
+  const navItems = NAV_ITEMS.filter(
+    (item) => (!item.authOnly || signedIn) && (!item.learnOnly || LEARN_ENABLED),
+  );
 
   const currentTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light';
 
@@ -144,6 +167,21 @@ export function Header() {
         </button>
 
         <div style={{ flex: 1 }} />
+
+        {LEARN_ENABLED && (
+          <>
+            <span className="hide-sm" style={{ display: 'inline-flex' }}>
+              <GamificationHud
+                signedIn={signedIn}
+                stats={gamification}
+                loading={gamificationLoading}
+              />
+            </span>
+            <span className="show-sm">
+              <GamificationHudMobile signedIn={signedIn} stats={gamification} />
+            </span>
+          </>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button

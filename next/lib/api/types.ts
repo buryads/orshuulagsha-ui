@@ -321,3 +321,88 @@ export interface McpTokenCreated {
   created_at: string;
   token: string;
 }
+
+// --- Gamification ---
+
+export interface GamificationMe {
+  xp: number;
+  level: number;
+  streak: number;
+  longest_streak: number;
+  last_active_date: string | null;
+  daily_goal_xp: number;
+  xp_today: number;
+  goal_met: boolean;
+}
+
+export interface LeaderboardRow {
+  rank: number;
+  user_id: number;
+  name: string;
+  xp: number;
+  level: number;
+}
+
+export interface LeaderboardMe {
+  rank: number;
+  xp: number;
+}
+
+export interface LeaderboardResponse {
+  rows: LeaderboardRow[];
+  me: LeaderboardMe | null;
+}
+
+// --- Lessons ---
+
+export interface LessonListItem {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  position: number;
+  xp_reward: number;
+  exercise_count: number;
+  status: 'locked' | 'available' | 'completed';
+  score: number | null;
+  prerequisite_id: number | null;
+}
+
+export type ExerciseType = 'match' | 'type' | 'listen-pick' | 'image-pick';
+
+export interface Exercise {
+  id: number;
+  type: ExerciseType;
+  prompt: string;
+  payload: Record<string, unknown>;
+  position?: number;
+}
+
+export interface LessonDetail {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string;
+  position?: number;
+  xp_reward?: number;
+  prerequisite_id?: number | null;
+  exercises: Exercise[];
+}
+
+export interface CheckAnswer {
+  exercise_id: number;
+  answer: unknown;
+}
+
+export interface CheckResult {
+  exercise_id: number;
+  correct: boolean;
+}
+
+export interface CheckResponse {
+  results: CheckResult[];
+  score: number;
+  passed: boolean;
+  xp_awarded: number;
+  stats: GamificationMe;
+}
