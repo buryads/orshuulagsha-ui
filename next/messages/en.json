@@ -127,7 +127,8 @@
       "names": "Names",
       "packs": "Flashcards",
       "changes": "What's new",
-      "help": "Help the project"
+      "help": "Help the project",
+      "privacy": "Policy and license"
     },
     "tools": {
       "keyboard": "Keyboard layouts (GitHub)",
@@ -532,6 +533,17 @@
     "about": "About you (optional)",
     "aboutHint": "Where you are from, which dialect you know",
     "privacy": "We use this only to contact you on Telegram.",
+    "usageTitle": "How we use your contribution",
+    "usage": [
+      "Your voice, words and lesson corrections will become part of buryads.com and will be open to everyone under the CC BY 4.0 license. Attribution: \"buryads.com and contributors\".",
+      "Your contacts (name and Telegram) are never published. We use them only to get in touch with you.",
+      "You can ask us to delete your data and recordings."
+    ],
+    "licenseLink": "CC BY 4.0 license",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.en",
+    "consentBefore": "I agree to the terms and the CC BY 4.0 license, see ",
+    "consentLink": "Policy and license",
+    "errConsent": "Agreement to the terms is required",
     "submit": "Send request",
     "sending": "Sending...",
     "successTitle": "Thank you, you are wonderful!",
@@ -543,6 +555,28 @@
     "errServer": "Could not send the request. Please try later",
     "errThrottle": "Too many attempts. Please try later"
   }
+  },
+  "privacy": {
+    "metaTitle": "Policy and license",
+    "metaDescription": "What data we collect from contributors, why, and under which license your contribution is open.",
+    "title": "Policy and license",
+    "updated": "Updated: November 17, 2026",
+    "collectTitle": "What we collect",
+    "collect": [
+      "Application: name, Telegram, how you want to help, a comment.",
+      "In the studio: your audio recordings and lesson corrections."
+    ],
+    "whyTitle": "Why",
+    "why": "The application lets us contact you and give you access to the studio. Recordings and corrections help us improve lessons and the dictionary.",
+    "storageTitle": "Where it is stored",
+    "storage": "On our own servers.",
+    "licenseTitle": "License of your contribution",
+    "license": "Your voice, words and lesson corrections are open to everyone under the CC BY 4.0 license. Attribution: \"buryads.com and contributors\".",
+    "licenseLabel": "CC BY 4.0 license text",
+    "contactsTitle": "Your contacts",
+    "contacts": "We do not publish your name or Telegram and do not share them with third parties.",
+    "deleteTitle": "Deletion",
+    "delete": "Want your data or recordings deleted? Reply to us on Telegram when we message you, and we will delete everything."
   },
   "changes": {
     "title": "What's new",

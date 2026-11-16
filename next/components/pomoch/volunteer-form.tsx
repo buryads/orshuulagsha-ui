@@ -3,25 +3,26 @@
 import { useState, type FormEvent } from 'react';
 import axios from 'axios';
 import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { submitVolunteerApplication } from '@/lib/api/volunteers';
+import { normalizeTelegram, validateVolunteerForm } from '@/lib/volunteer-form';
 
 const HELP_TYPES = ['voice', 'review', 'words', 'other'] as const;
-const TELEGRAM_RE = /^[A-Za-z0-9_]{4,32}$/;
 
-function normalizeTelegram(value: string): string {
-  return value
-    .trim()
-    .replace(/^https?:\/\//i, '')
-    .replace(/^t\.me\//i, '')
-    .replace(/^@/, '')
-    .replace(/[/?].*$/, '');
-}
+const ERROR_KEYS = {
+  name: 'errName',
+  telegram: 'errTelegram',
+  help: 'errHelp',
+  about: 'errAbout',
+  consent: 'errConsent',
+} as const;
 
 interface Errors {
   name?: string;
   telegram?: string;
   help?: string;
   about?: string;
+  consent?: string;
   form?: string;
 }
 
@@ -35,6 +36,8 @@ const fieldStyle = {
   font: 'inherit',
 } as const;
 
+const linkStyle = { color: 'var(--primary-700)', textDecoration: 'underline' } as const;
+
 const errorStyle = { color: 'var(--tertiary-700)', fontSize: 13, marginTop: 4 } as const;
 
 export function VolunteerForm() {
@@ -45,6 +48,7 @@ export function VolunteerForm() {
   const [helpTypes, setHelpTypes] = useState<string[]>([]);
   const [about, setAbout] = useState('');
   const [website, setWebsite] = useState('');
+  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -55,12 +59,9 @@ export function VolunteerForm() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (submitting) return;
-    const handle = normalizeTelegram(telegram);
+    const failed = validateVolunteerForm({ name, telegram, helpTypes, about, consent });
     const next: Errors = {};
-    if (name.trim().length < 2) next.name = t('errName');
-    if (!TELEGRAM_RE.test(handle)) next.telegram = t('errTelegram');
-    if (helpTypes.length === 0) next.help = t('errHelp');
-    if (about.length > 1000) next.about = t('errAbout');
+    for (const key of Object.keys(failed) as (keyof typeof ERROR_KEYS)[]) next[key] = t(ERROR_KEYS[key]);
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -68,11 +69,12 @@ export function VolunteerForm() {
     try {
       await submitVolunteerApplication({
         name: name.trim(),
-        telegram: handle,
+        telegram: normalizeTelegram(telegram),
         help_types: helpTypes,
         about: about.trim() || undefined,
         locale,
         website,
+        consent: true,
       });
       setDone(true);
     } catch (err) {
@@ -96,6 +98,17 @@ export function VolunteerForm() {
     <section className="card" style={{ padding: 20 }}>
       <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 6px' }}>{t('title')}</h2>
       <p style={{ margin: '0 0 16px', color: 'var(--text-muted)' }}>{t('text')}</p>
+      <div style={{ margin: '0 0 18px', padding: 14, borderRadius: 12, background: 'var(--surface-2)' }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 6px' }}>{t('usageTitle')}</h3>
+        <ul style={{ listStyle: 'disc', paddingLeft: 20, margin: 0, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 14 }}>
+          {(t.raw('usage') as string[]).map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ul>
+        <a href={t('licenseUrl')} target="_blank" rel="noreferrer noopener" style={{ ...linkStyle, display: 'inline-block', marginTop: 8, fontSize: 14 }}>
+          {t('licenseLink')}
+        </a>
+      </div>
       <form onSubmit={onSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <label>
           <span style={{ fontSize: 14, fontWeight: 600 }}>{t('name')}</span>
@@ -165,6 +178,23 @@ export function VolunteerForm() {
           aria-hidden="true"
           style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
         />
+
+        <div>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 14 }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              aria-invalid={Boolean(errors.consent)}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              {t('consentBefore')}
+              <Link href="/privacy" style={linkStyle}>{t('consentLink')}</Link>
+            </span>
+          </label>
+          {errors.consent && <div role="alert" style={errorStyle}>{errors.consent}</div>}
+        </div>
 
         <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>{t('privacy')}</p>
         {errors.form && <div role="alert" style={errorStyle}>{errors.form}</div>}

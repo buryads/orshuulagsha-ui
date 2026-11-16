@@ -7,6 +7,7 @@ export interface VolunteerApplicationInput {
   about?: string;
   locale: string;
   website: string;
+  consent: boolean;
 }
 
 export async function submitVolunteerApplication(
