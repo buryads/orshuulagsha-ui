@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactElement } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+  type ReactElement,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import { useAudioRecorder, type RecordedClip } from '@/components/audio/use-audio-recorder';
 import { skipFlowItem, type VoiceItem } from '@/lib/api/studio-flow';
@@ -21,7 +28,15 @@ export interface VoiceTabProps {
   onGoReview: () => void;
 }
 
-export function VoiceTab({ queue, active, advance, reload, onAccept, onSkip, onGoReview }: VoiceTabProps): ReactElement {
+export function VoiceTab({
+  queue,
+  active,
+  advance,
+  reload,
+  onAccept,
+  onSkip,
+  onGoReview,
+}: VoiceTabProps): ReactElement {
   const t = useTranslations('studio.flow');
   const rec = useAudioRecorder({ keepStream: true });
   const { phase, clip, error, level, start, stop, discard } = rec;
@@ -31,7 +46,8 @@ export function VoiceTab({ queue, active, advance, reload, onAccept, onSkip, onG
   const [micBlocked, setMicBlocked] = useState(false);
   const item = queue.item;
   const supported =
-    typeof navigator === 'undefined' || (Boolean(navigator.mediaDevices?.getUserMedia) && typeof MediaRecorder !== 'undefined');
+    typeof navigator === 'undefined' ||
+    (Boolean(navigator.mediaDevices?.getUserMedia) && typeof MediaRecorder !== 'undefined');
   const unavailable = micBlocked || !supported || error === 'micDenied' || error === 'unsupported';
 
   useEffect(() => {
@@ -143,7 +159,13 @@ export function VoiceTab({ queue, active, advance, reload, onAccept, onSkip, onG
   }, [active, ready]);
 
   if (queue.status !== 'ready' || !item) {
-    return <QueueState status={queue.status === 'ready' ? 'loading' : queue.status} mode="voice" onRetry={() => void reload()} />;
+    return (
+      <QueueState
+        status={queue.status === 'ready' ? 'loading' : queue.status}
+        mode="voice"
+        onRetry={() => void reload()}
+      />
+    );
   }
 
   const recording = phase === 'recording';
@@ -159,17 +181,55 @@ export function VoiceTab({ queue, active, advance, reload, onAccept, onSkip, onG
   };
 
   return (
-    <div className="card" style={{ padding: 'clamp(18px, 4vw, 32px)', display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center', textAlign: 'center' }} data-testid="voice-card">
-      {queue.fromSkipped && <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('state.fromSkipped')}</span>}
-      <div style={{ fontSize: 'clamp(30px, 7vw, 52px)', fontWeight: 800, lineHeight: 1.15, fontFamily: 'var(--font-display)', overflowWrap: 'anywhere' }} data-testid="voice-text">
+    <div
+      className="card"
+      style={{
+        padding: 'clamp(18px, 4vw, 32px)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+        alignItems: 'center',
+        textAlign: 'center',
+      }}
+      data-testid="voice-card"
+    >
+      {queue.fromSkipped && (
+        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('state.fromSkipped')}</span>
+      )}
+      <div
+        style={{
+          fontSize: 'clamp(30px, 7vw, 52px)',
+          fontWeight: 800,
+          lineHeight: 1.15,
+          fontFamily: 'var(--font-display)',
+          overflowWrap: 'anywhere',
+        }}
+        data-testid="voice-text"
+      >
         {item.text}
       </div>
-      <div style={{ fontSize: 'clamp(16px, 3.5vw, 22px)', color: 'var(--text-muted)' }}>{item.ru ?? t('voice.noRu')}</div>
-      <div style={{ fontSize: 13, color: 'var(--text-soft)' }}>{t('voice.usedIn', { n: item.uses })}</div>
+      <div style={{ fontSize: 'clamp(16px, 3.5vw, 22px)', color: 'var(--text-muted)' }}>
+        {item.ru ?? t('voice.noRu')}
+      </div>
+      <div style={{ fontSize: 13, color: 'var(--text-soft)' }}>
+        {t('voice.usedIn', { n: item.uses })}
+      </div>
 
       {unavailable ? (
-        <div role="alert" style={{ padding: 14, borderRadius: 12, background: 'var(--tertiary-soft)', color: 'var(--tertiary-700)', maxWidth: 420 }} data-testid="mic-unavailable">
-          <p style={{ margin: '0 0 10px' }}>{!supported || error === 'unsupported' ? t('voice.unsupported') : t('voice.micDenied')}</p>
+        <div
+          role="alert"
+          style={{
+            padding: 14,
+            borderRadius: 12,
+            background: 'var(--tertiary-soft)',
+            color: 'var(--tertiary-700)',
+            maxWidth: 420,
+          }}
+          data-testid="mic-unavailable"
+        >
+          <p style={{ margin: '0 0 10px' }}>
+            {!supported || error === 'unsupported' ? t('voice.unsupported') : t('voice.micDenied')}
+          </p>
           <button type="button" className="btn btn-secondary" onClick={onGoReview}>
             {t('voice.goReview')}
           </button>
@@ -205,42 +265,91 @@ export function VoiceTab({ queue, active, advance, reload, onAccept, onSkip, onG
               margin: '12px 0',
             }}
           >
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <svg
+              width="44"
+              height="44"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
               <rect x="9" y="3" width="6" height="12" rx="3" />
               <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
             </svg>
           </button>
-          <div style={{ minHeight: 22, fontWeight: 600, color: recording ? 'var(--tertiary-700)' : 'var(--text-muted)' }} aria-live="polite" data-testid="voice-status">
-            {tooShort
-              ? t('voice.tooShort')
-              : error === 'tooLarge'
-                ? t('voice.tooLarge')
-                : error === 'recordFailed'
-                  ? t('voice.recordFailed')
-                  : recording
-                    ? t('voice.recording')
-                    : recorded
-                      ? t('voice.ready')
-                      : phase === 'requesting'
-                        ? t('state.loading')
-                        : (
-                            <>
-                              <span className="flow-kbd-only">{t('voice.holdKey')}</span>
-                              <span className="flow-touch-only">{t('voice.holdTouch')}</span>
-                            </>
-                          )}
+          <div
+            style={{
+              minHeight: 22,
+              fontWeight: 600,
+              color: recording ? 'var(--tertiary-700)' : 'var(--text-muted)',
+            }}
+            aria-live="polite"
+            data-testid="voice-status"
+          >
+            {tooShort ? (
+              t('voice.tooShort')
+            ) : error === 'tooLarge' ? (
+              t('voice.tooLarge')
+            ) : error === 'recordFailed' ? (
+              t('voice.recordFailed')
+            ) : recording ? (
+              t('voice.recording')
+            ) : recorded ? (
+              t('voice.ready')
+            ) : phase === 'requesting' ? (
+              t('state.loading')
+            ) : (
+              <>
+                <span className="flow-kbd-only">{t('voice.holdKey')}</span>
+                <span className="flow-touch-only">{t('voice.holdTouch')}</span>
+              </>
+            )}
           </div>
         </>
       )}
 
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
-        <button type="button" className="btn btn-primary" disabled={!recorded} onMouseDown={(e) => e.preventDefault()} onClick={accept} style={{ minHeight: 52, flex: '1 1 140px', fontSize: 16 }} data-testid="voice-accept">
+      <div
+        style={{
+          display: 'flex',
+          gap: 10,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          width: '100%',
+        }}
+      >
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={!recorded}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={accept}
+          style={{ minHeight: 52, flex: '1 1 140px', fontSize: 16, opacity: recorded ? 1 : 0.45 }}
+          data-testid="voice-accept"
+        >
           {t('voice.accept')}
         </button>
-        <button type="button" className="btn btn-secondary" disabled={!recorded} onMouseDown={(e) => e.preventDefault()} onClick={redo} style={{ minHeight: 52, flex: '1 1 110px' }} data-testid="voice-redo">
+        <button
+          type="button"
+          className="btn btn-secondary"
+          disabled={!recorded}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={redo}
+          style={{ minHeight: 52, flex: '1 1 110px', opacity: recorded ? 1 : 0.45 }}
+          data-testid="voice-redo"
+        >
           {t('voice.rerecord')}
         </button>
-        <button type="button" className="btn btn-ghost" onMouseDown={(e) => e.preventDefault()} onClick={skip} style={{ minHeight: 52, flex: '1 1 110px' }} data-testid="voice-skip">
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={skip}
+          style={{ minHeight: 52, flex: '1 1 110px' }}
+          data-testid="voice-skip"
+        >
           {t('voice.skip')}
         </button>
       </div>
