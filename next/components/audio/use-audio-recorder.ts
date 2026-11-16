@@ -14,7 +14,11 @@ export interface RecordedClip {
   fromFile: boolean;
 }
 
-export function useAudioRecorder() {
+export interface AudioRecorderOptions {
+  keepStream?: boolean;
+}
+
+export function useAudioRecorder({ keepStream = false }: AudioRecorderOptions = {}) {
   const [phase, setPhase] = useState<RecorderPhase>('idle');
   const [elapsedMs, setElapsedMs] = useState(0);
   const [level, setLevel] = useState(0);
@@ -29,19 +33,23 @@ export function useAudioRecorder() {
   const startedAtRef = useRef(0);
   const clipUrlRef = useRef<string | null>(null);
   const phaseRef = useRef<RecorderPhase>('idle');
+  const keepStreamRef = useRef(keepStream);
+  keepStreamRef.current = keepStream;
 
   const updatePhase = useCallback((p: RecorderPhase) => {
     phaseRef.current = p;
     setPhase(p);
   }, []);
 
-  const releaseMic = useCallback(() => {
+  const releaseMic = useCallback((keepTracks = false) => {
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     if (timerRef.current !== null) window.clearInterval(timerRef.current);
     rafRef.current = null;
     timerRef.current = null;
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
+    if (!keepTracks) {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
     void ctxRef.current?.close().catch(() => undefined);
     ctxRef.current = null;
     setLevel(0);
@@ -90,12 +98,17 @@ export function useAudioRecorder() {
     setElapsedMs(0);
     updatePhase('requesting');
     let stream: MediaStream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setError('micDenied');
-      updatePhase('idle');
-      return;
+    const kept = streamRef.current;
+    if (keepStreamRef.current && kept && kept.getAudioTracks().some((t) => t.readyState === 'live')) {
+      stream = kept;
+    } else {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch {
+        setError('micDenied');
+        updatePhase('idle');
+        return;
+      }
     }
     try {
       streamRef.current = stream;
@@ -108,7 +121,7 @@ export function useAudioRecorder() {
       recorder.onstop = () => {
         const duration = Date.now() - startedAtRef.current;
         const type = recorder.mimeType || mime || 'audio/webm';
-        releaseMic();
+        releaseMic(keepStreamRef.current);
         recorderRef.current = null;
         if (!chunks.length) {
           setError('recordFailed');
@@ -118,7 +131,7 @@ export function useAudioRecorder() {
         acceptClip(new Blob(chunks, { type }), duration, type, false);
       };
       recorder.onerror = () => {
-        releaseMic();
+        releaseMic(keepStreamRef.current);
         setError('recordFailed');
         updatePhase('idle');
       };

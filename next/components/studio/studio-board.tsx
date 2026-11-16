@@ -34,6 +34,7 @@ import {
 } from '@/lib/studio/board';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
 import { Field, inputStyle } from './field';
+import { FlowEntry } from './flow-entry';
 import { TeachersPanel } from './teachers-panel';
 import { isForbidden } from './use-studio-access';
 
@@ -281,6 +282,8 @@ export function StudioBoard({ isAdmin }: { isAdmin: boolean }): ReactElement {
           ? {t('help.title')}
         </button>
       </div>
+
+      <FlowEntry />
 
       <div role="tablist" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }} data-testid="level-tabs">
         {LEVELS.map((l, i) => {

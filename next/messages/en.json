@@ -820,6 +820,119 @@
         "recordFailed": "Could not record audio.",
         "uploadFailed": "Could not upload the recording."
       }
+    },
+    "flow": {
+      "title": "Flow",
+      "tabs": {
+        "voice": "Voicing",
+        "review": "Review"
+      },
+      "entry": {
+        "open": "Flow",
+        "hint": "Voicing and review without extra clicks",
+        "voiceLeft": "To voice: {n}",
+        "reviewLeft": "To review: {n}",
+        "today": "Today: {n}"
+      },
+      "counter": {
+        "session": "This session: {n}",
+        "streak": "Streak: {n}"
+      },
+      "voice": {
+        "usedIn": "Used in lessons: {n}",
+        "noRu": "No translation",
+        "holdKey": "Hold Space and speak",
+        "holdTouch": "Hold the button and speak",
+        "recording": "Recording…",
+        "ready": "Recording ready — check how it sounds",
+        "accept": "Accept",
+        "rerecord": "Re-record",
+        "skip": "Skip",
+        "play": "Play",
+        "tooShort": "Too short — hold longer",
+        "tooLarge": "Recording is too long",
+        "recordFailed": "Could not record, please try again",
+        "help": "Space — record · Enter — next · R — redo · S — skip",
+        "micDenied": "No microphone access. Allow it in the browser settings or switch to review.",
+        "unsupported": "This browser cannot record audio. The Review tab still works.",
+        "goReview": "Go to review",
+        "mic": "Microphone"
+      },
+      "uploads": {
+        "uploading": "Uploading: {n}",
+        "failed": "Not sent: {n}",
+        "retry": "Retry"
+      },
+      "review": {
+        "kind": {
+          "phrase": "Phrase",
+          "vocab": "Word",
+          "exercise": "Exercise"
+        },
+        "exerciseType": {
+          "match": "Match pairs",
+          "type": "Type the answer",
+          "listen-pick": "Pick by audio",
+          "image-pick": "Pick by image"
+        },
+        "sourceAi": "AI",
+        "lesson": "Lesson",
+        "ok": "Correct",
+        "wrong": "Has a mistake",
+        "skip": "Skip",
+        "fixLabel": "Correct version",
+        "notePlaceholder": "Comment (optional)",
+        "exerciseNote": "What is wrong in this exercise?",
+        "submit": "Send",
+        "cancel": "Cancel",
+        "correct": "correct",
+        "accepted": "accepted",
+        "hint": "Hint",
+        "help": "→ correct · ← mistake · ↓ skip · Esc — cancel",
+        "swipeHint": "Right — correct, left — mistake, up — skip",
+        "conflict": "Already changed, next one",
+        "submitFailed": "Could not send, please try again"
+      },
+      "state": {
+        "emptyVoiceTitle": "Everything is voiced!",
+        "emptyVoiceBody": "Thank you! No new phrases to voice for now.",
+        "emptyReviewTitle": "Everything is reviewed!",
+        "emptyReviewBody": "Thank you! Nothing new to review for now.",
+        "error": "Could not load",
+        "retry": "Retry",
+        "notReady": "Flow is still being set up. Try again in a minute.",
+        "loading": "Loading…",
+        "fromSkipped": "Bringing back a skipped one",
+        "back": "Back to studio"
+      },
+      "milestone": {
+        "title": "{n} this session!",
+        "rest": "Take a break?",
+        "more": "10 more"
+      },
+      "praise": {
+        "p0": "Great pace!",
+        "p1": "Keep it up, you are helping students!",
+        "p2": "Fifty, that is strong!",
+        "p3": "A true flow master!",
+        "p4": "A little more and you are a legend",
+        "p5": "Thank you for your work!"
+      },
+      "rest": {
+        "title": "Break time",
+        "body": "You did great. Rest a bit, then come back.",
+        "count": "Accepted: {n}",
+        "best": "Best streak: {n}",
+        "uploaded": "Recordings uploaded: {n}",
+        "resume": "Back to flow"
+      },
+      "egg": {
+        "item108": "108 is a lucky number!",
+        "rare": "Һайн даа!",
+        "konamiOn": "Secret theme on",
+        "konamiOff": "Secret theme off",
+        "check": "Accepted"
+      }
     }
   }
 }
