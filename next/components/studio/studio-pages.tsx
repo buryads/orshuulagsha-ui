@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import type { FlowMode } from '@/lib/api/studio-flow';
 import { StudioFlow } from './flow/studio-flow';
 import { LessonEditor } from './lesson-editor';
+import { ReminderButton } from './reminder-button';
 import { StudioBoard } from './studio-board';
 import { StudioGate } from './studio-gate';
 
@@ -20,5 +21,9 @@ function modeFromUrl(): FlowMode {
 }
 
 export function StudioFlowPage(): ReactElement {
-  return <StudioGate>{() => <StudioFlow initialMode={modeFromUrl()} />}</StudioGate>;
+  return (
+    <StudioGate>
+      {() => <StudioFlow initialMode={modeFromUrl()} reminderSlot={<ReminderButton />} />}
+    </StudioGate>
+  );
 }

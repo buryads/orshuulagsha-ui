@@ -1,15 +1,32 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type Dispatch, type ReactElement, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  type Dispatch,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { RecordedClip } from '@/components/audio/use-audio-recorder';
-import { skipFlowItem, type FlowMode, type ReviewItem, type VoiceItem } from '@/lib/api/studio-flow';
+import {
+  skipFlowItem,
+  type FlowMode,
+  type ReviewItem,
+  type VoiceItem,
+} from '@/lib/api/studio-flow';
 import { acceptEffects, type ConfettiPalette } from '@/lib/studio/flow-easter';
 import { feedKonami, konamiInput, KONAMI_START, swallowsArrow } from '@/lib/studio/flow-konami';
 import { isMilestone } from '@/lib/studio/flow-milestones';
 import { INITIAL_SESSION, sessionReducer, type SessionAction } from '@/lib/studio/flow-session';
 import { isTypingTarget } from '@/lib/studio/shortcuts';
+import { KudosInbox } from '../kudos-inbox';
 import { Banner, Celebration, type Burst } from './celebration';
 import { MilestoneDialog } from './milestone-dialog';
 import { RestScreen } from './rest-screen';
@@ -48,11 +65,20 @@ function VoiceSection({
   dispatch,
   enqueue,
   onGoReview,
-}: SectionProps & { enqueue: ReturnType<typeof useVoiceUploads>['enqueue']; onGoReview: () => void }): ReactElement {
+}: SectionProps & {
+  enqueue: ReturnType<typeof useVoiceUploads>['enqueue'];
+  onGoReview: () => void;
+}): ReactElement {
   const { state, advance, reload } = useFlowQueue('voice', blocked);
   const onAccept = useCallback(
     (item: VoiceItem, clip: RecordedClip) => {
-      enqueue({ id: item.item_key, text: item.text, blob: clip.blob, mime: clip.mime, durationMs: clip.durationMs });
+      enqueue({
+        id: item.item_key,
+        text: item.text,
+        blob: clip.blob,
+        mime: clip.mime,
+        durationMs: clip.durationMs,
+      });
       dispatch({ type: 'accept' });
       void advance(() => skipFlowItem('voice', item.item_key));
     },
@@ -71,7 +97,12 @@ function VoiceSection({
   );
 }
 
-function ReviewSection({ active, blocked, dispatch, onToast }: SectionProps & { onToast: (m: string) => void }): ReactElement {
+function ReviewSection({
+  active,
+  blocked,
+  dispatch,
+  onToast,
+}: SectionProps & { onToast: (m: string) => void }): ReactElement {
   const { state, advance, reload } = useFlowQueue('review', blocked);
   return (
     <ReviewTab
@@ -86,8 +117,15 @@ function ReviewSection({ active, blocked, dispatch, onToast }: SectionProps & { 
   );
 }
 
-export function StudioFlow({ initialMode, reminderSlot }: { initialMode: FlowMode; reminderSlot?: ReactNode }): ReactElement {
+export function StudioFlow({
+  initialMode,
+  reminderSlot,
+}: {
+  initialMode: FlowMode;
+  reminderSlot?: ReactNode;
+}): ReactElement {
   const t = useTranslations('studio.flow');
+  const th = useTranslations('studio.honor');
   const reduced = useReducedMotion();
   const [mode, setMode] = useState<FlowMode>(initialMode);
   const [session, dispatch] = useReducer(sessionReducer, INITIAL_SESSION);
@@ -101,7 +139,10 @@ export function StudioFlow({ initialMode, reminderSlot }: { initialMode: FlowMod
   const lastCount = useRef(0);
 
   const { enqueue, retryFailed } = useVoiceUploads(dispatch, session.failed);
-  const blocked = useMemo(() => new Set([...session.pending, ...session.failed]), [session.pending, session.failed]);
+  const blocked = useMemo(
+    () => new Set([...session.pending, ...session.failed]),
+    [session.pending, session.failed],
+  );
   const idle = milestone === null && !resting;
 
   const showToast = useCallback((message: string) => setToast(message), []);
@@ -132,7 +173,8 @@ export function StudioFlow({ initialMode, reminderSlot }: { initialMode: FlowMod
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isTypingTarget(e.target as HTMLElement | null) || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (isTypingTarget(e.target as HTMLElement | null) || e.ctrlKey || e.metaKey || e.altKey)
+        return;
       const input = konamiInput(e);
       const res = feedKonami(konami.current, input);
       konami.current = res.progress;
@@ -202,25 +244,63 @@ export function StudioFlow({ initialMode, reminderSlot }: { initialMode: FlowMod
   return (
     <div className="container fade-up" style={{ paddingTop: 20, paddingBottom: 48, maxWidth: 760 }}>
       <style>{CSS}</style>
-      <div className={fun ? 'flow-fun' : undefined} style={{ display: 'flex', flexDirection: 'column', gap: 14 }} data-testid="flow-root" data-fun={fun || undefined}>
+      <div
+        className={fun ? 'flow-fun' : undefined}
+        style={{ display: 'flex', flexDirection: 'column', gap: 14 }}
+        data-testid="flow-root"
+        data-fun={fun || undefined}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <Link href="/studio" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>
+          <Link
+            href="/studio"
+            style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}
+          >
             ← {t('state.back')}
           </Link>
-          <h1 style={{ margin: 0, fontSize: 'clamp(22px, 4vw, 30px)', fontWeight: 800, fontFamily: 'var(--font-display)' }}>{t('title')}</h1>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 'clamp(22px, 4vw, 30px)',
+              fontWeight: 800,
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            {t('title')}
+          </h1>
+          <span style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+            <Link
+              href="/studio/board"
+              className="btn btn-ghost"
+              style={{ textDecoration: 'none', fontSize: 14 }}
+              data-testid="flow-honor-link"
+            >
+              {th('title')}
+            </Link>
+            <KudosInbox />
+          </span>
         </div>
         <div role="tablist" style={{ display: 'flex', gap: 8 }}>
           {tab('voice', t('tabs.voice'))}
           {tab('review', t('tabs.review'))}
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }} aria-live="polite">
+        <div
+          style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}
+          aria-live="polite"
+        >
           {chip(t('counter.session', { n: session.count }), 'flow-count')}
           {session.streak >= 2 && chip(t('counter.streak', { n: session.streak }), 'flow-streak')}
-          {session.pending.length > 0 && chip(t('uploads.uploading', { n: session.pending.length }), 'flow-uploading')}
+          {session.pending.length > 0 &&
+            chip(t('uploads.uploading', { n: session.pending.length }), 'flow-uploading')}
           {session.failed.length > 0 && (
             <>
               {chip(t('uploads.failed', { n: session.failed.length }), 'flow-failed', 'warn')}
-              <button type="button" className="btn btn-secondary" style={{ padding: '4px 12px', fontSize: 13 }} onClick={retryFailed} data-testid="flow-retry-uploads">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                style={{ padding: '4px 12px', fontSize: 13 }}
+                onClick={retryFailed}
+                data-testid="flow-retry-uploads"
+              >
                 {t('uploads.retry')}
               </button>
             </>
@@ -228,31 +308,69 @@ export function StudioFlow({ initialMode, reminderSlot }: { initialMode: FlowMod
         </div>
 
         {resting ? (
-          <RestScreen session={session} reminderSlot={reminderSlot} onResume={() => setResting(false)} />
+          <RestScreen
+            session={session}
+            reminderSlot={reminderSlot}
+            onResume={() => setResting(false)}
+          />
         ) : mode === 'voice' ? (
-          <VoiceSection key="voice" active={idle} blocked={blocked} dispatch={dispatch} enqueue={enqueue} onGoReview={() => switchMode('review')} />
+          <VoiceSection
+            key="voice"
+            active={idle}
+            blocked={blocked}
+            dispatch={dispatch}
+            enqueue={enqueue}
+            onGoReview={() => switchMode('review')}
+          />
         ) : (
-          <ReviewSection key="review" active={idle} blocked={blocked} dispatch={dispatch} onToast={showToast} />
+          <ReviewSection
+            key="review"
+            active={idle}
+            blocked={blocked}
+            dispatch={dispatch}
+            onToast={showToast}
+          />
         )}
       </div>
 
-      <Celebration burst={burst} reducedMotion={reduced} />
-      {banner === 'item108' && <Banner big text={t('egg.item108')} />}
-      {banner === 'rare' && <Banner text={t('egg.rare')} />}
-      {milestone !== null && (
-        <MilestoneDialog
-          count={milestone}
-          onMore={() => setMilestone(null)}
-          onRest={() => {
-            setMilestone(null);
-            setResting(true);
-          }}
-        />
-      )}
-      {toast && (
-        <div role="status" style={{ position: 'fixed', left: '50%', bottom: 24, transform: 'translateX(-50%)', zIndex: 80, padding: '10px 18px', borderRadius: 12, background: 'var(--neutral-900)', color: '#fff', fontWeight: 600, maxWidth: '90vw' }} data-testid="flow-toast">
-          {toast}
-        </div>
+      {createPortal(
+        <>
+          <Celebration burst={burst} reducedMotion={reduced} />
+          {banner === 'item108' && <Banner big text={t('egg.item108')} />}
+          {banner === 'rare' && <Banner text={t('egg.rare')} />}
+          {milestone !== null && (
+            <MilestoneDialog
+              count={milestone}
+              onMore={() => setMilestone(null)}
+              onRest={() => {
+                setMilestone(null);
+                setResting(true);
+              }}
+            />
+          )}
+          {toast && (
+            <div
+              role="status"
+              style={{
+                position: 'fixed',
+                left: '50%',
+                bottom: 24,
+                transform: 'translateX(-50%)',
+                zIndex: 80,
+                padding: '10px 18px',
+                borderRadius: 12,
+                background: 'var(--neutral-900)',
+                color: '#fff',
+                fontWeight: 600,
+                maxWidth: '90vw',
+              }}
+              data-testid="flow-toast"
+            >
+              {toast}
+            </div>
+          )}
+        </>,
+        document.body,
       )}
     </div>
   );
