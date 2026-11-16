@@ -49,6 +49,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const [initials, setInitials] = useState('У');
+  const [isTeacher, setIsTeacher] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [gamification, setGamification] = useState<GamificationMe | null>(null);
   const [gamificationLoading, setGamificationLoading] = useState(true);
@@ -73,6 +74,7 @@ export function Header() {
     user
       .getUser()
       .then((u) => {
+        setIsTeacher(Boolean(u?.roles?.some((r) => r.slug === 'teacher' || r.slug === 'admin')));
         if (!u?.name) return;
         const parts = u.name.trim().split(/\s+/);
         const init = (parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '');
@@ -211,6 +213,16 @@ export function Header() {
               style={{ width: 38, height: 38 }}
             >
               <Icon name="lock" size={18} />
+            </Link>
+          )}
+          {isTeacher && (
+            <Link
+              href="/studio"
+              className="btn btn-secondary hide-md"
+              style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 13 }}
+              data-testid="nav-studio"
+            >
+              {t('studio')}
             </Link>
           )}
           {signedIn && (
@@ -358,6 +370,16 @@ export function Header() {
                 style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
               >
                 {t('mcp')}
+              </Link>
+            )}
+            {isTeacher && (
+              <Link
+                href="/studio"
+                className="btn btn-secondary"
+                style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
+                data-testid="nav-studio-mobile"
+              >
+                {t('studio')}
               </Link>
             )}
             {signedIn && (

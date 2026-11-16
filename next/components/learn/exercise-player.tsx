@@ -329,7 +329,7 @@ function ListenPickExercise({
 }: ListenPickProps): ReactElement {
   const t = useTranslations('learn.lesson.listenPick');
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const payload = exercise.payload as { audio_url?: string; options?: string[] };
+  const payload = exercise.payload as { audio_url?: string; audio_source?: string; options?: string[] };
   const options: string[] = useMemo(
     () => (Array.isArray(payload.options) ? payload.options : []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -391,6 +391,9 @@ function ListenPickExercise({
             <Icon name="volume" size={16} />
             {t('replay')}
           </button>
+          {payload.audio_source === 'user' && (
+            <span className="chip chip-green">{t('humanVoiced')}</span>
+          )}
         </div>
       ) : (
         <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 16 }}>{t('noAudio')}</p>
