@@ -532,12 +532,12 @@
     "other": "Other",
     "about": "About you (optional)",
     "aboutHint": "Where you are from, which dialect you know",
-    "privacy": "We use this only to contact you on Telegram.",
+    "privacy": "We use contacts only to get in touch with you.",
     "usageTitle": "How we use your contribution",
     "usage": [
       "Your voice, words and lesson corrections will become part of buryads.com and will be open to everyone under the CC BY 4.0 license. Attribution: \"buryads.com and contributors\".",
       "Your contacts (name and Telegram) are never published. We use them only to get in touch with you.",
-      "You can ask us to delete your data and recordings."
+      "To delete your data or recordings, send an application on the \"Help the project\" page with the note \"delete\" in the \"About you\" field, or reply to us on Telegram. We will delete everything within 30 days."
     ],
     "licenseLink": "CC BY 4.0 license",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.en",
@@ -576,7 +576,8 @@
     "contactsTitle": "Your contacts",
     "contacts": "We do not publish your name or Telegram and do not share them with third parties.",
     "deleteTitle": "Deletion",
-    "delete": "Want your data or recordings deleted? Reply to us on Telegram when we message you, and we will delete everything."
+    "delete": "To delete your data or recordings, send an application on the \"Help the project\" page with the note \"delete\" in the \"About you\" field, or reply to us on Telegram. We will delete everything within 30 days.",
+    "deleteLink": "Open the form"
   },
   "changes": {
     "title": "What's new",

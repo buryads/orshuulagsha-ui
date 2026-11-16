@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 
 export async function generateMetadata({
   params,
@@ -66,6 +67,11 @@ export default async function PrivacyPage({ params }: { params: { locale: string
       <section>
         <h2 style={heading}>{t('deleteTitle')}</h2>
         <p style={{ margin: 0 }}>{t('delete')}</p>
+        <p style={{ margin: '8px 0 0' }}>
+          <Link href="/pomoch" style={{ color: 'var(--primary-700)', textDecoration: 'underline' }}>
+            {t('deleteLink')}
+          </Link>
+        </p>
       </section>
     </div>
   );
