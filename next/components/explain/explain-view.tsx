@@ -1,10 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
 import { useLocale, useTranslations } from 'next-intl';
 import { explainText } from '@/lib/api/explain';
 import type { ExplainFrom, ExplainResponse } from '@/lib/api/types';
+import { BurKeyboard } from '@/components/home/bur-keyboard';
+import { useBurKeyboard } from '@/components/home/use-bur-keyboard';
+import { Icon } from '@/components/ui/icon';
 import { ShareBar } from './share-bar';
 import { WordCard } from './word-card';
 
@@ -24,6 +27,13 @@ export function ExplainView() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ExplainResponse | null>(null);
   const [submitted, setSubmitted] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const kb = useBurKeyboard(
+    textareaRef,
+    text,
+    (next) => setText(next.slice(0, MAX_LEN)),
+    { multiline: true },
+  );
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +85,8 @@ export function ExplainView() {
           ))}
         </div>
         <textarea
+          ref={textareaRef}
+          {...kb.fieldProps}
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={MAX_LEN}
@@ -93,14 +105,25 @@ export function ExplainView() {
           }}
         />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-            {text.length}/{MAX_LEN}
+          <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              className="btn-icon"
+              {...kb.toggleProps}
+              style={{ color: kb.open ? 'var(--primary)' : 'var(--text-muted)' }}
+            >
+              <Icon name="keyboard" size={16} />
+            </button>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+              {text.length}/{MAX_LEN}
+            </span>
           </span>
           <button type="submit" className="btn btn-primary" disabled={loading || !text.trim()}>
             {loading ? t('loading') : t('submit')}
           </button>
         </div>
       </form>
+
+      {kb.open && <BurKeyboard {...kb.panelProps} />}
 
       {error && (
         <div role="alert" className="card" style={{ padding: 14, color: 'var(--tertiary-700)' }}>

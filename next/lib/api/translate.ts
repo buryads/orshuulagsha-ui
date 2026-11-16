@@ -1,3 +1,4 @@
+import { normalizeBuryatH } from '@/lib/bur-text';
 import { apiCall } from './client';
 import type {
   DataEnvelope,
@@ -19,7 +20,7 @@ export async function translateWord(
   const body = await apiCall<DataEnvelope<TranslateResponse>>(
     'GET',
     `${RESOURCE}/${type}`,
-    { params: { word: value.toLowerCase() } },
+    { params: { word: normalizeBuryatH(value).toLowerCase() } },
   );
   return body.data;
 }

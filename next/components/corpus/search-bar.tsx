@@ -3,6 +3,8 @@
 import { type ReactElement, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
+import { BurKeyboard } from '@/components/home/bur-keyboard';
+import { useBurKeyboard } from '@/components/home/use-bur-keyboard';
 
 interface SearchBarProps {
   value: string;
@@ -14,6 +16,7 @@ interface SearchBarProps {
 export function SearchBar({ value, onChange, onSubmit, loading }: SearchBarProps): ReactElement {
   const t = useTranslations('corpus');
   const inputRef = useRef<HTMLInputElement>(null);
+  const kb = useBurKeyboard(inputRef, value, onChange);
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') onSubmit();
@@ -43,6 +46,7 @@ export function SearchBar({ value, onChange, onSubmit, loading }: SearchBarProps
         />
         <input
           ref={inputRef}
+          {...kb.fieldProps}
           type="search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -85,6 +89,25 @@ export function SearchBar({ value, onChange, onSubmit, loading }: SearchBarProps
           </button>
         )}
         <button
+          {...kb.toggleProps}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 40,
+            minWidth: 40,
+            height: 40,
+            border: 'none',
+            background: 'var(--surface-2)',
+            borderRadius: 8,
+            cursor: 'pointer',
+            color: kb.open ? 'var(--primary)' : 'var(--text-soft)',
+            flexShrink: 0,
+          }}
+        >
+          <Icon name="keyboard" size={16} />
+        </button>
+        <button
           type="button"
           onClick={onSubmit}
           disabled={loading}
@@ -115,6 +138,7 @@ export function SearchBar({ value, onChange, onSubmit, loading }: SearchBarProps
           <span className="hide-sm">{t('searchButton')}</span>
         </button>
       </div>
+      {kb.open && <BurKeyboard {...kb.panelProps} />}
       <p
         style={{
           margin: 0,

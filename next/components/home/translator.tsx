@@ -12,6 +12,7 @@ import { Icon } from '@/components/ui/icon';
 import { Link } from '@/i18n/navigation';
 import { TranslationText } from './translation-text';
 import { BurKeyboard } from './bur-keyboard';
+import { useBurKeyboard } from './use-bur-keyboard';
 
 export type FromLang = 'ru' | 'en' | 'mn' | 'auto' | 'bur';
 export type ToLang = 'bur' | 'ru';
@@ -83,9 +84,9 @@ export function Translator({
   targetMeta,
 }: TranslatorProps): ReactElement {
   const t = useTranslations('home.translator');
-  const [showKb, setShowKb] = useState(false);
   const [recording, setRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const kb = useBurKeyboard(textareaRef, src, setSrc, { multiline: true });
 
   // Auto-grow textarea to fit content so the card never needs a vertical
   // scrollbar. Reset to auto first to allow shrinking when text is deleted.
@@ -95,46 +96,6 @@ export function Translator({
     el.style.height = 'auto';
     el.style.height = `${Math.max(el.scrollHeight, 150)}px`;
   }, [src]);
-
-  const insertChar = (c: string) => {
-    const el = textareaRef.current;
-    if (!el) {
-      setSrc(src + c);
-      return;
-    }
-    const start = el.selectionStart ?? src.length;
-    const end = el.selectionEnd ?? src.length;
-    const next = src.slice(0, start) + c + src.slice(end);
-    setSrc(next);
-    requestAnimationFrame(() => {
-      el.focus();
-      const pos = start + c.length;
-      el.setSelectionRange(pos, pos);
-    });
-  };
-
-  const deleteBack = () => {
-    const el = textareaRef.current;
-    if (!el) {
-      setSrc(src.slice(0, -1));
-      return;
-    }
-    const start = el.selectionStart ?? src.length;
-    const end = el.selectionEnd ?? src.length;
-    if (start !== end) {
-      setSrc(src.slice(0, start) + src.slice(end));
-      requestAnimationFrame(() => {
-        el.focus();
-        el.setSelectionRange(start, start);
-      });
-    } else if (start > 0) {
-      setSrc(src.slice(0, start - 1) + src.slice(start));
-      requestAnimationFrame(() => {
-        el.focus();
-        el.setSelectionRange(start - 1, start - 1);
-      });
-    }
-  };
 
   const speak = (text: string, lang: FromLang | ToLang) => {
     if (typeof window === 'undefined' || !text) return;
@@ -275,6 +236,7 @@ export function Translator({
             value={src}
             onChange={(e) => setSrc(e.target.value)}
             onBlur={() => onCommit?.()}
+            {...kb.fieldProps}
             placeholder="Введите текст…"
             style={{
               width: '100%',
@@ -301,13 +263,12 @@ export function Translator({
           >
             <div style={{ display: 'flex', gap: 6 }}>
               <button
-                type="button"
                 className="btn-icon"
-                onClick={() => setShowKb(!showKb)}
+                {...kb.toggleProps}
                 style={{
                   width: 34,
                   height: 34,
-                  color: showKb ? 'var(--primary)' : 'var(--text-muted)',
+                  color: kb.open ? 'var(--primary)' : 'var(--text-muted)',
                 }}
                 title="Бурятская клавиатура"
               >
@@ -468,13 +429,9 @@ export function Translator({
         </div>
       </div>
 
-      {showKb && (
+      {kb.open && (
         <div style={{ padding: '0 14px 14px' }}>
-          <BurKeyboard
-            onInsert={insertChar}
-            onBackspace={deleteBack}
-            onClose={() => setShowKb(false)}
-          />
+          <BurKeyboard {...kb.panelProps} />
         </div>
       )}
     </div>

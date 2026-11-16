@@ -1,3 +1,4 @@
+import { normalizeBuryatH } from '@/lib/bur-text';
 import { apiCall } from './client';
 import type {
   CorpusSearchParams,
@@ -47,7 +48,7 @@ export function normalizeFacets(raw: RawCorpusFacets | undefined): CorpusFacets 
 
 function buildSearchQuery(params: CorpusSearchParams): Record<string, unknown> {
   const query: Record<string, unknown> = {};
-  if (params.q) query.q = params.q;
+  if (params.q) query.q = normalizeBuryatH(params.q);
   if (params.type && params.type.length > 0) query['type[]'] = params.type;
   if (params.source && params.source.length > 0) query['source[]'] = params.source;
   if (params.license && params.license.length > 0) query['license[]'] = params.license;

@@ -1,3 +1,4 @@
+import { normalizeBuryatH } from '@/lib/bur-text';
 import { apiCall } from './client';
 import type {
   DataEnvelope,
@@ -13,7 +14,7 @@ export async function explainText(
   const body = await apiCall<DataEnvelope<ExplainResponse>>(
     'POST',
     '/api/explain',
-    { data: { text, from, locale } },
+    { data: { text: from === 'bur' ? normalizeBuryatH(text) : text, from, locale } },
   );
   return body.data;
 }

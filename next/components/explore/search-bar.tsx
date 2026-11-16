@@ -3,12 +3,16 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
+  useRef,
   useState,
   type ChangeEvent,
   type FormEvent,
   type ReactElement,
 } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { BurKeyboard } from '@/components/home/bur-keyboard';
+import { useBurKeyboard } from '@/components/home/use-bur-keyboard';
+import { normalizeBuryatH } from '@/lib/bur-text';
 
 export function SearchBar(): ReactElement {
   const router = useRouter();
@@ -16,6 +20,8 @@ export function SearchBar(): ReactElement {
   const initialQ = searchParams.get('q') ?? '';
   const [q, setQ] = useState<string>(initialQ);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const kb = useBurKeyboard(inputRef, q, setQ);
 
   function pushQuery(value: string): void {
     const params = new URLSearchParams(searchParams.toString());
@@ -32,7 +38,9 @@ export function SearchBar(): ReactElement {
   function onSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     setSubmitting(true);
-    pushQuery(q);
+    const normalized = normalizeBuryatH(q);
+    setQ(normalized);
+    pushQuery(normalized);
     // Reset after micro-task — visual only.
     setTimeout(() => setSubmitting(false), 150);
   }
@@ -42,6 +50,7 @@ export function SearchBar(): ReactElement {
   }
 
   return (
+    <>
     <form
       onSubmit={onSubmit}
       className="card"
@@ -58,6 +67,8 @@ export function SearchBar(): ReactElement {
         style={{ margin: '0 18px', color: 'var(--text-soft)' }}
       />
       <input
+        ref={inputRef}
+        {...kb.fieldProps}
         value={q}
         onChange={onChange}
         placeholder="Поиск на бурятском, русском или транслитерацией…"
@@ -84,9 +95,9 @@ export function SearchBar(): ReactElement {
         }}
       >
         <button
-          type="button"
           className="btn-icon"
-          aria-label="Виртуальная клавиатура"
+          {...kb.toggleProps}
+          style={{ color: kb.open ? 'var(--primary)' : undefined }}
         >
           <Icon name="keyboard" size={16} />
         </button>
@@ -98,5 +109,11 @@ export function SearchBar(): ReactElement {
         </button>
       </div>
     </form>
+    {kb.open && (
+      <div style={{ marginTop: -10, marginBottom: 20 }}>
+        <BurKeyboard {...kb.panelProps} />
+      </div>
+    )}
+    </>
   );
 }

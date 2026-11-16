@@ -1,3 +1,4 @@
+import { normalizeBuryatH } from '@/lib/bur-text';
 import { apiCall } from './client';
 import type { AiTranslateResponse, DataEnvelope } from '@/lib/api/types';
 
@@ -10,7 +11,7 @@ export async function aiTranslate(
   const body = await apiCall<DataEnvelope<AiTranslateResponse>>(
     'POST',
     RESOURCE_AI_TRANSLATE,
-    { data: { text, direction } },
+    { data: { text: normalizeBuryatH(text), direction } },
   );
   return body.data;
 }
