@@ -31,7 +31,18 @@ export function ExerciseView({
 }): ReactElement {
   const t = useTranslations('studio.flow.review');
   const draft = draftFromPayload(type, payload);
-  const title = <div style={{ fontSize: 'clamp(20px, 4.5vw, 28px)', fontWeight: 800, fontFamily: 'var(--font-display)', overflowWrap: 'anywhere' }}>{prompt}</div>;
+  const title = (
+    <div
+      style={{
+        fontSize: 'clamp(20px, 4.5vw, 28px)',
+        fontWeight: 800,
+        fontFamily: 'var(--font-display)',
+        overflowWrap: 'anywhere',
+      }}
+    >
+      {prompt}
+    </div>
+  );
   if (type === 'match') {
     const d = draft as MatchDraft;
     return (
@@ -63,9 +74,18 @@ export function ExerciseView({
       </div>
     );
   }
-  const options = type === 'listen-pick' ? (draft as ListenPickDraft).options : (draft as ImagePickDraft).options.map((o) => o.label);
-  const correct = type === 'listen-pick' ? (draft as ListenPickDraft).correct_answer : (draft as ImagePickDraft).correct_answer;
-  const hint = type === 'listen-pick' ? (draft as ListenPickDraft).audio_text : (draft as ImagePickDraft).image_hint;
+  const options =
+    type === 'listen-pick'
+      ? (draft as ListenPickDraft).options
+      : (draft as ImagePickDraft).options.map((o) => o.label);
+  const correct =
+    type === 'listen-pick'
+      ? (draft as ListenPickDraft).correct_answer
+      : (draft as ImagePickDraft).correct_answer;
+  const hint =
+    type === 'listen-pick'
+      ? (draft as ListenPickDraft).audio_text
+      : (draft as ImagePickDraft).image_hint;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
       {title}

@@ -47,11 +47,17 @@ export interface KudosList {
 }
 
 export async function getBoard(period: BoardPeriod): Promise<Board> {
-  const body = await apiCall<{ data: BoardRow[]; meta: BoardMeta }>('GET', `${BASE}/board`, { params: { period } });
+  const body = await apiCall<{ data: BoardRow[]; meta: BoardMeta }>('GET', `${BASE}/board`, {
+    params: { period },
+  });
   return { rows: body.data, meta: body.meta };
 }
 
-export async function sendKudos(input: { to_user_id: number; emoji: KudosEmoji; message?: string }): Promise<void> {
+export async function sendKudos(input: {
+  to_user_id: number;
+  emoji: KudosEmoji;
+  message?: string;
+}): Promise<void> {
   await apiCall('POST', `${BASE}/kudos`, { data: input });
 }
 

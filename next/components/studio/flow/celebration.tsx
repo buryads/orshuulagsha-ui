@@ -78,7 +78,13 @@ function runConfetti(canvas: HTMLCanvasElement, burst: Burst): () => void {
   };
 }
 
-export function Celebration({ burst, reducedMotion }: { burst: Burst | null; reducedMotion: boolean }): ReactElement | null {
+export function Celebration({
+  burst,
+  reducedMotion,
+}: {
+  burst: Burst | null;
+  reducedMotion: boolean;
+}): ReactElement | null {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [checkId, setCheckId] = useState<number | null>(null);
 
@@ -86,7 +92,8 @@ export function Celebration({ burst, reducedMotion }: { burst: Burst | null; red
     if (!burst) return;
     setCheckId(burst.id);
     const hide = window.setTimeout(() => setCheckId(null), 700);
-    const stop = !reducedMotion && canvasRef.current ? runConfetti(canvasRef.current, burst) : undefined;
+    const stop =
+      !reducedMotion && canvasRef.current ? runConfetti(canvasRef.current, burst) : undefined;
     return () => {
       window.clearTimeout(hide);
       stop?.();
@@ -94,7 +101,11 @@ export function Celebration({ burst, reducedMotion }: { burst: Burst | null; red
   }, [burst, reducedMotion]);
 
   return (
-    <div aria-hidden style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 60 }} data-testid="celebration">
+    <div
+      aria-hidden
+      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 60 }}
+      data-testid="celebration"
+    >
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
       {checkId !== null && (
         <div
@@ -116,7 +127,16 @@ export function Celebration({ burst, reducedMotion }: { burst: Burst | null; red
             boxShadow: 'var(--shadow-lg)',
           }}
         >
-          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="56"
+            height="56"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M5 12.5l4.5 4.5L19 7.5" />
           </svg>
         </div>

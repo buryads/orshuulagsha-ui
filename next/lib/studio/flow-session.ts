@@ -31,7 +31,12 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
   switch (action.type) {
     case 'accept': {
       const streak = state.streak + 1;
-      return { ...state, count: state.count + 1, streak, bestStreak: Math.max(state.bestStreak, streak) };
+      return {
+        ...state,
+        count: state.count + 1,
+        streak,
+        bestStreak: Math.max(state.bestStreak, streak),
+      };
     }
     case 'skip':
       return { ...state, streak: 0, skipped: state.skipped + 1 };

@@ -2,7 +2,11 @@ export type SwipeDir = 'right' | 'left' | 'up';
 
 export const SWIPE_THRESHOLD = 90;
 
-export function classifySwipe(dx: number, dy: number, threshold = SWIPE_THRESHOLD): SwipeDir | null {
+export function classifySwipe(
+  dx: number,
+  dy: number,
+  threshold = SWIPE_THRESHOLD,
+): SwipeDir | null {
   const ax = Math.abs(dx);
   const ay = Math.abs(dy);
   if (ax >= ay && ax >= threshold && ax > ay) return dx > 0 ? 'right' : 'left';

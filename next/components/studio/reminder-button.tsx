@@ -158,17 +158,29 @@ export function ReminderButton(): ReactElement {
     );
   }
 
-  const timeLabel = chosen ? chosen.toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' }) : '';
+  const timeLabel = chosen
+    ? chosen.toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' })
+    : '';
   const presetStyle = { padding: '8px 12px', fontSize: 14, textAlign: 'left' as const };
 
   return (
-    <div ref={root} style={{ position: 'relative', display: 'inline-block' }} data-testid="reminder">
+    <div
+      ref={root}
+      style={{ position: 'relative', display: 'inline-block' }}
+      data-testid="reminder"
+    >
       <button
         type="button"
         className="btn btn-ghost"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        style={{ padding: '8px 14px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+        style={{
+          padding: '8px 14px',
+          fontSize: 14,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+        }}
       >
         <span aria-hidden>⏰</span>
         {t('button')}
@@ -194,10 +206,20 @@ export function ReminderButton(): ReactElement {
           }}
         >
           <strong style={{ fontSize: 14 }}>{t('title')}</strong>
-          <button type="button" className="btn btn-ghost" style={presetStyle} onClick={() => pick('hour')}>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={presetStyle}
+            onClick={() => pick('hour')}
+          >
             {t('hour')}
           </button>
-          <button type="button" className="btn btn-ghost" style={presetStyle} onClick={() => pick('tomorrow')}>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={presetStyle}
+            onClick={() => pick('tomorrow')}
+          >
             {t('tomorrow')}
           </button>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -208,7 +230,12 @@ export function ReminderButton(): ReactElement {
               aria-label={t('custom')}
               style={{ ...inputStyle, flex: '1 1 auto' }}
             />
-            <button type="button" className="btn btn-primary" style={{ padding: '8px 12px', fontSize: 13 }} onClick={pickCustom}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ padding: '8px 12px', fontSize: 13 }}
+              onClick={pickCustom}
+            >
               {t('customSet')}
             </button>
           </div>
@@ -223,7 +250,12 @@ export function ReminderButton(): ReactElement {
             </p>
           )}
           {chosen && (
-            <button type="button" className="btn btn-primary" style={{ padding: '8px 12px', fontSize: 14 }} onClick={addToCalendar}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ padding: '8px 12px', fontSize: 14 }}
+              onClick={addToCalendar}
+            >
               {t('calendar')}
             </button>
           )}

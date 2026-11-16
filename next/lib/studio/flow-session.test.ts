@@ -19,7 +19,11 @@ describe('sessionReducer', () => {
     expect(s.skipped).toBe(1);
   });
   it('tracks uploads from pending to done', () => {
-    const s = run({ type: 'upload-start', id: 'a' }, { type: 'upload-start', id: 'b' }, { type: 'upload-ok', id: 'a' });
+    const s = run(
+      { type: 'upload-start', id: 'a' },
+      { type: 'upload-start', id: 'b' },
+      { type: 'upload-ok', id: 'a' },
+    );
     expect(s.pending).toEqual(['b']);
     expect(s.uploaded).toBe(1);
   });

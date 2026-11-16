@@ -13,11 +13,15 @@ describe('presetTime', () => {
   });
 
   it('picks tomorrow even late in the evening', () => {
-    expect(presetTime('tomorrow', new Date(2026, 10, 16, 22, 0, 0))).toEqual(new Date(2026, 10, 17, 19, 0, 0));
+    expect(presetTime('tomorrow', new Date(2026, 10, 16, 22, 0, 0))).toEqual(
+      new Date(2026, 10, 17, 19, 0, 0),
+    );
   });
 
   it('rolls over the month end', () => {
-    expect(presetTime('tomorrow', new Date(2026, 10, 30, 12, 0, 0))).toEqual(new Date(2026, 11, 1, 19, 0, 0));
+    expect(presetTime('tomorrow', new Date(2026, 10, 30, 12, 0, 0))).toEqual(
+      new Date(2026, 11, 1, 19, 0, 0),
+    );
   });
 });
 

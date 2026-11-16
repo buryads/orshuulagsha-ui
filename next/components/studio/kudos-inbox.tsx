@@ -59,7 +59,13 @@ export function KudosInbox(): ReactElement {
         className="btn btn-ghost"
         aria-expanded={open}
         onClick={toggle}
-        style={{ padding: '8px 14px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+        style={{
+          padding: '8px 14px',
+          fontSize: 14,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+        }}
       >
         <span aria-hidden>🙌</span>
         {t('inbox')}
@@ -105,13 +111,33 @@ export function KudosInbox(): ReactElement {
         >
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
             <strong style={{ fontSize: 14 }}>{t('inboxTitle')}</strong>
-            <button type="button" className="btn btn-ghost" style={{ marginLeft: 'auto', padding: '2px 10px', fontSize: 12 }} onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              style={{ marginLeft: 'auto', padding: '2px 10px', fontSize: 12 }}
+              onClick={() => setOpen(false)}
+            >
               {t('close')}
             </button>
           </div>
-          {failed && <p style={{ margin: 0, fontSize: 13, color: 'var(--tertiary-700)' }}>{t('inboxLoadFailed')}</p>}
-          {!failed && items.length === 0 && <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>{t('inboxEmpty')}</p>}
-          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {failed && (
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--tertiary-700)' }}>
+              {t('inboxLoadFailed')}
+            </p>
+          )}
+          {!failed && items.length === 0 && (
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>{t('inboxEmpty')}</p>
+          )}
+          <ul
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}
+          >
             {items.map((k) => (
               <li
                 key={k.id}
@@ -129,8 +155,16 @@ export function KudosInbox(): ReactElement {
                 </span>
                 <span style={{ fontSize: 13, minWidth: 0, overflowWrap: 'anywhere' }}>
                   <strong>{k.from.name}</strong>
-                  {!k.seen && <span style={{ marginLeft: 6, fontSize: 11, color: 'var(--tertiary-700)' }}>{t('newLabel')}</span>}
-                  {k.message && <span style={{ display: 'block', color: 'var(--text-muted)' }}>{k.message}</span>}
+                  {!k.seen && (
+                    <span style={{ marginLeft: 6, fontSize: 11, color: 'var(--tertiary-700)' }}>
+                      {t('newLabel')}
+                    </span>
+                  )}
+                  {k.message && (
+                    <span style={{ display: 'block', color: 'var(--text-muted)' }}>
+                      {k.message}
+                    </span>
+                  )}
                 </span>
               </li>
             ))}
@@ -139,27 +173,27 @@ export function KudosInbox(): ReactElement {
       )}
       {toast &&
         createPortal(
-        <div
-          role="status"
-          data-testid="kudos-toast"
-          style={{
-            position: 'fixed',
-            right: 16,
-            bottom: 16,
-            left: 16,
-            maxWidth: 360,
-            marginLeft: 'auto',
-            zIndex: 120,
-            padding: '12px 16px',
-            borderRadius: 12,
-            background: 'var(--neutral-900)',
-            color: 'var(--text-inv)',
-            fontSize: 14,
-            boxShadow: '0 8px 24px rgba(14,16,19,0.3)',
-          }}
-        >
-          {toast}
-        </div>,
+          <div
+            role="status"
+            data-testid="kudos-toast"
+            style={{
+              position: 'fixed',
+              right: 16,
+              bottom: 16,
+              left: 16,
+              maxWidth: 360,
+              marginLeft: 'auto',
+              zIndex: 120,
+              padding: '12px 16px',
+              borderRadius: 12,
+              background: 'var(--neutral-900)',
+              color: 'var(--text-inv)',
+              fontSize: 14,
+              boxShadow: '0 8px 24px rgba(14,16,19,0.3)',
+            }}
+          >
+            {toast}
+          </div>,
           document.body,
         )}
     </div>

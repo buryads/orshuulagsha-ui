@@ -47,7 +47,9 @@ describe('buildIcs', () => {
   });
 
   it('honours a custom duration', () => {
-    expect(buildIcs({ ...base, durationMinutes: 30 }).split('\r\n')).toContain('DTEND:20261117T193000Z');
+    expect(buildIcs({ ...base, durationMinutes: 30 }).split('\r\n')).toContain(
+      'DTEND:20261117T193000Z',
+    );
   });
 
   it('includes the flow url and an alarm at start', () => {

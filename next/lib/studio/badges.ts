@@ -29,7 +29,11 @@ export interface NextBadge extends Badge {
   target: number;
 }
 
-const badge = (id: BadgeId, icon: string): Badge => ({ id, key: `studio.honor.badges.${id}`, icon });
+const badge = (id: BadgeId, icon: string): Badge => ({
+  id,
+  key: `studio.honor.badges.${id}`,
+  icon,
+});
 
 const TOTAL_LADDER: { badge: Badge; target: number }[] = [
   { badge: badge('first', '🌱'), target: 1 },
@@ -38,7 +42,10 @@ const TOTAL_LADDER: { badge: Badge; target: number }[] = [
   { badge: badge('actions1000', '🏆'), target: 1000 },
 ];
 
-const TYPE_LADDERS: { field: 'recorded' | 'reviewed' | 'fixed'; steps: { badge: Badge; target: number }[] }[] = [
+const TYPE_LADDERS: {
+  field: 'recorded' | 'reviewed' | 'fixed';
+  steps: { badge: Badge; target: number }[];
+}[] = [
   {
     field: 'recorded',
     steps: [

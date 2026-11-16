@@ -14,7 +14,12 @@ describe('earnedBadges', () => {
 
   it('awards action milestones cumulatively', () => {
     expect(ids({ allTimeTotal: 10 })).toEqual(['first', 'actions10']);
-    expect(ids({ allTimeTotal: 1000 })).toEqual(['first', 'actions10', 'actions100', 'actions1000']);
+    expect(ids({ allTimeTotal: 1000 })).toEqual([
+      'first',
+      'actions10',
+      'actions100',
+      'actions1000',
+    ]);
   });
 
   it('awards per-type badges from counts', () => {
@@ -28,7 +33,12 @@ describe('earnedBadges', () => {
   });
 
   it('skips type badges when counts are unknown', () => {
-    expect(ids({ allTimeTotal: 5000 })).toEqual(['first', 'actions10', 'actions100', 'actions1000']);
+    expect(ids({ allTimeTotal: 5000 })).toEqual([
+      'first',
+      'actions10',
+      'actions100',
+      'actions1000',
+    ]);
   });
 
   it('returns i18n key and icon', () => {
@@ -44,7 +54,12 @@ describe('nextBadge', () => {
   });
 
   it('points at the next action milestone', () => {
-    expect(nextBadge(58)).toMatchObject({ id: 'actions100', current: 58, target: 100, key: 'studio.honor.badges.actions100' });
+    expect(nextBadge(58)).toMatchObject({
+      id: 'actions100',
+      current: 58,
+      target: 100,
+      key: 'studio.honor.badges.actions100',
+    });
   });
 
   it('is null after the last milestone', () => {

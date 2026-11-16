@@ -3,7 +3,13 @@
 import { useCallback, useEffect, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { BOARD_PERIODS, getBoard, type Board, type BoardPeriod, type BoardRow } from '@/lib/api/studio-board';
+import {
+  BOARD_PERIODS,
+  getBoard,
+  type Board,
+  type BoardPeriod,
+  type BoardRow,
+} from '@/lib/api/studio-board';
 import { earnedBadges, nextBadge } from '@/lib/studio/badges';
 import { KudosDialog } from './kudos-dialog';
 import { KudosInbox } from './kudos-inbox';
@@ -30,7 +36,12 @@ function Row({
   const tr = useTranslations();
   const badges = earnedBadges(
     period === 'all'
-      ? { allTimeTotal: row.all_time_total, recorded: row.recorded, reviewed: row.reviewed, fixed: row.fixed }
+      ? {
+          allTimeTotal: row.all_time_total,
+          recorded: row.recorded,
+          reviewed: row.reviewed,
+          fixed: row.fixed,
+        }
       : { allTimeTotal: row.all_time_total },
   );
   const next = isMe ? nextBadge(row.all_time_total) : null;
@@ -50,12 +61,32 @@ function Row({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-        <span aria-label={t('rank', { rank })} style={{ minWidth: 32, textAlign: 'center', fontSize: medal ? 24 : 15, fontWeight: 700, color: 'var(--text-muted)' }}>
+        <span
+          aria-label={t('rank', { rank })}
+          style={{
+            minWidth: 32,
+            textAlign: 'center',
+            fontSize: medal ? 24 : 15,
+            fontWeight: 700,
+            color: 'var(--text-muted)',
+          }}
+        >
           {medal ?? rank}
         </span>
-        <span style={{ fontWeight: 700, fontSize: 16, minWidth: 0, overflowWrap: 'anywhere' }}>{row.user.name}</span>
+        <span style={{ fontWeight: 700, fontSize: 16, minWidth: 0, overflowWrap: 'anywhere' }}>
+          {row.user.name}
+        </span>
         {isMe && (
-          <span style={{ fontSize: 11, fontWeight: 700, background: 'var(--primary)', color: 'var(--text-inv)', borderRadius: 999, padding: '2px 8px' }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              background: 'var(--primary)',
+              color: 'var(--text-inv)',
+              borderRadius: 999,
+              padding: '2px 8px',
+            }}
+          >
             {t('you')}
           </span>
         )}
@@ -63,7 +94,15 @@ function Row({
           <strong style={{ fontSize: 20, color: 'var(--text)' }}>{row.total}</strong> {t('total')}
         </span>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px', fontSize: 13, color: 'var(--text-muted)' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '4px 14px',
+          fontSize: 13,
+          color: 'var(--text-muted)',
+        }}
+      >
         {COUNTERS.map((c) => (
           <span key={c}>
             <strong style={{ color: 'var(--text)' }}>{row[c]}</strong> {t(`counters.${c}`)}
@@ -81,7 +120,12 @@ function Row({
             <span
               key={b.id}
               title={tr(b.key)}
-              style={{ fontSize: 12, background: 'var(--accent-warm-soft)', borderRadius: 999, padding: '2px 10px' }}
+              style={{
+                fontSize: 12,
+                background: 'var(--accent-warm-soft)',
+                borderRadius: 999,
+                padding: '2px 10px',
+              }}
             >
               <span aria-hidden>{b.icon}</span> {tr(b.key)}
             </span>
@@ -91,14 +135,30 @@ function Row({
       {next && (
         <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
           {t('next', { badge: tr(next.key), current: next.current, target: next.target })}
-          <div style={{ height: 6, borderRadius: 3, background: 'var(--border)', marginTop: 4, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${Math.round((next.current / next.target) * 100)}%`, background: 'var(--primary)' }} />
+          <div
+            style={{
+              height: 6,
+              borderRadius: 3,
+              background: 'var(--border)',
+              marginTop: 4,
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+                width: `${Math.round((next.current / next.target) * 100)}%`,
+                background: 'var(--primary)',
+              }}
+            />
           </div>
         </div>
       )}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         {row.kudos_received > 0 && (
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>🙌 {t('kudosReceived', { count: row.kudos_received })}</span>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            🙌 {t('kudosReceived', { count: row.kudos_received })}
+          </span>
         )}
         {!isMe && (
           <button
@@ -144,7 +204,17 @@ function HonorBoard(): ReactElement {
   const link = { textDecoration: 'none', padding: '8px 14px', fontSize: 14 } as const;
 
   return (
-    <div className="container" style={{ paddingTop: 24, paddingBottom: 48, display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 760 }}>
+    <div
+      className="container"
+      style={{
+        paddingTop: 24,
+        paddingBottom: 48,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+        maxWidth: 760,
+      }}
+    >
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
         <Link href="/studio" className="btn btn-ghost" style={link}>
           ← {t('back')}
@@ -159,7 +229,9 @@ function HonorBoard(): ReactElement {
       </div>
       <div>
         <h1 style={{ margin: 0, fontSize: 26 }}>🏅 {t('title')}</h1>
-        <p style={{ margin: '4px 0 0', color: 'var(--text-muted)', fontSize: 14 }}>{t('subtitle')}</p>
+        <p style={{ margin: '4px 0 0', color: 'var(--text-muted)', fontSize: 14 }}>
+          {t('subtitle')}
+        </p>
       </div>
       <div role="tablist" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {BOARD_PERIODS.map((p) => (
@@ -182,7 +254,10 @@ function HonorBoard(): ReactElement {
         </p>
       )}
       {failed && (
-        <div className="card" style={{ padding: 16, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div
+          className="card"
+          style={{ padding: 16, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}
+        >
           <span role="alert">{t('loadFailed')}</span>
           <button type="button" className="btn btn-ghost" onClick={() => load(period)}>
             {t('retry')}
@@ -190,11 +265,30 @@ function HonorBoard(): ReactElement {
         </div>
       )}
       {!board && !failed && <p style={{ color: 'var(--text-muted)' }}>{t('loading')}</p>}
-      {board && board.rows.length === 0 && <p style={{ color: 'var(--text-muted)' }}>{t('empty')}</p>}
+      {board && board.rows.length === 0 && (
+        <p style={{ color: 'var(--text-muted)' }}>{t('empty')}</p>
+      )}
       {board && board.rows.length > 0 && (
-        <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }} data-testid="honor-list">
+        <ol
+          style={{
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+          }}
+          data-testid="honor-list"
+        >
           {board.rows.map((row, i) => (
-            <Row key={row.user.id} row={row} rank={i + 1} isMe={row.user.id === board.meta.me} period={period} onThanks={setThanksTo} />
+            <Row
+              key={row.user.id}
+              row={row}
+              rank={i + 1}
+              isMe={row.user.id === board.meta.me}
+              period={period}
+              onThanks={setThanksTo}
+            />
           ))}
         </ol>
       )}

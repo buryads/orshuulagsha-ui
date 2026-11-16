@@ -1,9 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactElement } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+  type ReactElement,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import { Field } from '@/components/studio/field';
-import { isConflict, skipFlowItem, submitReview, type ReviewInput, type ReviewItem } from '@/lib/api/studio-flow';
+import {
+  isConflict,
+  skipFlowItem,
+  submitReview,
+  type ReviewInput,
+  type ReviewItem,
+} from '@/lib/api/studio-flow';
 import { classifySwipe, swipeVisual, type SwipeDir } from '@/lib/studio/flow-swipe';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
 import { ExerciseView } from './exercise-view';
@@ -26,7 +39,15 @@ const HINT_RGB: Record<SwipeDir, string> = {
   up: '110,116,125',
 };
 
-export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onToast }: ReviewTabProps): ReactElement {
+export function ReviewTab({
+  queue,
+  active,
+  advance,
+  reload,
+  onDone,
+  onSkip,
+  onToast,
+}: ReviewTabProps): ReactElement {
   const t = useTranslations('studio.flow');
   const item = queue.item;
   const [panel, setPanel] = useState(false);
@@ -45,7 +66,8 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
   }, [item?.item_key, item?.bur]);
 
   useEffect(() => {
-    if (panel) document.querySelector<HTMLElement>('[data-fid="flow-fix"], [data-fid="flow-note"]')?.focus();
+    if (panel)
+      document.querySelector<HTMLElement>('[data-fid="flow-fix"], [data-fid="flow-note"]')?.focus();
   }, [panel]);
 
   const send = useCallback(
@@ -84,7 +106,12 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
     const noteText = note.trim();
     const changed = item.fixable && fix.trim() !== '' && fix.trim() !== (item.bur ?? '').trim();
     const input: ReviewInput = changed
-      ? { item_key: item.item_key, verdict: 'fix', bur: fix.trim(), ...(noteText ? { note: noteText } : {}) }
+      ? {
+          item_key: item.item_key,
+          verdict: 'fix',
+          bur: fix.trim(),
+          ...(noteText ? { note: noteText } : {}),
+        }
       : { item_key: item.item_key, verdict: 'issue', ...(noteText ? { note: noteText } : {}) };
     void send(input);
   }, [item, busy, fix, note, send]);
@@ -121,7 +148,13 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
   }, [active, ready]);
 
   if (queue.status !== 'ready' || !item) {
-    return <QueueState status={queue.status === 'ready' ? 'loading' : queue.status} mode="review" onRetry={() => void reload()} />;
+    return (
+      <QueueState
+        status={queue.status === 'ready' ? 'loading' : queue.status}
+        mode="review"
+        onRetry={() => void reload()}
+      />
+    );
   }
 
   const onDown = (e: PointerEvent<HTMLDivElement>) => {
@@ -177,17 +210,40 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
           transform: visual?.transform,
           transition: drag ? 'none' : 'transform 0.2s ease',
           opacity: busy ? 0.6 : 1,
-          boxShadow: visual?.hint ? `inset 0 0 0 3px rgba(${HINT_RGB[visual.hint]},${(0.7 * visual.strength).toFixed(2)}), var(--shadow-md)` : undefined,
-          background: visual?.hint ? `linear-gradient(rgba(${HINT_RGB[visual.hint]},${(0.28 * visual.strength).toFixed(2)}),rgba(${HINT_RGB[visual.hint]},${(0.28 * visual.strength).toFixed(2)})), var(--surface)` : undefined,
+          boxShadow: visual?.hint
+            ? `inset 0 0 0 3px rgba(${HINT_RGB[visual.hint]},${(0.7 * visual.strength).toFixed(2)}), var(--shadow-md)`
+            : undefined,
+          background: visual?.hint
+            ? `linear-gradient(rgba(${HINT_RGB[visual.hint]},${(0.28 * visual.strength).toFixed(2)}),rgba(${HINT_RGB[visual.hint]},${(0.28 * visual.strength).toFixed(2)})), var(--surface)`
+            : undefined,
         }}
       >
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', fontSize: 13, color: 'var(--text-muted)' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: 13,
+            color: 'var(--text-muted)',
+          }}
+        >
           <span style={{ fontWeight: 700 }} data-testid="review-kind">
             {t(`review.kind.${item.kind}`)}
             {item.exercise ? ` · ${t(`review.exerciseType.${item.exercise.type}`)}` : ''}
           </span>
           {item.source === 'ai' && (
-            <span style={{ padding: '2px 8px', borderRadius: 999, background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 700 }} data-testid="review-ai">
+            <span
+              style={{
+                padding: '2px 8px',
+                borderRadius: 999,
+                background: 'var(--primary-50)',
+                color: 'var(--primary-700)',
+                fontWeight: 700,
+              }}
+              data-testid="review-ai"
+            >
               {t('review.sourceAi')}
             </span>
           )}
@@ -196,21 +252,48 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
           </span>
         </div>
         {item.exercise ? (
-          <ExerciseView type={item.exercise.type} prompt={item.exercise.prompt} payload={item.exercise.payload} />
+          <ExerciseView
+            type={item.exercise.type}
+            prompt={item.exercise.prompt}
+            payload={item.exercise.payload}
+          />
         ) : (
           <>
-            <div style={{ fontSize: 'clamp(28px, 6.5vw, 46px)', fontWeight: 800, lineHeight: 1.15, fontFamily: 'var(--font-display)', overflowWrap: 'anywhere' }} data-testid="review-bur">
+            <div
+              style={{
+                fontSize: 'clamp(28px, 6.5vw, 46px)',
+                fontWeight: 800,
+                lineHeight: 1.15,
+                fontFamily: 'var(--font-display)',
+                overflowWrap: 'anywhere',
+              }}
+              data-testid="review-bur"
+            >
               {item.bur}
             </div>
-            <div style={{ fontSize: 'clamp(16px, 3.5vw, 22px)', color: 'var(--text-muted)' }}>{item.ru}</div>
+            <div style={{ fontSize: 'clamp(16px, 3.5vw, 22px)', color: 'var(--text-muted)' }}>
+              {item.ru}
+            </div>
           </>
         )}
       </div>
 
       {panel ? (
-        <div className="card" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }} data-testid="review-panel">
+        <div
+          className="card"
+          style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}
+          data-testid="review-panel"
+        >
           {item.fixable && (
-            <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: 'var(--text-muted)' }}>
+            <label
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 4,
+                fontSize: 13,
+                color: 'var(--text-muted)',
+              }}
+            >
               {t('review.fixLabel')}
               <Field
                 value={fix}
@@ -243,28 +326,67 @@ export function ReviewTab({ queue, active, advance, reload, onDone, onSkip, onTo
             }}
           />
           <div style={{ display: 'flex', gap: 10 }}>
-            <button type="button" className="btn btn-primary" style={{ ...btn, flex: 1 }} disabled={busy} onClick={submitPanel} data-testid="review-submit">
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ ...btn, flex: 1 }}
+              disabled={busy}
+              onClick={submitPanel}
+              data-testid="review-submit"
+            >
               {t('review.submit')}
             </button>
-            <button type="button" className="btn btn-ghost" style={btn} onClick={() => setPanel(false)}>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              style={btn}
+              onClick={() => setPanel(false)}
+            >
               {t('review.cancel')}
             </button>
           </div>
         </div>
       ) : (
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <button type="button" className="btn btn-secondary" style={{ ...btn, flex: '1 1 130px', color: 'var(--tertiary-700)' }} disabled={busy} onMouseDown={(e) => e.preventDefault()} onClick={() => setPanel(true)} data-testid="review-wrong">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            style={{ ...btn, flex: '1 1 130px', color: 'var(--tertiary-700)' }}
+            disabled={busy}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setPanel(true)}
+            data-testid="review-wrong"
+          >
             {t('review.wrong')}
           </button>
-          <button type="button" className="btn btn-ghost" style={{ ...btn, flex: '0 1 110px' }} disabled={busy} onMouseDown={(e) => e.preventDefault()} onClick={skip} data-testid="review-skip">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={{ ...btn, flex: '0 1 110px' }}
+            disabled={busy}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={skip}
+            data-testid="review-skip"
+          >
             {t('review.skip')}
           </button>
-          <button type="button" className="btn btn-primary" style={{ ...btn, flex: '1 1 130px' }} disabled={busy} onMouseDown={(e) => e.preventDefault()} onClick={approve} data-testid="review-ok">
+          <button
+            type="button"
+            className="btn btn-primary"
+            style={{ ...btn, flex: '1 1 130px' }}
+            disabled={busy}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={approve}
+            data-testid="review-ok"
+          >
             {t('review.ok')}
           </button>
         </div>
       )}
-      <div className="flow-help" style={{ fontSize: 12, color: 'var(--text-soft)', textAlign: 'center' }}>
+      <div
+        className="flow-help"
+        style={{ fontSize: 12, color: 'var(--text-soft)', textAlign: 'center' }}
+      >
         <span className="flow-kbd-only">{t('review.help')}</span>
         <span className="flow-touch-only">{t('review.swipeHint')}</span>
       </div>

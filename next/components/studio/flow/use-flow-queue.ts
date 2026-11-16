@@ -38,8 +38,16 @@ export function useFlowQueue<M extends FlowMode>(mode: M, blocked: ReadonlySet<s
     const mine = ++seq.current;
     setState((s) => ({ ...s, status: 'loading', item: null }));
     try {
-      let res = (await getFlowNext(mode as never)) as { item: ItemOf<M> | null; remaining: number; fromSkipped: boolean };
-      for (let i = 0; i < MAX_GUARD_SKIPS && res.item && blockedRef.current.has(res.item.item_key); i++) {
+      let res = (await getFlowNext(mode as never)) as {
+        item: ItemOf<M> | null;
+        remaining: number;
+        fromSkipped: boolean;
+      };
+      for (
+        let i = 0;
+        i < MAX_GUARD_SKIPS && res.item && blockedRef.current.has(res.item.item_key);
+        i++
+      ) {
         await skipFlowItem(mode, res.item.item_key).catch(() => undefined);
         res = (await getFlowNext(mode as never)) as typeof res;
       }
@@ -52,7 +60,12 @@ export function useFlowQueue<M extends FlowMode>(mode: M, blocked: ReadonlySet<s
       });
     } catch (err) {
       if (mine !== seq.current) return;
-      setState({ status: isNotReady(err) ? 'notReady' : 'error', item: null, remaining: 0, fromSkipped: false });
+      setState({
+        status: isNotReady(err) ? 'notReady' : 'error',
+        item: null,
+        remaining: 0,
+        fromSkipped: false,
+      });
     }
   }, [mode]);
 

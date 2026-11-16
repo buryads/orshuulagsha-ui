@@ -63,10 +63,22 @@ export function KudosDialog({ to, onClose, onSent }: Props): ReactElement {
         data-testid="kudos-dialog"
         className="card"
         onClick={(e) => e.stopPropagation()}
-        style={{ width: '100%', maxWidth: 400, padding: 20, display: 'flex', flexDirection: 'column', gap: 14, background: 'var(--surface-elev)' }}
+        style={{
+          width: '100%',
+          maxWidth: 400,
+          padding: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 14,
+          background: 'var(--surface-elev)',
+        }}
       >
         <h2 style={{ margin: 0, fontSize: 18 }}>{t('title', { name: to.name })}</h2>
-        <div role="radiogroup" aria-label={t('emojiLabel')} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+        <div
+          role="radiogroup"
+          aria-label={t('emojiLabel')}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}
+        >
           {KUDOS_EMOJI.map((e, i) => (
             <button
               key={e}
@@ -88,7 +100,15 @@ export function KudosDialog({ to, onClose, onSent }: Props): ReactElement {
             </button>
           ))}
         </div>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13, color: 'var(--text-muted)' }}>
+        <label
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+            fontSize: 13,
+            color: 'var(--text-muted)',
+          }}
+        >
           {t('message')}
           <textarea
             value={message}
@@ -111,7 +131,12 @@ export function KudosDialog({ to, onClose, onSent }: Props): ReactElement {
           <button type="button" className="btn btn-ghost" onClick={onClose}>
             {t('cancel')}
           </button>
-          <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void submit()}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={busy}
+            onClick={() => void submit()}
+          >
             {busy ? t('sending') : t('send')}
           </button>
         </div>

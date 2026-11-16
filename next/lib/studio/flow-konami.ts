@@ -1,6 +1,17 @@
 export type KonamiInput = 'up' | 'down' | 'left' | 'right' | 'b' | 'a';
 
-const SEQUENCE: KonamiInput[] = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a'];
+const SEQUENCE: KonamiInput[] = [
+  'up',
+  'up',
+  'down',
+  'down',
+  'left',
+  'right',
+  'left',
+  'right',
+  'b',
+  'a',
+];
 
 export const KONAMI_START = 0;
 
@@ -22,7 +33,10 @@ export function konamiInput(e: { key: string; code?: string }): KonamiInput | nu
   return null;
 }
 
-export function feedKonami(progress: number, input: KonamiInput | null): { progress: number; done: boolean } {
+export function feedKonami(
+  progress: number,
+  input: KonamiInput | null,
+): { progress: number; done: boolean } {
   if (input === null) return { progress: 0, done: false };
   if (SEQUENCE[progress] === input) {
     const next = progress + 1;
@@ -33,5 +47,7 @@ export function feedKonami(progress: number, input: KonamiInput | null): { progr
 }
 
 export function swallowsArrow(progress: number, input: KonamiInput | null): boolean {
-  return progress >= 3 && (input === 'up' || input === 'down' || input === 'left' || input === 'right');
+  return (
+    progress >= 3 && (input === 'up' || input === 'down' || input === 'left' || input === 'right')
+  );
 }

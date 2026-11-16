@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { KONAMI_START, feedKonami, konamiInput, swallowsArrow, type KonamiInput } from './flow-konami';
+import {
+  KONAMI_START,
+  feedKonami,
+  konamiInput,
+  swallowsArrow,
+  type KonamiInput,
+} from './flow-konami';
 
 const press = (...inputs: (KonamiInput | null)[]) => {
   let s = KONAMI_START;
