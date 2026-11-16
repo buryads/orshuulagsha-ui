@@ -105,7 +105,8 @@ function Row({
       >
         {COUNTERS.map((c) => (
           <span key={c}>
-            <strong style={{ color: 'var(--text)' }}>{row[c]}</strong> {t(`counters.${c}`)}
+            <strong style={{ color: 'var(--text)' }}>{row[c]}</strong>{' '}
+            {t(`counters.${c}`, { count: row[c] })}
           </span>
         ))}
         {row.flagged > 0 && (

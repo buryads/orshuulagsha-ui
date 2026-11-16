@@ -952,7 +952,7 @@
         "recorded": "recorded",
         "reviewed": "reviewed",
         "fixed": "fixed",
-        "lessons": "lessons",
+        "lessons": "{count, plural, one {lesson} other {lessons}}",
         "flagged": "flagged"
       },
       "total": "total",

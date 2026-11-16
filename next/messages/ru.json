@@ -951,7 +951,7 @@
         "recorded": "записано",
         "reviewed": "проверено",
         "fixed": "исправлено",
-        "lessons": "уроков",
+        "lessons": "{count, plural, one {урок} few {урока} other {уроков}}",
         "flagged": "с замечанием"
       },
       "total": "всего",
