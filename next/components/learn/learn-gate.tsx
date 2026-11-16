@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { ReactElement, ReactNode } from 'react';
 import { LEARN_ENABLED } from '@/lib/learn-enabled';
 import { isLearnVisible } from '@/lib/learn-access';
@@ -8,9 +10,15 @@ import { useCurrentUser } from '@/lib/use-current-user';
 
 export function LearnGate({ children }: { children: ReactNode }): ReactElement | null {
   const t = useTranslations('common');
-  const { isTeacher, ready, error } = useCurrentUser();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { signedIn, isTeacher, ready, error } = useCurrentUser();
+  const redirectToSignin = !LEARN_ENABLED && ready && !signedIn;
+  useEffect(() => {
+    if (redirectToSignin) router.replace(`/signin?next=${encodeURIComponent(pathname)}`);
+  }, [redirectToSignin, router, pathname]);
   if (LEARN_ENABLED) return <>{children}</>;
-  if (!ready) return null;
+  if (!ready || redirectToSignin) return null;
   if (error) {
     return (
       <div className="container" style={{ paddingTop: 64, paddingBottom: 64, textAlign: 'center' }} data-testid="learn-gate-error">

@@ -14,6 +14,18 @@ export interface CurrentUser {
   error: boolean;
 }
 
+let cached: { token: string; promise: Promise<IUser> } | null = null;
+
+function fetchUserOnce(token: string): Promise<IUser> {
+  if (cached?.token === token) return cached.promise;
+  const promise = user.getUser();
+  cached = { token, promise };
+  promise.catch(() => {
+    if (cached?.promise === promise) cached = null;
+  });
+  return promise;
+}
+
 export function useCurrentUser(): CurrentUser {
   const [state, setState] = useState<CurrentUser>({
     signedIn: false,
@@ -23,13 +35,13 @@ export function useCurrentUser(): CurrentUser {
     error: false,
   });
   useEffect(() => {
-    if (!getAuthToken()) {
+    const token = getAuthToken();
+    if (!token) {
       setState({ signedIn: false, user: null, isTeacher: false, ready: true, error: false });
       return;
     }
     setState((s) => ({ ...s, signedIn: true }));
-    user
-      .getUser()
+    fetchUserOnce(token)
       .then((u) => setState({ signedIn: true, user: u, isTeacher: isTeacherUser(u), ready: true, error: false }))
       .catch(() => setState((s) => ({ ...s, ready: true, error: true })));
   }, []);
