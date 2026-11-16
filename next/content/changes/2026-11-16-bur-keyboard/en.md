@@ -6,7 +6,7 @@ bur_reviewed: false
 
 ## What's new
 
-The on-screen Buryat keyboard is now available in the translator, dictionary search, corpus search, phrase explainer and when adding a word to a pack. The "һ" key now types the real letter һ instead of a Latin h.
+The on-screen Buryat keyboard is now available in the translator, dictionary search, corpus search and the phrase explainer. The "һ" key now types the real letter һ instead of a Latin h.
 
 ## How to use
 

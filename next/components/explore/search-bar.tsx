@@ -73,7 +73,7 @@ export function SearchBar(): ReactElement {
         onChange={onChange}
         placeholder="Поиск на бурятском, русском или транслитерацией…"
         aria-label="Поиск по словарю"
-        disabled={submitting}
+        readOnly={submitting}
         style={{
           flex: 1,
           padding: '18px 0',

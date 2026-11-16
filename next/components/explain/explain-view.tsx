@@ -28,12 +28,10 @@ export function ExplainView() {
   const [result, setResult] = useState<ExplainResponse | null>(null);
   const [submitted, setSubmitted] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const kb = useBurKeyboard(
-    textareaRef,
-    text,
-    (next) => setText(next.slice(0, MAX_LEN)),
-    { multiline: true },
-  );
+  const kb = useBurKeyboard(textareaRef, text, setText, {
+    multiline: true,
+    maxLength: MAX_LEN,
+  });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
