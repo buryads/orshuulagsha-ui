@@ -7,7 +7,6 @@ import {
   useRef,
   useState,
   type ChangeEvent,
-  type KeyboardEvent,
   type ReactElement,
 } from 'react';
 import { useTranslations } from 'next-intl';
@@ -15,6 +14,8 @@ import { Link } from '@/i18n/navigation';
 import { Icon } from '@/components/ui/icon';
 import { XpToast } from '@/components/learn/xp-toast';
 import { BurKeyboard } from '@/components/home/bur-keyboard';
+import { useBurKeyboard } from '@/components/home/use-bur-keyboard';
+import { normalizeBuryatH } from '@/lib/bur-text';
 import { getLessonDetail, checkLesson } from '@/lib/api/lessons';
 import { getGamificationMe } from '@/lib/api/gamification';
 import type { LessonDetail, Exercise, CheckAnswer, CheckResponse } from '@/lib/api/types';
@@ -247,44 +248,8 @@ interface TypeExerciseProps {
 
 function TypeExercise({ exercise, value, onChange, feedbackPhase }: TypeExerciseProps): ReactElement {
   const t = useTranslations('learn.lesson.type');
-  const [showKb, setShowKb] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const caretRef = useRef<number>(0);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
-  };
-
-  const handleInsert = (text: string) => {
-    const el = inputRef.current;
-    if (!el) {
-      onChange(value + text);
-      return;
-    }
-    const start = caretRef.current;
-    const end = el.selectionEnd ?? start;
-    const next = value.slice(0, start) + text + value.slice(end);
-    onChange(next);
-    caretRef.current = start + text.length;
-    requestAnimationFrame(() => {
-      el.focus();
-      el.setSelectionRange(start + text.length, start + text.length);
-    });
-  };
-
-  const handleBackspace = () => {
-    const el = inputRef.current;
-    const start = caretRef.current;
-    if (start > 0) {
-      const next = value.slice(0, start - 1) + value.slice(start);
-      onChange(next);
-      caretRef.current = start - 1;
-      requestAnimationFrame(() => {
-        el?.focus();
-        el?.setSelectionRange(start - 1, start - 1);
-      });
-    }
-  };
+  const kb = useBurKeyboard(inputRef, value, onChange);
 
   const payload = exercise.payload as { prompt?: string; audio_url?: string };
 
@@ -308,17 +273,12 @@ function TypeExercise({ exercise, value, onChange, feedbackPhase }: TypeExercise
       )}
       <input
         ref={inputRef}
+        {...kb.fieldProps}
         type="text"
         value={value}
-        onChange={handleChange}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         disabled={feedbackPhase}
         placeholder={t('placeholder')}
-        onSelect={(e) => {
-          caretRef.current = (e.target as HTMLInputElement).selectionStart ?? 0;
-        }}
-        onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-          caretRef.current = (e.target as HTMLInputElement).selectionStart ?? 0;
-        }}
         style={{
           width: '100%',
           padding: '14px 16px',
@@ -336,22 +296,15 @@ function TypeExercise({ exercise, value, onChange, feedbackPhase }: TypeExercise
       />
       <div style={{ marginTop: 10, display: 'flex', gap: 8, alignItems: 'center' }}>
         <button
-          type="button"
+          {...kb.toggleProps}
           className="btn btn-ghost"
-          onClick={() => setShowKb((s) => !s)}
           style={{ fontSize: 13, gap: 6, display: 'flex', alignItems: 'center' }}
         >
           <Icon name="keyboard" size={15} />
           {t('keyboard')}
         </button>
       </div>
-      {showKb && (
-        <BurKeyboard
-          onInsert={handleInsert}
-          onBackspace={handleBackspace}
-          onClose={() => setShowKb(false)}
-        />
-      )}
+      {kb.open && <BurKeyboard {...kb.panelProps} />}
     </div>
   );
 }
@@ -834,7 +787,8 @@ export function ExercisePlayer({ slug }: ExercisePlayerProps): ReactElement {
   const handleCheck = async () => {
     if (!canCheck()) return;
 
-    const ans = getEffectiveAnswer();
+    const raw = getEffectiveAnswer();
+    const ans = typeof raw === 'string' ? normalizeBuryatH(raw) : raw;
 
     // Naive local feedback (will be confirmed by server on last exercise)
     // Just show "answered" state for now, real correctness comes from POST /check
