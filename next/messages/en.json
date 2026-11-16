@@ -933,6 +933,91 @@
         "konamiOff": "Secret theme off",
         "check": "Accepted"
       }
+    },
+    "honor": {
+      "title": "Honor board",
+      "subtitle": "Who helps the lessons most: recording, reviewing, fixing.",
+      "back": "Back to lessons",
+      "toFlow": "To the flow",
+      "loading": "Loading…",
+      "loadFailed": "Could not load the board.",
+      "retry": "Retry",
+      "empty": "Nobody here yet.",
+      "periods": {
+        "week": "Week",
+        "month": "Month",
+        "all": "All time"
+      },
+      "counters": {
+        "recorded": "recorded",
+        "reviewed": "reviewed",
+        "fixed": "fixed",
+        "lessons": "lessons",
+        "flagged": "flagged"
+      },
+      "total": "total",
+      "totalLabel": "Total actions: {count}",
+      "you": "you",
+      "rank": "Rank {rank}",
+      "kudosReceived": "Thanks received: {count}",
+      "thanks": "Thanks",
+      "thanksTo": "Say thanks to {name}",
+      "next": "To the \"{badge}\" badge: {current} of {target}",
+      "badgesTitle": "Badges",
+      "badges": {
+        "first": "First step",
+        "actions10": "10 actions",
+        "actions100": "100 actions",
+        "actions1000": "1000 actions",
+        "voice10": "Voice: 10 recordings",
+        "voice100": "Voice: 100 recordings",
+        "voice1000": "Voice: 1000 recordings",
+        "review10": "Reviewer: 10",
+        "review100": "Reviewer: 100",
+        "review1000": "Reviewer: 1000",
+        "fix10": "Fixer: 10"
+      },
+      "badgesNote": "Recording, review and fix badges are counted over all time."
+    },
+    "kudos": {
+      "title": "Thanks to {name}",
+      "emojiLabel": "Pick an emoji",
+      "message": "Message (optional)",
+      "messagePlaceholder": "For example: great voicing!",
+      "counter": "{count} / {max}",
+      "send": "Send",
+      "cancel": "Cancel",
+      "sending": "Sending…",
+      "sent": "Thanks sent",
+      "tooSoon": "You thanked this person recently. Try again a bit later.",
+      "failed": "Could not send. Check the message and try again.",
+      "inbox": "My thanks",
+      "inboxTitle": "Thanks you received",
+      "inboxEmpty": "Nobody has sent thanks yet.",
+      "inboxLoadFailed": "Could not load.",
+      "close": "Close",
+      "toast": "You got {emoji} from {name}",
+      "toastMore": "You got {emoji} from {name} and {count} more",
+      "newLabel": "new"
+    },
+    "reminder": {
+      "button": "Remind me",
+      "title": "Remind me about the studio",
+      "hour": "In 1 hour",
+      "tomorrow": "Tomorrow at 19:00",
+      "custom": "Custom time",
+      "customSet": "Set",
+      "honest": "The browser notification works only while the site is open in a tab. The calendar entry always works.",
+      "scheduled": "Done. We will remind you at {time} if the site is open in a tab.",
+      "denied": "Browser notifications are blocked. Use the calendar.",
+      "unsupported": "This browser does not support notifications. Use the calendar.",
+      "calendar": "Add to calendar",
+      "calendarTitle": "Studio: record and review",
+      "calendarBody": "Time to visit the studio: record and review phrases.",
+      "notifTitle": "Studio: time to drop by",
+      "notifBody": "Tap to open the flow.",
+      "invalid": "Pick a time in the future.",
+      "close": "Close"
     }
   }
 }
