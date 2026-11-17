@@ -17,7 +17,8 @@ export function StudioLessonPage({ id }: { id: number }): ReactElement {
 }
 
 function modeFromUrl(): FlowMode {
-  return new URLSearchParams(window.location.search).get('mode') === 'review' ? 'review' : 'voice';
+  const mode = new URLSearchParams(window.location.search).get('mode');
+  return mode === 'review' || mode === 'words' ? mode : 'voice';
 }
 
 export function StudioFlowPage(): ReactElement {

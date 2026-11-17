@@ -12,16 +12,19 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { RecordedClip } from '@/components/audio/use-audio-recorder';
 import {
+  getFlowSummary,
   skipFlowItem,
   type FlowMode,
+  type FlowSummary,
   type ReviewItem,
   type VoiceItem,
 } from '@/lib/api/studio-flow';
 import { acceptEffects, type ConfettiPalette } from '@/lib/studio/flow-easter';
+import { enForm, ruForm } from '@/lib/studio/word-plural';
 import { feedKonami, konamiInput, KONAMI_START, swallowsArrow } from '@/lib/studio/flow-konami';
 import { getStudioStreak, type StudioStreak } from '@/lib/api/studio-streak';
 import { isMilestone } from '@/lib/studio/flow-milestones';
@@ -42,6 +45,7 @@ import { useFlowQueue } from './use-flow-queue';
 import { useReducedMotion } from './use-reduced-motion';
 import { useVoiceUploads } from './use-voice-uploads';
 import { VoiceTab } from './voice-tab';
+import { WordsTab } from './words-tab';
 
 const CSS = `
 .flow-touch-only{display:none}
@@ -128,6 +132,36 @@ function ReviewSection({
   );
 }
 
+function WordsSection({
+  blocked,
+  dispatch,
+  onToast,
+  onDone,
+  onSummaryStale,
+  onGoReview,
+}: {
+  blocked: ReadonlySet<string>;
+  dispatch: Dispatcher;
+  onToast: (m: string) => void;
+  onDone: () => void;
+  onSummaryStale: () => void;
+  onGoReview: () => void;
+}): ReactElement {
+  const { state, advance, reload } = useFlowQueue('words', blocked);
+  return (
+    <WordsTab
+      queue={state}
+      advance={advance}
+      reload={reload}
+      onDone={onDone}
+      onSkip={() => dispatch({ type: 'skip' })}
+      onSummaryStale={onSummaryStale}
+      onToast={onToast}
+      onGoReview={onGoReview}
+    />
+  );
+}
+
 export function StudioFlow({
   initialMode,
   reminderSlot,
@@ -137,6 +171,7 @@ export function StudioFlow({
 }): ReactElement {
   const t = useTranslations('studio.flow');
   const th = useTranslations('studio.honor');
+  const locale = useLocale();
   const reduced = useReducedMotion();
   const [mode, setMode] = useState<FlowMode>(initialMode);
   const [session, dispatch] = useReducer(sessionReducer, INITIAL_SESSION);
@@ -149,6 +184,7 @@ export function StudioFlow({
   const [resting, setResting] = useState(false);
   const [fun, setFun] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [summary, setSummary] = useState<FlowSummary | null>(null);
   const konami = useRef(KONAMI_START);
   const lastCount = useRef(0);
   const prevDone = useRef<boolean | null>(null);
@@ -176,10 +212,30 @@ export function StudioFlow({
       .catch(() => undefined);
   }, []);
 
+  const summarySeq = useRef(0);
+  const refreshSummary = useCallback(() => {
+    const seq = ++summarySeq.current;
+    getFlowSummary()
+      .then((next) => {
+        if (seq === summarySeq.current) setSummary(next);
+      })
+      .catch(() => undefined);
+  }, []);
+
   useEffect(refreshStreak, [refreshStreak]);
+  useEffect(refreshSummary, [refreshSummary]);
   useEffect(() => {
     if (session.uploaded > 0) refreshStreak();
   }, [session.uploaded, refreshStreak]);
+  useEffect(() => {
+    if (resting) refreshSummary();
+  }, [resting, refreshSummary]);
+
+  const onWordsDone = useCallback(() => {
+    dispatch({ type: 'accept' });
+    refreshStreak();
+    refreshSummary();
+  }, [refreshStreak, refreshSummary]);
 
   useEffect(() => {
     if (streakPending === null || milestone !== null || banner !== null || resting) return;
@@ -331,6 +387,12 @@ export function StudioFlow({
         <div role="tablist" style={{ display: 'flex', gap: 8 }}>
           {tab('voice', t('tabs.voice'))}
           {tab('review', t('tabs.review'))}
+          {tab(
+            'words',
+            summary && summary.words_remaining > 0
+              ? `${t('tabs.words')} · ${summary.words_remaining}`
+              : t('tabs.words'),
+          )}
         </div>
         <div
           style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}
@@ -338,6 +400,18 @@ export function StudioFlow({
         >
           {chip(t('counter.session', { n: session.count }), 'flow-count')}
           {session.streak >= 2 && chip(t('counter.streak', { n: session.streak }), 'flow-streak')}
+          {mode === 'words' &&
+            summary !== null &&
+            summary.words_remaining > 0 &&
+            chip(
+              t(
+                `words.waiting.${locale === 'en' ? enForm(summary.words_remaining) : ruForm(summary.words_remaining)}`,
+                {
+                  n: summary.words_remaining,
+                },
+              ),
+              'flow-words-waiting',
+            )}
           {session.pending.length > 0 &&
             chip(t('uploads.uploading', { n: session.pending.length }), 'flow-uploading')}
           {session.failed.length > 0 && (
@@ -359,6 +433,7 @@ export function StudioFlow({
         {resting ? (
           <RestScreen
             session={session}
+            wordsWaited={summary?.words_waited ?? 0}
             reminderSlot={reminderSlot}
             onResume={() => setResting(false)}
           />
@@ -371,7 +446,7 @@ export function StudioFlow({
             enqueue={enqueue}
             onGoReview={() => switchMode('review')}
           />
-        ) : (
+        ) : mode === 'review' ? (
           <ReviewSection
             key="review"
             active={idle}
@@ -379,6 +454,16 @@ export function StudioFlow({
             dispatch={dispatch}
             onToast={showToast}
             onReviewed={refreshStreak}
+          />
+        ) : (
+          <WordsSection
+            key="words"
+            blocked={blocked}
+            dispatch={dispatch}
+            onToast={showToast}
+            onDone={onWordsDone}
+            onSummaryStale={refreshSummary}
+            onGoReview={() => switchMode('review')}
           />
         )}
       </div>

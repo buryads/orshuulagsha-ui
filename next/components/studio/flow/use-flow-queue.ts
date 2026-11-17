@@ -8,6 +8,7 @@ import {
   type FlowMode,
   type ReviewItem,
   type VoiceItem,
+  type WordItem,
 } from '@/lib/api/studio-flow';
 
 export type QueueStatus = 'loading' | 'ready' | 'empty' | 'error' | 'notReady';
@@ -19,7 +20,11 @@ export interface QueueState<T> {
   fromSkipped: boolean;
 }
 
-type ItemOf<M extends FlowMode> = M extends 'voice' ? VoiceItem : ReviewItem;
+type ItemOf<M extends FlowMode> = M extends 'voice'
+  ? VoiceItem
+  : M extends 'review'
+    ? ReviewItem
+    : WordItem;
 
 const MAX_GUARD_SKIPS = 3;
 

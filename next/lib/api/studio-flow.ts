@@ -4,7 +4,7 @@ import type { ExerciseType } from './studio';
 
 const BASE = '/api/studio/flow';
 
-export type FlowMode = 'voice' | 'review';
+export type FlowMode = 'voice' | 'review' | 'words';
 
 export interface FlowLessonRef {
   id: number;
@@ -41,7 +41,34 @@ export interface ReviewItem {
   fixable: boolean;
 }
 
-export type FlowItem = VoiceItem | ReviewItem;
+export type WordDirection = 'ru2bur' | 'bur2ru';
+
+export interface WordSuggestion {
+  id: number;
+  translation: string;
+  example: string | null;
+  moderator_edited: boolean;
+  confirmations: number;
+}
+
+export interface WordItem {
+  mode: 'words';
+  item_key: string;
+  kind: 'word_request';
+  id: number;
+  query: string;
+  direction: WordDirection;
+  demand: number;
+  contexts: string[];
+  suggestion: WordSuggestion | null;
+  moderator_note: string | null;
+}
+
+interface WordCardRaw extends Omit<WordItem, 'mode' | 'item_key'> {
+  key: string;
+}
+
+export type FlowItem = VoiceItem | ReviewItem | WordItem;
 
 export interface FlowNext<T extends FlowItem = FlowItem> {
   item: T | null;
@@ -61,7 +88,16 @@ export interface ReviewInput {
 export interface FlowSummary {
   voice_remaining: number;
   review_remaining: number;
-  today: { recorded: number; reviewed: number; fixed: number; flagged: number; lessons: number };
+  words_remaining: number;
+  today: {
+    recorded: number;
+    reviewed: number;
+    fixed: number;
+    flagged: number;
+    lessons: number;
+    words: number;
+  };
+  words_waited: number;
   unseen_kudos: number;
 }
 
@@ -72,7 +108,19 @@ interface NextResponse<T> {
 
 export async function getFlowNext(mode: 'voice'): Promise<FlowNext<VoiceItem>>;
 export async function getFlowNext(mode: 'review'): Promise<FlowNext<ReviewItem>>;
+export async function getFlowNext(mode: 'words'): Promise<FlowNext<WordItem>>;
 export async function getFlowNext(mode: FlowMode): Promise<FlowNext> {
+  if (mode === 'words') {
+    const res = await apiCall<NextResponse<WordCardRaw>>('GET', `${BASE}/next`, {
+      params: { mode },
+    });
+    const card = res.data;
+    return {
+      item: card ? { ...card, mode: 'words', item_key: card.key } : null,
+      remaining: res.meta?.remaining ?? 0,
+      fromSkipped: res.meta?.from_skipped ?? false,
+    };
+  }
   const res = await apiCall<NextResponse<FlowItem>>('GET', `${BASE}/next`, { params: { mode } });
   return {
     item: res.data,
@@ -87,6 +135,40 @@ export async function skipFlowItem(mode: FlowMode, itemKey: string): Promise<voi
 
 export async function submitReview(input: ReviewInput): Promise<void> {
   await apiCall<unknown>('POST', `${BASE}/review`, { data: input });
+}
+
+const WORDS = '/api/studio/word-requests';
+
+export interface WordAnswerInput {
+  translations: string[];
+  example?: string;
+}
+
+export async function answerWordRequest(id: number, input: WordAnswerInput): Promise<void> {
+  await apiCall<unknown>('POST', `${WORDS}/${id}/answer`, { data: input });
+}
+
+export async function agreeWordRequest(id: number, suggestionId: number): Promise<void> {
+  await apiCall<unknown>('POST', `${WORDS}/${id}/agree`, { data: { suggestion_id: suggestionId } });
+}
+
+export type WordRejectReason = 'typo' | 'not_buryat' | 'other';
+
+export interface WordRejectInput {
+  reason: WordRejectReason;
+  hint?: string;
+}
+
+export async function rejectWordRequest(id: number, input: WordRejectInput): Promise<void> {
+  await apiCall<unknown>('POST', `${WORDS}/${id}/reject`, { data: input });
+}
+
+export async function undoRejectWordRequest(id: number): Promise<void> {
+  await apiCall<unknown>('DELETE', `${WORDS}/${id}/reject`);
+}
+
+export async function touchWordRequest(id: number): Promise<void> {
+  await apiCall<unknown>('POST', `${WORDS}/${id}/touch`);
 }
 
 export async function getFlowSummary(): Promise<FlowSummary> {
