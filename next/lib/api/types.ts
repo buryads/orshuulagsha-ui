@@ -179,6 +179,31 @@ export interface QuizQuestionsResponse {
   count: number;
 }
 
+export interface ListenItem {
+  token: string;
+  audioUrl: string;
+  options: string[];
+}
+
+export interface ListenSeriesMeta {
+  available: boolean;
+  eligible: number;
+  min: number;
+  count: number;
+}
+
+export interface ListenSeriesResponse {
+  items: ListenItem[];
+  meta: ListenSeriesMeta;
+}
+
+export interface ListenAnswerResult {
+  correct: boolean;
+  correctIndex: number;
+  correctText: string;
+  ru: string | null;
+}
+
 // --- Statistic ---
 
 export interface TranslationsAmountResponse {

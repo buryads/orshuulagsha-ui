@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { QuizPlayer } from '@/components/quiz/quiz-player';
+import { QuizTabs } from '@/components/quiz/quiz-tabs';
 
 interface QuizPageProps {
   params: { locale: string };
@@ -24,7 +24,7 @@ export default async function QuizPage({ params }: QuizPageProps): Promise<React
       >
         {t('title')}
       </h1>
-      <QuizPlayer />
+      <QuizTabs />
     </div>
   );
 }
