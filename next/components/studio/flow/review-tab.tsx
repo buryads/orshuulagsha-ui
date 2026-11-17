@@ -59,12 +59,17 @@ export function ReviewTab({
   const [drag, setDrag] = useState<{ dx: number; dy: number } | null>(null);
   const start = useRef<{ x: number; y: number; id: number } | null>(null);
   const [undo, setUndo] = useState<string | null>(null);
+  const [undoPaused, setUndoPaused] = useState(false);
 
   useEffect(() => {
-    if (!undo) return;
+    if (!undo) {
+      setUndoPaused(false);
+      return;
+    }
+    if (undoPaused) return;
     const id = window.setTimeout(() => setUndo(null), UNDO_WINDOW_MS);
     return () => window.clearTimeout(id);
-  }, [undo]);
+  }, [undo, undoPaused]);
 
   useEffect(() => {
     setPanel(false);
@@ -433,6 +438,10 @@ export function ReviewTab({
             alignItems: 'center',
             gap: 12,
           }}
+          onMouseEnter={() => setUndoPaused(true)}
+          onMouseLeave={() => setUndoPaused(false)}
+          onFocus={() => setUndoPaused(true)}
+          onBlur={() => setUndoPaused(false)}
           data-testid="review-undo"
         >
           {t('review.approved')}

@@ -5,21 +5,12 @@ import { useLocale, useTranslations } from 'next-intl';
 import { renderShareCard } from '@/components/explain/share-card';
 import { AudioButton } from '@/components/marathon/audio-button';
 import { getGreetings, type GreetingItem, type GreetingList } from '@/lib/api/greetings';
-import { clampName, nameCounter, NAME_LIMIT, pickOccasion } from '@/lib/cards/card-text';
+import { pickOccasion } from '@/lib/cards/card-text';
 
 const FILE_NAME = 'buryads-card.png';
 const DEFAULT_OCCASION = 'sagaalgan';
 
 type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; data: GreetingList };
-
-const input = {
-  padding: '10px 12px',
-  borderRadius: 12,
-  border: '1px solid var(--border-strong)',
-  background: 'var(--surface)',
-  color: 'var(--text)',
-  width: '100%',
-} as const;
 
 export function CardsBuilder(): ReactElement {
   const t = useTranslations('cards');
@@ -27,8 +18,6 @@ export function CardsBuilder(): ReactElement {
   const [load, setLoad] = useState<Load>({ status: 'loading' });
   const [occasion, setOccasion] = useState('');
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [to, setTo] = useState('');
-  const [from, setFrom] = useState('');
 
   const fetchList = useCallback(() => {
     setLoad({ status: 'loading' });
@@ -101,21 +90,7 @@ export function CardsBuilder(): ReactElement {
             ))}
           </div>
 
-          <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
-            <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 600 }}>
-              {t('to')}
-              <input style={input} value={to} onChange={(e) => setTo(clampName(e.target.value))} maxLength={NAME_LIMIT * 2} autoComplete="off" />
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-muted)', textAlign: 'right' }}>{nameCounter(to)}</span>
-            </label>
-            <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 600 }}>
-              {t('from')}
-              <input style={input} value={from} onChange={(e) => setFrom(clampName(e.target.value))} maxLength={NAME_LIMIT * 2} autoComplete="off" />
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-muted)', textAlign: 'right' }}>{nameCounter(from)}</span>
-            </label>
-            <p style={{ gridColumn: '1 / -1', margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>{t('localNote')}</p>
-          </section>
-
-          {selected && <Preview item={selected} to={to.trim()} from={from.trim()} locale={locale} />}
+          {selected && <Preview item={selected} locale={locale} />}
         </>
       )}
     </div>
@@ -165,7 +140,7 @@ function PhraseOption({
   );
 }
 
-function Preview({ item, to, from, locale }: { item: GreetingItem; to: string; from: string; locale: string }): ReactElement {
+function Preview({ item, locale }: { item: GreetingItem; locale: string }): ReactElement {
   const t = useTranslations('cards');
   const [file, setFile] = useState<File | null>(null);
   const [failed, setFailed] = useState(false);
@@ -259,10 +234,8 @@ function Preview({ item, to, from, locale }: { item: GreetingItem; to: string; f
           gap: 12,
         }}
       >
-        {to && <p style={{ margin: 0, fontWeight: 700, color: '#5C6470' }}>{`${t('to')}: ${to}`}</p>}
         <p style={{ margin: 0, fontSize: 28, fontWeight: 800, lineHeight: 1.25, color: '#002E54' }}>{item.bur}</p>
         <p style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>{item.ru}</p>
-        {from && <p style={{ margin: 0, fontWeight: 700, color: '#5C6470' }}>{`${t('from')}: ${from}`}</p>}
         <p style={{ margin: 0, fontWeight: 800, color: '#0066B3' }}>buryads.com</p>
       </div>
       <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>{t('previewHint')}</p>

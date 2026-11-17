@@ -196,6 +196,12 @@ function numberList(v: unknown): number[] {
   return Array.isArray(v) ? v.filter((x): x is number => typeof x === 'number') : [];
 }
 
+export function tooShortMinDays(err: unknown): number | null {
+  const body = responseData(err);
+  if (!body || errorCode(err) !== 'too_short') return null;
+  return typeof body.min_days === 'number' ? body.min_days : null;
+}
+
 export function publishProblem(err: unknown): PublishProblem | null {
   const body = responseData(err);
   if (!body) return null;

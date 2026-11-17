@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import {
+  finalOpensOn,
   getFinal,
   postFinalAnswers,
   type FinalData,
@@ -17,6 +18,7 @@ type Phase =
   | { name: 'intro' }
   | { name: 'loading' }
   | { name: 'loadError' }
+  | { name: 'notOpen'; date: string }
   | { name: 'quiz'; data: FinalData; index: number; answers: Record<string, string | null> }
   | { name: 'sending'; data: FinalData; answers: Record<string, string | null> }
   | { name: 'sendError'; data: FinalData; answers: Record<string, string | null> }
@@ -26,6 +28,7 @@ export function FinalDictation({ event, signedIn }: { event: MarathonEvent; sign
   const t = useTranslations('marathon.final');
   const locale = useLocale();
   const [phase, setPhase] = useState<Phase>({ name: 'intro' });
+  const [copied, setCopied] = useState(false);
 
   if (!event.final.open) {
     return (
@@ -37,10 +40,14 @@ export function FinalDictation({ event, signedIn }: { event: MarathonEvent; sign
   }
 
   const start = () => {
+    setCopied(false);
     setPhase({ name: 'loading' });
     getFinal(event.slug)
       .then((data) => setPhase({ name: 'quiz', data, index: 0, answers: {} }))
-      .catch(() => setPhase({ name: 'loadError' }));
+      .catch((err: unknown) => {
+        const date = finalOpensOn(err);
+        setPhase(date ? { name: 'notOpen', date } : { name: 'loadError' });
+      });
   };
 
   const send = async (data: FinalData, answers: Record<string, string | null>) => {
@@ -49,8 +56,28 @@ export function FinalDictation({ event, signedIn }: { event: MarathonEvent; sign
       const filled = Object.fromEntries(data.questions.map((q) => [q.id, answers[q.id] ?? null]));
       const result = await postFinalAnswers(event.slug, filled, data.seed);
       setPhase({ name: 'result', result });
+    } catch (err) {
+      const date = finalOpensOn(err);
+      setPhase(date ? { name: 'notOpen', date } : { name: 'sendError', data, answers });
+    }
+  };
+
+  const shareResult = async (result: FinalResult) => {
+    const text = t('shareText', { c: result.correct, t: result.total });
+    const url = `${window.location.origin}/${locale}/marathon`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ text, url });
+      } catch {
+        return;
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setCopied(true);
     } catch {
-      setPhase({ name: 'sendError', data, answers });
+      setCopied(false);
     }
   };
 
@@ -80,6 +107,7 @@ export function FinalDictation({ event, signedIn }: { event: MarathonEvent; sign
         </>
       )}
       {phase.name === 'loading' && <p style={{ margin: 0, color: 'var(--text-muted)' }}>…</p>}
+      {phase.name === 'notOpen' && <p style={{ margin: 0 }}>{t('opensOn', { date: formatDate(phase.date, locale) })}</p>}
       {phase.name === 'loadError' && (
         <div>
           <button type="button" className="btn btn-secondary" onClick={start}>
@@ -130,10 +158,18 @@ export function FinalDictation({ event, signedIn }: { event: MarathonEvent; sign
                 {t('loginSave')}
               </Link>
             )}
+            <button type="button" className="btn btn-secondary" onClick={() => void shareResult(phase.result)}>
+              {t('share')}
+            </button>
             <button type="button" className="btn btn-secondary" onClick={start}>
               {t('retry')}
             </button>
           </div>
+          {copied && (
+            <p role="status" style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
+              {t('copied')}
+            </p>
+          )}
         </div>
       )}
     </section>
@@ -154,12 +190,17 @@ function QuestionStep({
   const t = useTranslations('marathon.final');
   const [picked, setPicked] = useState<string | null>(null);
   const last = index + 1 >= total;
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    heading.current?.focus();
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>
+      <h3 ref={heading} tabIndex={-1} style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>
         {t('question', { n: index + 1, total })}
-      </p>
+      </h3>
       <div>
         <AudioButton url={question.audio_url} />
       </div>

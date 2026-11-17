@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { postAnswers, type EventMe, type MarathonEvent } from '@/lib/api/events';
+import { postAnswers, type MarathonEvent } from '@/lib/api/events';
 import { defaultDay, formatDate, selectableDay } from '@/lib/marathon/days';
 import { pendingGuestDays, replayGuestDays } from '@/lib/marathon/guest-progress';
 import { useCurrentUser } from '@/lib/use-current-user';
@@ -61,7 +61,7 @@ function EventScreen({ event, reload }: { event: MarathonEvent; reload: () => vo
   const locale = useLocale();
   const { signedIn, ready } = useCurrentUser();
   const [selected, setSelected] = useState<number | null>(() => defaultDay(event));
-  const [joinNote, setJoinNote] = useState<EventMe | null>(null);
+  const [justJoined, setJustJoined] = useState(false);
   const me = event.me;
   const joined = !!me?.joined;
 
@@ -75,8 +75,8 @@ function EventScreen({ event, reload }: { event: MarathonEvent; reload: () => vo
     if (ready && signedIn && joined) void replay();
   }, [ready, signedIn, joined, replay]);
 
-  const onJoined = (next: EventMe) => {
-    setJoinNote(next);
+  const onJoined = () => {
+    setJustJoined(true);
     void replay().finally(reload);
   };
 
@@ -116,11 +116,11 @@ function EventScreen({ event, reload }: { event: MarathonEvent; reload: () => vo
         </p>
       )}
 
-      {joinNote && (
+      {justJoined && joined && me && (
         <p role="status" className="card" style={{ margin: 0, padding: '12px 16px', fontWeight: 700 }}>
           {event.state === 'upcoming'
             ? t('join.joinedUpcoming', { date: formatDate(event.starts_on, locale) })
-            : t('join.joinedStreak', { n: joinNote.streak })}
+            : t('join.joinedStreak', { n: me.streak })}
         </p>
       )}
 
@@ -178,8 +178,10 @@ function EventScreen({ event, reload }: { event: MarathonEvent; reload: () => vo
                     onSaved={reload}
                   />
                 </>
-              ) : (
+              ) : day.status === 'locked' ? (
                 <p style={{ margin: 0, fontWeight: 600 }}>{t('day.locked', { date: formatDate(day.date, locale) })}</p>
+              ) : (
+                <p style={{ margin: 0, fontWeight: 600 }}>{t('day.updating')}</p>
               )}
             </section>
           )}

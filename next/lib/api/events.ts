@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { apiCall } from './client';
 import type { DataEnvelope } from '@/lib/api/types';
 
@@ -155,8 +156,8 @@ export async function getTeams(slug: string): Promise<TeamsData> {
   return body.data;
 }
 
-export async function getFinal(slug: string): Promise<FinalData> {
-  const body = await apiCall<DataEnvelope<FinalData>>('GET', `/api/events/${slug}/final`);
+export async function getFinal(slug: string, tz: string = browserTimezone()): Promise<FinalData> {
+  const body = await apiCall<DataEnvelope<FinalData>>('GET', `/api/events/${slug}/final`, { params: { tz } });
   return body.data;
 }
 
@@ -164,9 +165,17 @@ export async function postFinalAnswers(
   slug: string,
   answers: Record<string, string | null>,
   seed?: string | number,
+  tz: string = browserTimezone(),
 ): Promise<FinalResult> {
   const body = await apiCall<DataEnvelope<FinalResult>>('POST', `/api/events/${slug}/final/answers`, {
-    data: seed === undefined ? { answers } : { answers, seed },
+    data: seed === undefined ? { answers, tz } : { answers, seed, tz },
   });
   return body.data;
+}
+
+export function finalOpensOn(err: unknown): string | null {
+  if (!axios.isAxiosError(err) || err.response?.status !== 403) return null;
+  const body: unknown = err.response.data;
+  const date = body && typeof body === 'object' ? (body as Record<string, unknown>).opens_on : null;
+  return typeof date === 'string' ? date : null;
 }

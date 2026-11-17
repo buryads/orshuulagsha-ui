@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import axios from 'axios';
 import { Link } from '@/i18n/navigation';
 import {
@@ -11,12 +11,14 @@ import {
   publishEvent,
   publishProblem,
   setEventDay,
+  tooShortMinDays,
   unpublishEvent,
   updateEvent,
   type EventDay,
   type PhraseReadiness,
   type StudioEventDetail,
 } from '@/lib/api/studio-events';
+import { formatDate } from '@/lib/marathon/days';
 import { bannerDate, dayChoices, formatDayRanges, missingKey } from '@/lib/studio/events';
 import { inputStyle } from '../field';
 
@@ -26,6 +28,7 @@ const labelStyle = { display: 'flex', flexDirection: 'column', gap: 4, fontSize:
 
 export function EventEditor({ id }: { id: number }): ReactElement {
   const t = useTranslations('studioEvents');
+  const locale = useLocale();
   const [event, setEvent] = useState<StudioEventDetail | null>(null);
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -94,12 +97,17 @@ export function EventEditor({ id }: { id: number }): ReactElement {
 
   const saveMeta = () =>
     run(async () => {
-      await updateEvent(id, {
-        title: title.trim(),
-        starts_on: startsOn,
-        days_count: Number(daysCount) || undefined,
-        team_min_size: Number(teamMin) || undefined,
-      });
+      try {
+        await updateEvent(id, {
+          title: title.trim(),
+          starts_on: startsOn,
+          days_count: Number(daysCount) || undefined,
+          team_min_size: Number(teamMin) || undefined,
+        });
+      } catch (err) {
+        if (errorCode(err) === 'frozen') return { kind: 'error', text: t('editor.scheduleFrozen') };
+        throw err;
+      }
       await load();
       return { kind: 'ok', text: t('editor.saved') };
     });
@@ -155,6 +163,8 @@ export function EventEditor({ id }: { id: number }): ReactElement {
       try {
         await publishEvent(id);
       } catch (err) {
+        const minDays = tooShortMinDays(err);
+        if (minDays !== null) return { kind: 'error', text: t('editor.tooShort', { n: minDays }) };
         const problem = publishProblem(err);
         if (!problem) throw err;
         await load();
@@ -170,15 +180,17 @@ export function EventEditor({ id }: { id: number }): ReactElement {
       const fresh = await getEvent(id);
       apply(fresh);
       const banner = bannerDate(fresh.starts_on, fresh.banner_days_before);
-      return { kind: 'ok', text: t('editor.published', { date: banner ?? fresh.starts_on }) };
+      return { kind: 'ok', text: t('editor.published', { date: formatDate(banner ?? fresh.starts_on.slice(0, 10), locale, true) }) };
     });
 
-  const unpublish = () =>
-    run(async () => {
+  const unpublish = () => {
+    if (!window.confirm(t('editor.unpublishConfirm'))) return;
+    return run(async () => {
       await unpublishEvent(id);
       await load();
       return { kind: 'ok', text: t('editor.unpublished') };
     });
+  };
 
   if (failed)
     return (

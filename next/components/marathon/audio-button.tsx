@@ -14,7 +14,6 @@ export function AudioButton({ url, onFirstPlay, compact = false }: AudioButtonPr
   const t = useTranslations('marathon.audio');
   const ref = useRef<HTMLAudioElement | null>(null);
   const played = useRef(false);
-  const [playing, setPlaying] = useState(false);
   const [heard, setHeard] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -22,7 +21,6 @@ export function AudioButton({ url, onFirstPlay, compact = false }: AudioButtonPr
     ref.current?.pause();
     ref.current = null;
     played.current = false;
-    setPlaying(false);
     setHeard(false);
     setFailed(false);
   }, [url]);
@@ -45,19 +43,15 @@ export function AudioButton({ url, onFirstPlay, compact = false }: AudioButtonPr
     let audio = ref.current;
     if (!audio) {
       audio = new Audio(resolveApiUrl(url));
-      audio.onended = () => setPlaying(false);
       audio.onerror = () => {
-        setPlaying(false);
         setFailed(true);
         ref.current = null;
       };
       ref.current = audio;
     }
     audio.currentTime = 0;
-    setPlaying(true);
     setHeard(true);
     audio.play().catch(() => {
-      setPlaying(false);
       setFailed(true);
       ref.current = null;
     });
@@ -69,10 +63,9 @@ export function AudioButton({ url, onFirstPlay, compact = false }: AudioButtonPr
         type="button"
         className={compact ? 'btn btn-secondary' : 'btn btn-primary'}
         onClick={play}
-        aria-pressed={playing}
         style={compact ? { padding: '8px 14px' } : undefined}
       >
-        <span aria-hidden>{playing ? '❚❚' : '▶'}</span>
+        <span aria-hidden>▶</span>
         {heard ? t('again') : t('listen')}
       </button>
       {failed && (

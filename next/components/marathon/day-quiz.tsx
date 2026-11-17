@@ -14,6 +14,8 @@ interface DayQuizProps {
   onSaved: () => void;
 }
 
+const PROMPT_KEY = { audio_ru: 'promptAudio', bur_ru: 'promptBurRu', ru_bur: 'promptRuBur' } as const;
+
 type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; questions: QuizQuestion[] };
 
 export function DayQuiz({ slug, day, signedIn, onSaved }: DayQuizProps): ReactElement {
@@ -84,7 +86,7 @@ export function DayQuiz({ slug, day, signedIn, onSaved }: DayQuizProps): ReactEl
         return (
           <fieldset key={q.id} style={{ border: 0, padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
             <legend style={{ fontWeight: 700, marginBottom: 8, padding: 0 }}>
-              {i + 1}. {q.prompt}
+              {i + 1}. {q.prompt || t(PROMPT_KEY[q.type])}
             </legend>
             {q.audio_url && (
               <div style={{ marginBottom: 6 }}>
