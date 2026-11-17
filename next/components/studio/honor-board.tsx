@@ -78,6 +78,7 @@ function Row({
         </span>
         <span
           data-testid="honor-streak"
+          role="img"
           aria-label={t('streak.aria', { current: row.streak.current, best: row.streak.best })}
           title={t('streak.aria', { current: row.streak.current, best: row.streak.best })}
           style={{

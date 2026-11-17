@@ -1029,7 +1029,7 @@
         },
         "days": "{n, plural, one {# day} other {# days}}",
         "label": "{points} of {goal} points today",
-        "hint": "Voice: 3, fix or edit: 2, review: 1. The day follows Irkutsk time"
+        "hint": "Voice: 3, fix: 2, review, flag or edit: 1. The day follows Irkutsk time"
       },
       "milestone": {
         "title": "{n} this session!",

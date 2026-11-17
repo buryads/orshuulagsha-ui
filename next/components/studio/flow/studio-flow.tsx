@@ -160,9 +160,12 @@ export function StudioFlow({
   );
   const idle = milestone === null && !resting;
 
+  const streakSeq = useRef(0);
   const refreshStreak = useCallback(() => {
+    const seq = ++streakSeq.current;
     getStudioStreak()
       .then((next) => {
+        if (seq !== streakSeq.current) return;
         if (prevDone.current === false && next.done_today && !wasCelebratedToday()) {
           markCelebratedToday();
           setStreakPending(next.current);
