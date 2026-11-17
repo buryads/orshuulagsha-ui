@@ -10,7 +10,7 @@ export type Pending =
 export type Step =
   | { status: 'asking' }
   | { status: 'sending'; pending: Pending }
-  | { status: 'failed'; pending: Pending }
+  | { status: 'failed'; pending: Pending; expired?: boolean }
   | { status: 'revealed'; pending: Pending; result: ListenAnswerResult }
   | { status: 'audioFailed' };
 
@@ -27,7 +27,7 @@ export type SeriesAction =
   | { type: 'start'; items: ListenItem[] }
   | { type: 'pick'; pending: Pending }
   | { type: 'answered'; result: ListenAnswerResult }
-  | { type: 'failed' }
+  | { type: 'failed'; expired?: boolean }
   | { type: 'audioFailed' }
   | { type: 'next' };
 
@@ -92,12 +92,18 @@ export function seriesReducer(state: SeriesState, action: SeriesAction): SeriesS
     }
     case 'failed':
       if (state.step.status !== 'sending') return state;
-      return { ...state, step: { status: 'failed', pending: state.step.pending } };
+      return {
+        ...state,
+        step: { status: 'failed', pending: state.step.pending, expired: action.expired },
+      };
     case 'audioFailed':
       if (state.step.status !== 'asking') return state;
       return { ...state, step: { status: 'audioFailed' } };
     case 'next': {
-      const canAdvance = state.step.status === 'revealed' || state.step.status === 'audioFailed';
+      const canAdvance =
+        state.step.status === 'revealed' ||
+        state.step.status === 'audioFailed' ||
+        (state.step.status === 'failed' && state.step.expired === true);
       if (!canAdvance) return state;
       return { ...state, index: state.index + 1, step: { status: 'asking' } };
     }

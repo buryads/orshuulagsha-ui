@@ -309,6 +309,7 @@
       "nextQuestion": "Next question",
       "next": "Next",
       "answerError": "Couldn't check the answer.",
+      "answerExpired": "This question is outdated. It does not count.",
       "retry": "Try again",
       "score": "{correct} of {scored}",
       "cantHearSuffix": "({count} can't hear)",
@@ -1087,6 +1088,7 @@
         "statCantHear": "Learners could not hear it: {notRecognized} of {heard} did not recognize it.",
         "confusion": "Often picked: «{confusion}»",
         "saved": "+{points, plural, one {# point} other {# points}}. Recording replaced",
+        "savedPlain": "Recording replaced",
         "micDenied": "Allow microphone access",
         "recheck": "Check again",
         "uploadFailed": "Recording was not sent. <retry>Retry</retry>"

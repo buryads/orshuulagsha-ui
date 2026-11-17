@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useReducer, useRef, useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
-import { getListenSeries, postListenAnswer, type ListenAnswerInput } from '@/lib/api/quiz';
+import {
+  getListenSeries,
+  isExpiredAnswer,
+  postListenAnswer,
+  type ListenAnswerInput,
+} from '@/lib/api/quiz';
 import type { ListenItem, ListenSeriesMeta } from '@/lib/api/types';
 import { getListenSessionId } from '@/lib/quiz/listen-session';
 import {
@@ -62,8 +67,8 @@ export function ListenQuiz({ onSwitchToWords }: { onSwitchToWords: () => void })
     try {
       const result = await postListenAnswer(toAnswerInput(session, current.token, pending));
       dispatch({ type: 'answered', result });
-    } catch {
-      dispatch({ type: 'failed' });
+    } catch (err) {
+      dispatch({ type: 'failed', expired: isExpiredAnswer(err) });
     }
   };
 
@@ -213,7 +218,7 @@ function Question({
         <div
           style={{
             height: '100%',
-            width: `${((index + (revealed || step.status === 'audioFailed' ? 1 : 0)) / total) * 100}%`,
+            width: `${((index + (revealed || step.status === 'audioFailed' || (step.status === 'failed' && step.expired) ? 1 : 0)) / total) * 100}%`,
             background: 'var(--primary)',
             transition: 'width 0.3s ease',
           }}
@@ -320,7 +325,15 @@ function Question({
               </div>
             )}
 
-            {step.status === 'failed' && (
+            {step.status === 'failed' && step.expired && (
+              <div style={{ marginTop: 20 }}>
+                <p style={{ color: 'var(--tertiary)', marginBottom: 12 }}>{t('answerExpired')}</p>
+                <button type="button" className="btn btn-primary" onClick={onNext}>
+                  {t('nextQuestion')}
+                </button>
+              </div>
+            )}
+            {step.status === 'failed' && !step.expired && (
               <div style={{ marginTop: 20 }}>
                 <p style={{ color: 'var(--tertiary)', marginBottom: 12 }}>{t('answerError')}</p>
                 <button

@@ -308,6 +308,7 @@
       "nextQuestion": "Следующий вопрос",
       "next": "Дальше",
       "answerError": "Не удалось проверить.",
+      "answerExpired": "Этот вопрос устарел. Он не засчитан.",
       "retry": "Повторить",
       "score": "{correct} из {scored}",
       "cantHearSuffix": "({count} не слышно)",
@@ -1086,6 +1087,7 @@
         "statCantHear": "Ученикам было не слышно: {notRecognized} из {heard} не узнали.",
         "confusion": "Часто выбирают «{confusion}»",
         "saved": "+{points, plural, one {# очко} few {# очка} many {# очков} other {# очка}}. Запись заменена",
+        "savedPlain": "Запись заменена",
         "micDenied": "Разрешите доступ к микрофону",
         "recheck": "Проверить снова",
         "uploadFailed": "Запись не отправилась. <retry>Повторить</retry>"

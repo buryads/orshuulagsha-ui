@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { apiCall } from './client';
 import type {
   ListenAnswerResult,
@@ -50,6 +51,10 @@ export type ListenAnswerInput =
 
 interface ListenAnswerApiResponse {
   data: { correct: boolean; correct_index: number; correct_text: string; ru: string | null };
+}
+
+export function isExpiredAnswer(err: unknown): boolean {
+  return axios.isAxiosError(err) && err.response?.status === 422;
 }
 
 export async function postListenAnswer(input: ListenAnswerInput): Promise<ListenAnswerResult> {

@@ -19,6 +19,9 @@ import type { QueueState as QueueData } from './use-flow-queue';
 
 const MIN_CLIP_MS = 300;
 
+const isButtonTarget = (target: EventTarget | null) =>
+  (target as HTMLElement | null)?.tagName === 'BUTTON';
+
 export interface VoiceTabProps {
   queue: QueueData<VoiceItem>;
   active: boolean;
@@ -65,6 +68,7 @@ export function VoiceTab({
   useEffect(() => {
     discard();
     setTooShort(false);
+    setFailed(false);
   }, [item?.item_key, discard]);
 
   const stopPlayback = useCallback(() => {
@@ -159,7 +163,7 @@ export function VoiceTab({
   useEffect(() => {
     if (!active || !ready) return;
     const down = (e: KeyboardEvent) => {
-      if (!isPlainShortcut(e)) return;
+      if (!isPlainShortcut(e) || isButtonTarget(e.target)) return;
       if (isSpaceKey(e)) {
         e.preventDefault();
         if (!e.repeat) void latest.current.beginHold();

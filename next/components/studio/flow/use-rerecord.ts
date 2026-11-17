@@ -4,12 +4,7 @@ import { useCallback, type Dispatch } from 'react';
 import { useTranslations } from 'next-intl';
 import type { RecordedClip } from '@/components/audio/use-audio-recorder';
 import { uploadAudio } from '@/lib/api/studio';
-import {
-  keepRecording,
-  skipFlowItem,
-  type KeepReason,
-  type VoiceItem,
-} from '@/lib/api/studio-flow';
+import { keepRecording, type KeepReason, type VoiceItem } from '@/lib/api/studio-flow';
 import { mimeExtension } from '@/lib/studio/audio';
 import type { SessionAction } from '@/lib/studio/flow-session';
 
@@ -31,8 +26,9 @@ export function useRerecord(
         durationMs: clip.durationMs,
       });
       dispatch({ type: 'accept' });
-      onToast(t('rerecord.saved', { points: saved.points ?? 0 }));
-      await advance(() => skipFlowItem('voice', item.item_key));
+      const points = saved.points ?? 0;
+      onToast(points > 0 ? t('rerecord.saved', { points }) : t('rerecord.savedPlain'));
+      await advance();
     },
     [advance, dispatch, onToast, t],
   );

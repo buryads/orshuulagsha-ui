@@ -27,6 +27,23 @@ const run = (...actions: SeriesAction[]): SeriesState =>
   actions.reduce(seriesReducer, { ...EMPTY_SERIES, items });
 
 describe('seriesReducer', () => {
+  it('skips an expired answer without counting it', () => {
+    const failed = run(
+      { type: 'pick', pending: { kind: 'choice', choice: 1 } },
+      { type: 'failed', expired: true },
+    );
+    expect(seriesReducer(failed, { type: 'next' })).toMatchObject({
+      verdicts: [],
+      index: 1,
+      step: { status: 'asking' },
+    });
+    expect(
+      seriesReducer(run({ type: 'pick', pending: { kind: 'dont_know' } }, { type: 'failed' }), {
+        type: 'next',
+      }).index,
+    ).toBe(0);
+  });
+
   it('records correct and wrong choices and advances on next', () => {
     const s = run(
       { type: 'pick', pending: { kind: 'choice', choice: 1 } },
