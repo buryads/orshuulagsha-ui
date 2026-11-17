@@ -3,7 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { Hero } from '@/components/home/hero';
 import { TranslatorPanel } from '@/components/home/translator-panel';
 import { PublicPacks } from '@/components/home/public-packs';
-import { PomochBanner } from '@/components/home/pomoch-banner';
+import { HomeBanner } from '@/components/home/home-banner';
 import { DiscordCta } from '@/components/home/discord-cta';
 
 interface HomePageProps {
@@ -15,7 +15,7 @@ export default async function HomePage({ params }: HomePageProps): Promise<React
 
   return (
     <div className="fade-up">
-      <PomochBanner />
+      <HomeBanner />
       <Hero>
         {/* TranslatorPanel reads useSearchParams; Suspense lets the page
             statically pre-render the rest while the panel hydrates client-side. */}
