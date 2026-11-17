@@ -14,9 +14,11 @@ import {
   isConflict,
   skipFlowItem,
   submitReview,
+  undoReview,
   type ReviewInput,
   type ReviewItem,
 } from '@/lib/api/studio-flow';
+import { UNDO_WINDOW_MS } from '@/lib/studio/events';
 import { classifySwipe, swipeVisual, type SwipeDir } from '@/lib/studio/flow-swipe';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
 import { ExerciseView } from './exercise-view';
@@ -56,6 +58,13 @@ export function ReviewTab({
   const [busy, setBusy] = useState(false);
   const [drag, setDrag] = useState<{ dx: number; dy: number } | null>(null);
   const start = useRef<{ x: number; y: number; id: number } | null>(null);
+  const [undo, setUndo] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!undo) return;
+    const id = window.setTimeout(() => setUndo(null), UNDO_WINDOW_MS);
+    return () => window.clearTimeout(id);
+  }, [undo]);
 
   useEffect(() => {
     setPanel(false);
@@ -75,6 +84,7 @@ export function ReviewTab({
       setBusy(true);
       try {
         await submitReview(input);
+        setUndo(input.verdict === 'ok' ? input.item_key : null);
         onDone();
       } catch (err) {
         if (isConflict(err)) {
@@ -94,6 +104,19 @@ export function ReviewTab({
     if (!item || busy) return;
     void send({ item_key: item.item_key, verdict: 'ok' });
   }, [item, busy, send]);
+
+  const undoApproval = useCallback(async () => {
+    if (!undo) return;
+    const key = undo;
+    setUndo(null);
+    try {
+      await undoReview(key);
+      onToast(t('review.undone'));
+      await reload();
+    } catch {
+      onToast(t('review.undoFailed'));
+    }
+  }, [undo, onToast, reload, t]);
 
   const skip = useCallback(() => {
     if (!item || busy) return;
@@ -247,6 +270,14 @@ export function ReviewTab({
               {t('review.sourceAi')}
             </span>
           )}
+          {item.needs_second && (
+            <span className="chip chip-warm" data-testid="review-needs-second">
+              {t('review.needsSecond')}
+            </span>
+          )}
+          {item.signoffs !== undefined && item.signoffs > 0 && (
+            <span data-testid="review-signoffs">{t('review.signoffs', { n: item.signoffs })}</span>
+          )}
           <span>
             {t('review.lesson')}: {item.lesson.title}
           </span>
@@ -380,6 +411,39 @@ export function ReviewTab({
             data-testid="review-ok"
           >
             {t('review.ok')}
+          </button>
+        </div>
+      )}
+      {undo && (
+        <div
+          role="status"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: 24,
+            transform: 'translateX(-50%)',
+            zIndex: 80,
+            padding: '8px 8px 8px 18px',
+            borderRadius: 12,
+            background: 'var(--neutral-900)',
+            color: '#fff',
+            fontWeight: 600,
+            maxWidth: '90vw',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+          data-testid="review-undo"
+        >
+          {t('review.approved')}
+          <button
+            type="button"
+            className="btn btn-secondary"
+            style={{ padding: '6px 14px', minHeight: 40 }}
+            onClick={() => void undoApproval()}
+            data-testid="review-undo-btn"
+          >
+            {t('review.undo')}
           </button>
         </div>
       )}

@@ -55,6 +55,7 @@ type EditField = 'title' | 'title_bur';
 
 export function StudioBoard({ isAdmin }: { isAdmin: boolean }): ReactElement {
   const t = useTranslations('studio');
+  const te = useTranslations('studioEvents');
   const router = useRouter();
   const [level, setLevel] = useState<Level>('A1');
   const [overview, setOverview] = useState<StudioOverview | null>(null);
@@ -459,6 +460,16 @@ export function StudioBoard({ isAdmin }: { isAdmin: boolean }): ReactElement {
         style={inputStyle}
       />
 
+      {isAdmin && (
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }} data-testid="studio-admin-links">
+          <Link href="/studio/events" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+            {te('nav.events')}
+          </Link>
+          <Link href="/studio/greetings" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+            {te('nav.greetings')}
+          </Link>
+        </div>
+      )}
       {isAdmin && <TeachersPanel />}
 
       {helpOpen && (

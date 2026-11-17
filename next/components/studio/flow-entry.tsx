@@ -5,7 +5,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getFlowSummary, type FlowSummary } from '@/lib/api/studio-flow';
 import { enForm, ruForm } from '@/lib/studio/word-plural';
+import { EventPrep } from './event-prep';
 import { KudosInbox } from './kudos-inbox';
+import { VoiceCreditCard } from './voice-credit-card';
 
 export function FlowEntry(): ReactElement {
   const t = useTranslations('studio.flow');
@@ -33,7 +35,7 @@ export function FlowEntry(): ReactElement {
       {text}
     </span>
   );
-  return (
+  const card = (
     <div
       className="card"
       style={{
@@ -80,6 +82,13 @@ export function FlowEntry(): ReactElement {
             )}
         </span>
       )}
+    </div>
+  );
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {card}
+      {summary && <EventPrep summary={summary} />}
+      <VoiceCreditCard />
     </div>
   );
 }

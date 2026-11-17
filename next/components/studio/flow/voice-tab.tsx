@@ -256,6 +256,11 @@ export function VoiceTab({
         {t('voice.usedIn', { n: item.uses })}
       </div>
       {item.rerecord && <RerecordNotice rerecord={item.rerecord} onListen={play} />}
+      {item.reviewed_by_other && (
+        <span className="chip chip-green" data-testid="voice-reviewed-other">
+          {t('voice.reviewedByOther')}
+        </span>
+      )}
 
       {unavailable ? (
         <div

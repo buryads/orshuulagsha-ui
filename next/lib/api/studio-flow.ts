@@ -30,6 +30,7 @@ export interface VoiceItem {
   lessons: FlowLessonRef[];
   uses: number;
   rerecord?: RerecordInfo | null;
+  reviewed_by_other?: boolean;
 }
 
 export interface ReviewExercise {
@@ -49,6 +50,8 @@ export interface ReviewItem {
   ru: string | null;
   exercise: ReviewExercise | null;
   fixable: boolean;
+  signoffs?: number;
+  needs_second?: boolean;
 }
 
 export type WordDirection = 'ru2bur' | 'bur2ru';
@@ -109,6 +112,17 @@ export interface FlowSummary {
   };
   words_waited: number;
   unseen_kudos: number;
+  event_prep?: EventPrep | null;
+  learned_by_my_phrases?: number;
+  card_opens?: number;
+}
+
+export interface EventPrep {
+  title: string;
+  total: number;
+  ready: number;
+  remaining: number;
+  deadline: string | null;
 }
 
 interface NextResponse<T> {
@@ -179,6 +193,10 @@ export async function undoRejectWordRequest(id: number): Promise<void> {
 
 export async function touchWordRequest(id: number): Promise<void> {
   await apiCall<unknown>('POST', `${WORDS}/${id}/touch`);
+}
+
+export async function undoReview(itemKey: string): Promise<void> {
+  await apiCall<unknown>('POST', `${BASE}/undo`, { data: { item_key: itemKey } });
 }
 
 export async function getFlowSummary(): Promise<FlowSummary> {

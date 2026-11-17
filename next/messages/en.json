@@ -1027,6 +1027,7 @@
         "streak": "Streak: {n}"
       },
       "voice": {
+        "reviewedByOther": "Reviewed by another expert",
         "usedIn": "Used in lessons: {n}",
         "noRu": "No translation",
         "holdKey": "Hold Space and speak",
@@ -1052,6 +1053,12 @@
         "retry": "Retry"
       },
       "review": {
+        "needsSecond": "Second verdict needed",
+        "signoffs": "Expert verdicts: {n}",
+        "approved": "Marked as correct",
+        "undo": "Undo",
+        "undone": "Verdict undone",
+        "undoFailed": "Too late to undo",
         "kind": {
           "phrase": "Phrase",
           "vocab": "Word",
@@ -1374,6 +1381,120 @@
       "guest": "Sign in to see your requests",
       "directionRuBur": "ru → bur",
       "directionBurRu": "bur → ru"
+    }
+  },
+  "studioEvents": {
+    "common": {
+      "back": "Studio",
+      "loading": "Loading…",
+      "loadFailed": "Could not load.",
+      "retry": "Retry",
+      "actionFailed": "That did not work. Try again",
+      "adminOnly": "This page is for administrators.",
+      "pickLesson": "Pick a lesson"
+    },
+    "nav": {
+      "events": "Events",
+      "greetings": "Greetings"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "unpublished": "Unpublished"
+    },
+    "occasion": {
+      "sagaalgan": "Sagaalgan",
+      "birthday": "Birthday",
+      "wedding": "Wedding"
+    },
+    "missing": {
+      "voice": "Needs a native speaker recording",
+      "review": "Needs a native speaker review",
+      "second_review": "Needs a second native speaker verdict",
+      "issue": "Has a remark"
+    },
+    "prep": {
+      "left": "Holiday phrases: {n} of {total} left",
+      "review": "Review",
+      "voice": "Record",
+      "opens": "Your cards were opened {n} times",
+      "learned": "Your phrases were learned {n} times"
+    },
+    "credit": {
+      "title": "Credit for your voice",
+      "body": "Your recordings play in the marathon and on cards. The card page will show a credit line \"Voice: name\". Recordings are published under CC BY 4.0, so the credit states authorship.",
+      "nameLabel": "Name in the credit",
+      "hint": "A pseudonym by default. You can turn the credit off later; the card will then say \"Voice of a buryads.com expert\".",
+      "agree": "I agree, show the credit",
+      "failed": "Could not save. Try again",
+      "toggle": "Show my name under cards",
+      "shownAs": "Credit: {name}",
+      "hidden": "Credit: \"Voice of a buryads.com expert\""
+    },
+    "list": {
+      "title": "Events",
+      "create": "Create",
+      "createSubmit": "Create event",
+      "createFailed": "Could not create the event. Check the slug and date",
+      "empty": "No events yet. Create the first one.",
+      "meta": "Starts {date} · days: {days}"
+    },
+    "form": {
+      "title": "Title",
+      "slug": "Slug (latin, hyphens)",
+      "lesson": "Lesson with phrases",
+      "startsOn": "Start date",
+      "daysCount": "Days in the marathon",
+      "teamMin": "Team threshold"
+    },
+    "editor": {
+      "settings": "Event settings",
+      "save": "Save",
+      "saved": "Saved",
+      "phrases": "Lesson phrases",
+      "noPhrases": "The lesson has no phrases yet. Native speakers add them in the studio.",
+      "ready": "Ready",
+      "sendToStudio": "Send to studio",
+      "days": "Marathon days",
+      "inDay": "On day {n}",
+      "emptyDay": "— empty —",
+      "custom": "Custom of the day (in Russian)",
+      "changedBadge": "phrase changed — listen again and confirm",
+      "preview": "Preview day",
+      "previewTitle": "Day {n}",
+      "customPrefix": "Custom of the day",
+      "close": "Close",
+      "autofill": "Fill in order",
+      "autofilled": "Ready phrases were placed on the days",
+      "check": "Check",
+      "checkResult": "{ready} of {total} days are ready",
+      "emptyDays": "Days {days} are empty. Fill them or shorten the marathon",
+      "changedDays": "Days {days}: phrase changed — listen again and confirm",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "unpublished": "Event unpublished",
+      "published": "Marathon published. The banner appears on the home page on {date}",
+      "publishBlocked": "Publishing did not go through",
+      "frozen": "This day has passed and cannot be changed"
+    },
+    "greetings": {
+      "title": "Greetings",
+      "published": "Published",
+      "empty": "No published greetings yet.",
+      "stale": "Text changed — publish again",
+      "opens": "Opens: {n}",
+      "unpublish": "Unpublish",
+      "unpublished": "Greeting unpublished",
+      "republish": "Publish again",
+      "republished": "Greeting published again",
+      "add": "Add",
+      "occasion": "Occasion",
+      "pickLesson": "Pick a lesson to see its phrases.",
+      "noCandidates": "The lesson has no phrases yet.",
+      "publish": "Publish",
+      "publishedOk": "Greeting published",
+      "consentMissing": "The expert has not agreed to a voice credit yet",
+      "notReady": "The phrase is not ready: it needs a review and a recording"
     }
   }
 }

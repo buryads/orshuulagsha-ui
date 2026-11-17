@@ -36,6 +36,7 @@ import {
 import { INITIAL_SESSION, sessionReducer, type SessionAction } from '@/lib/studio/flow-session';
 import { isTypingTarget } from '@/lib/studio/shortcuts';
 import { KudosInbox } from '../kudos-inbox';
+import { VoiceCreditCard } from '../voice-credit-card';
 import { Banner, Celebration, type Burst } from './celebration';
 import { MilestoneDialog } from './milestone-dialog';
 import { RestScreen } from './rest-screen';
@@ -444,15 +445,18 @@ export function StudioFlow({
             onResume={() => setResting(false)}
           />
         ) : mode === 'voice' ? (
-          <VoiceSection
-            key="voice"
-            active={idle}
-            blocked={blocked}
-            dispatch={dispatch}
-            enqueue={enqueue}
-            onGoReview={() => switchMode('review')}
-            onToast={showToast}
-          />
+          <>
+            <VoiceCreditCard consentOnly />
+            <VoiceSection
+              key="voice"
+              active={idle}
+              blocked={blocked}
+              dispatch={dispatch}
+              enqueue={enqueue}
+              onGoReview={() => switchMode('review')}
+              onToast={showToast}
+            />
+          </>
         ) : mode === 'review' ? (
           <ReviewSection
             key="review"
