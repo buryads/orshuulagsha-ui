@@ -16,8 +16,10 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { RecordedClip } from '@/components/audio/use-audio-recorder';
 import {
+  getFlowSummary,
   skipFlowItem,
   type FlowMode,
+  type FlowSummary,
   type ReviewItem,
   type VoiceItem,
 } from '@/lib/api/studio-flow';
@@ -42,6 +44,7 @@ import { useFlowQueue } from './use-flow-queue';
 import { useReducedMotion } from './use-reduced-motion';
 import { useVoiceUploads } from './use-voice-uploads';
 import { VoiceTab } from './voice-tab';
+import { WordsTab } from './words-tab';
 
 const CSS = `
 .flow-touch-only{display:none}
@@ -128,6 +131,36 @@ function ReviewSection({
   );
 }
 
+function WordsSection({
+  blocked,
+  dispatch,
+  onToast,
+  onDone,
+  onSummaryStale,
+  onGoReview,
+}: {
+  blocked: ReadonlySet<string>;
+  dispatch: Dispatcher;
+  onToast: (m: string) => void;
+  onDone: () => void;
+  onSummaryStale: () => void;
+  onGoReview: () => void;
+}): ReactElement {
+  const { state, advance, reload } = useFlowQueue('words', blocked);
+  return (
+    <WordsTab
+      queue={state}
+      advance={advance}
+      reload={reload}
+      onDone={onDone}
+      onSkip={() => dispatch({ type: 'skip' })}
+      onSummaryStale={onSummaryStale}
+      onToast={onToast}
+      onGoReview={onGoReview}
+    />
+  );
+}
+
 export function StudioFlow({
   initialMode,
   reminderSlot,
@@ -149,6 +182,7 @@ export function StudioFlow({
   const [resting, setResting] = useState(false);
   const [fun, setFun] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [summary, setSummary] = useState<FlowSummary | null>(null);
   const konami = useRef(KONAMI_START);
   const lastCount = useRef(0);
   const prevDone = useRef<boolean | null>(null);
@@ -176,10 +210,30 @@ export function StudioFlow({
       .catch(() => undefined);
   }, []);
 
+  const summarySeq = useRef(0);
+  const refreshSummary = useCallback(() => {
+    const seq = ++summarySeq.current;
+    getFlowSummary()
+      .then((next) => {
+        if (seq === summarySeq.current) setSummary(next);
+      })
+      .catch(() => undefined);
+  }, []);
+
   useEffect(refreshStreak, [refreshStreak]);
+  useEffect(refreshSummary, [refreshSummary]);
   useEffect(() => {
     if (session.uploaded > 0) refreshStreak();
   }, [session.uploaded, refreshStreak]);
+  useEffect(() => {
+    if (resting) refreshSummary();
+  }, [resting, refreshSummary]);
+
+  const onWordsDone = useCallback(() => {
+    dispatch({ type: 'accept' });
+    refreshStreak();
+    refreshSummary();
+  }, [refreshStreak, refreshSummary]);
 
   useEffect(() => {
     if (streakPending === null || milestone !== null || banner !== null || resting) return;
@@ -331,6 +385,12 @@ export function StudioFlow({
         <div role="tablist" style={{ display: 'flex', gap: 8 }}>
           {tab('voice', t('tabs.voice'))}
           {tab('review', t('tabs.review'))}
+          {tab(
+            'words',
+            summary && summary.words_remaining > 0
+              ? `${t('tabs.words')} · ${summary.words_remaining}`
+              : t('tabs.words'),
+          )}
         </div>
         <div
           style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}
@@ -359,6 +419,7 @@ export function StudioFlow({
         {resting ? (
           <RestScreen
             session={session}
+            wordsWaited={summary?.words_waited ?? 0}
             reminderSlot={reminderSlot}
             onResume={() => setResting(false)}
           />
@@ -371,7 +432,7 @@ export function StudioFlow({
             enqueue={enqueue}
             onGoReview={() => switchMode('review')}
           />
-        ) : (
+        ) : mode === 'review' ? (
           <ReviewSection
             key="review"
             active={idle}
@@ -379,6 +440,16 @@ export function StudioFlow({
             dispatch={dispatch}
             onToast={showToast}
             onReviewed={refreshStreak}
+          />
+        ) : (
+          <WordsSection
+            key="words"
+            blocked={blocked}
+            dispatch={dispatch}
+            onToast={showToast}
+            onDone={onWordsDone}
+            onSummaryStale={refreshSummary}
+            onGoReview={() => switchMode('review')}
           />
         )}
       </div>

@@ -1,20 +1,24 @@
 'use client';
 
 import type { ReactElement, ReactNode } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { SessionState } from '@/lib/studio/flow-session';
+import { enForm, ruForm } from '@/lib/studio/word-plural';
 
 export function RestScreen({
   session,
+  wordsWaited,
   reminderSlot,
   onResume,
 }: {
   session: SessionState;
+  wordsWaited: number;
   reminderSlot?: ReactNode;
   onResume: () => void;
 }): ReactElement {
   const t = useTranslations('studio.flow');
+  const locale = useLocale();
   const stat = (text: string) => (
     <div
       style={{
@@ -50,6 +54,13 @@ export function RestScreen({
         {t('rest.title')}
       </div>
       <p style={{ margin: 0, color: 'var(--text-muted)' }}>{t('rest.body')}</p>
+      {wordsWaited > 0 && (
+        <p style={{ margin: 0, fontWeight: 700 }} data-testid="rest-words-waited">
+          {t(`rest.wordsWaited.${locale === 'en' ? enForm(wordsWaited) : ruForm(wordsWaited)}`, {
+            n: wordsWaited,
+          })}
+        </p>
+      )}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
         {stat(t('rest.count', { n: session.count }))}
         {stat(t('rest.best', { n: session.bestStreak }))}

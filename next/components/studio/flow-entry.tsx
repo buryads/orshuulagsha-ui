@@ -16,7 +16,11 @@ export function FlowEntry(): ReactElement {
       .catch(() => undefined);
   }, []);
   const today = summary
-    ? summary.today.recorded + summary.today.reviewed + summary.today.fixed + summary.today.flagged
+    ? summary.today.recorded +
+      summary.today.reviewed +
+      summary.today.fixed +
+      summary.today.flagged +
+      summary.today.words
     : 0;
   const chip = (text: string, id: string): ReactElement => (
     <span

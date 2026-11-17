@@ -10,7 +10,7 @@ export function QueueState({
   onRetry,
 }: {
   status: Exclude<QueueStatus, 'ready'>;
-  mode: 'voice' | 'review';
+  mode: 'voice' | 'review' | 'words';
   onRetry: () => void;
 }): ReactElement {
   const t = useTranslations('studio.flow.state');
@@ -49,9 +49,9 @@ export function QueueState({
     case 'loading':
       return body(t('loading'));
     case 'empty':
-      return mode === 'voice'
-        ? body(t('emptyVoiceTitle'), t('emptyVoiceBody'))
-        : body(t('emptyReviewTitle'), t('emptyReviewBody'));
+      if (mode === 'voice') return body(t('emptyVoiceTitle'), t('emptyVoiceBody'));
+      if (mode === 'words') return body(t('emptyWordsTitle'), t('emptyWordsBody'));
+      return body(t('emptyReviewTitle'), t('emptyReviewBody'));
     case 'notReady':
       return body(t('notReady'), undefined, true);
     case 'error':

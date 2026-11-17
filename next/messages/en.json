@@ -982,7 +982,8 @@
       "title": "Flow",
       "tabs": {
         "voice": "Voicing",
-        "review": "Review"
+        "review": "Review",
+        "words": "Words"
       },
       "entry": {
         "open": "Flow",
@@ -1058,6 +1059,8 @@
         "error": "Could not load",
         "retry": "Retry",
         "notReady": "Flow is still being set up. Try again in a minute.",
+        "emptyWordsTitle": "All words are done. Thank you!",
+        "emptyWordsBody": "There are no new word requests yet.",
         "loading": "Loading…",
         "fromSkipped": "Bringing back a skipped one",
         "back": "Back to studio"
@@ -1087,12 +1090,51 @@
         "p4": "A little more and you are a legend",
         "p5": "Thank you for your work!"
       },
+      "words": {
+        "asked": {
+          "one": "“{query}” — 1 person is looking for it",
+          "other": "“{query}” — {n} people are looking for it"
+        },
+        "direction": {
+          "ru2bur": "Russian → Buryat",
+          "bur2ru": "Buryat → Russian"
+        },
+        "contexts": "Found in: {list}",
+        "translation": "Translation",
+        "addValue": "+ Add a value",
+        "example": "Example (optional)",
+        "send": "Send for review",
+        "sent": "Sent for review. +2 points after approval",
+        "sendFailed": "Could not send. Try again",
+        "skip": "I do not know",
+        "reject": "Not a word",
+        "rejectTypo": "Typo",
+        "rejectNotBur": "Not a Buryat word",
+        "rejectOther": "Other",
+        "correct": "Correct: …",
+        "rejectConfirm": "Send",
+        "rejected": "Thanks. If another expert agrees, the request will close",
+        "undo": "Undo",
+        "saveFailed": "Could not save. Try again",
+        "suggestion": "Another expert's variant: {translation}",
+        "agree": "Agree",
+        "alt": "Another variant",
+        "agreed": "Thanks! Your agreement is recorded",
+        "conflict": "This card was already handled, next one",
+        "moderator": "Moderator: {note}",
+        "emptyTitle": "All words are done. Thank you!",
+        "checkPhrases": "Check phrases"
+      },
       "rest": {
         "title": "Break time",
         "body": "You did great. Rest a bit, then come back.",
         "count": "Accepted: {n}",
         "best": "Best streak: {n}",
         "uploaded": "Recordings uploaded: {n}",
+        "wordsWaited": {
+          "one": "Your word waited for {n} person",
+          "other": "Your words waited for {n} people"
+        },
         "resume": "Back to flow"
       },
       "egg": {
