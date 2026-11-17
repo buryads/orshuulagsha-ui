@@ -205,6 +205,16 @@ export interface TranslationLog {
 
 export type TranslationSuggestionStatus = 'pending' | 'approved' | 'rejected';
 
+export type WordRequestStatus = 'open' | 'answered' | 'added' | 'rejected';
+
+export interface AdminWordRequest {
+  id: number;
+  query: string;
+  direction: TranslationType;
+  demand: number;
+  status: WordRequestStatus;
+}
+
 export interface TranslationSuggestion {
   id: number;
   direction: TranslationType;
@@ -213,6 +223,16 @@ export interface TranslationSuggestion {
   note: string | null;
   status: TranslationSuggestionStatus;
   created_at: string;
+  word_request?: AdminWordRequest | null;
+  example?: string | null;
+  confirmations?: number;
+  moderator_edited?: boolean;
+}
+
+export interface CreatedWord {
+  id: number;
+  slug: string;
+  name: string;
 }
 
 export interface Paginated<T> {

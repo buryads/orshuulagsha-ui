@@ -7,6 +7,7 @@ import type {
   TranslationSuggestion,
   TranslationSuggestionStatus,
   TranslationType,
+  CreatedWord,
   Word,
 } from '@/lib/api/types';
 
@@ -50,12 +51,56 @@ export async function getTranslationsCount(
 export async function getTranslationSuggestions(
   status: TranslationSuggestionStatus,
   page: number,
+  source?: 'word_request',
 ): Promise<Paginated<TranslationSuggestion>> {
   return apiCall<Paginated<TranslationSuggestion>>(
     'GET',
     `${RESOURCE}/translation-suggestions`,
-    { params: { status, page } },
+    { params: { status, page, source } },
   );
+}
+
+export async function approveWordRequestSuggestion(
+  id: number,
+): Promise<{ word: CreatedWord; indexed: boolean }> {
+  const body = await apiCall<{ data: { word: CreatedWord; indexed: boolean } }>(
+    'POST',
+    `${RESOURCE}/translation-suggestions/${id}/approve-create`,
+  );
+  return body.data;
+}
+
+export async function linkWordRequestSuggestion(
+  id: number,
+  burwordId: number,
+): Promise<CreatedWord> {
+  const body = await apiCall<{ data: { word: CreatedWord } }>(
+    'POST',
+    `${RESOURCE}/translation-suggestions/${id}/link`,
+    { data: { burword_id: burwordId } },
+  );
+  return body.data.word;
+}
+
+export async function rejectWordRequestSuggestion(
+  id: number,
+  reason: string,
+): Promise<void> {
+  await apiCall('POST', `${RESOURCE}/translation-suggestions/${id}/reject`, {
+    data: { reason },
+  });
+}
+
+export async function editWordRequestSuggestion(
+  id: number,
+  input: { translation: string; example?: string | null },
+): Promise<TranslationSuggestion> {
+  const body = await apiCall<{ data: TranslationSuggestion }>(
+    'PATCH',
+    `${RESOURCE}/translation-suggestions/${id}/edit`,
+    { data: input },
+  );
+  return body.data;
 }
 
 export async function setTranslationSuggestionStatus(
