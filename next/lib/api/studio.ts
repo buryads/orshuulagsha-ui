@@ -247,7 +247,9 @@ export interface UploadAudioInput {
   durationMs?: number;
 }
 
-export async function uploadAudio(input: UploadAudioInput): Promise<Recording> {
+export async function uploadAudio(
+  input: UploadAudioInput,
+): Promise<Recording & { points?: number }> {
   const form = new FormData();
   form.append('file', input.file, input.filename ?? 'recording');
   form.append('owner_type', input.ownerType);
@@ -255,7 +257,11 @@ export async function uploadAudio(input: UploadAudioInput): Promise<Recording> {
   if (input.lineKey !== undefined) form.append('line_key', input.lineKey);
   if (input.text !== undefined) form.append('text', input.text);
   if (input.durationMs !== undefined) form.append('duration_ms', String(Math.round(input.durationMs)));
-  return (await apiCall<Envelope<Recording>>('POST', `${BASE}/audio`, { data: form })).data;
+  return (
+    await apiCall<Envelope<Recording & { points?: number }>>('POST', `${BASE}/audio`, {
+      data: form,
+    })
+  ).data;
 }
 
 export async function deleteAudio(uuid: string): Promise<void> {

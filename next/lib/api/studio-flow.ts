@@ -13,6 +13,15 @@ export interface FlowLessonRef {
   level: string;
 }
 
+export interface RerecordInfo {
+  flag_id: number;
+  old_audio_url: string;
+  reason: 'misheard' | 'cant_hear';
+  heard: number;
+  not_recognized: number;
+  confusions: string[];
+}
+
 export interface VoiceItem {
   mode: 'voice';
   item_key: string;
@@ -20,6 +29,7 @@ export interface VoiceItem {
   ru: string | null;
   lessons: FlowLessonRef[];
   uses: number;
+  rerecord?: RerecordInfo | null;
 }
 
 export interface ReviewExercise {
@@ -173,6 +183,50 @@ export async function touchWordRequest(id: number): Promise<void> {
 
 export async function getFlowSummary(): Promise<FlowSummary> {
   return (await apiCall<{ data: FlowSummary }>('GET', `${BASE}/summary`)).data;
+}
+
+export type KeepReason = 'as_is' | 'hard' | 'other';
+
+export async function keepRecording(
+  itemKey: string,
+  reason: KeepReason,
+  note?: string,
+): Promise<number> {
+  const res = await apiCall<{ data: { points: number } }>('POST', `${BASE}/keep`, {
+    data: { item_key: itemKey, reason, note },
+  });
+  return res.data.points;
+}
+
+export interface VoiceStatRecording {
+  uuid: string;
+  text: string;
+  audio_url: string;
+  recognized: number;
+  heard: number;
+}
+
+export interface FlaggedRecording {
+  uuid: string;
+  text: string;
+  audio_url: string;
+  reason: 'misheard' | 'cant_hear';
+  heard: number;
+  not_recognized: number;
+  confusions: string[];
+}
+
+export interface VoiceStats {
+  recognized: number;
+  heard: number;
+  rate: number | null;
+  needs_rerecord: number;
+  top: VoiceStatRecording[];
+  flagged: FlaggedRecording[];
+}
+
+export async function getVoiceStats(): Promise<VoiceStats> {
+  return (await apiCall<{ data: VoiceStats }>('GET', '/api/studio/voice-stats')).data;
 }
 
 export function isConflict(err: unknown): boolean {

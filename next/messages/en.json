@@ -1080,6 +1080,41 @@
         "conflict": "Already changed, next one",
         "submitFailed": "Could not send, please try again"
       },
+      "rerecord": {
+        "title": "Re-record",
+        "listenOld": "Play the old one",
+        "statMisheard": "Learners find it hard to hear: {notRecognized} of {heard} did not recognize it.",
+        "statCantHear": "Learners could not hear it: {notRecognized} of {heard} did not recognize it.",
+        "confusion": "Often picked: «{confusion}»",
+        "saved": "+{points, plural, one {# point} other {# points}}. Recording replaced",
+        "micDenied": "Allow microphone access",
+        "recheck": "Check again",
+        "uploadFailed": "Recording was not sent. <retry>Retry</retry>"
+      },
+      "keep": {
+        "title": "Keep as is",
+        "pick": "Choose a reason",
+        "reasons": {
+          "as_is": "It sounds right",
+          "hard": "Hard word",
+          "other": "Other: …"
+        },
+        "otherPlaceholder": "Your reason, up to 200 characters",
+        "points": "+{points, plural, one {# point} other {# points}}",
+        "saved": "Decision saved"
+      },
+      "stats": {
+        "recognized": "Your voice was recognized {n, plural, one {# time} other {# times}}",
+        "empty": "Your recordings will appear in the Listen quiz soon",
+        "details": "Details",
+        "hide": "Hide",
+        "top": "Recognized most often",
+        "flagged": "Flagged recordings",
+        "timesRecognized": "recognized {n, plural, one {# time} other {# times}}",
+        "needs": "{n, plural, one {# recording} other {# recordings}} should be re-recorded",
+        "needsHint": "learners find it hard to hear",
+        "rerecordCta": "Re-record"
+      },
       "state": {
         "emptyVoiceTitle": "Everything is voiced!",
         "emptyVoiceBody": "Thank you! No new phrases to voice for now.",

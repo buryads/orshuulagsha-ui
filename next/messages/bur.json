@@ -1078,6 +1078,41 @@
         "conflict": "Уже изменено, следующий",
         "submitFailed": "Не удалось отправить, попробуйте ещё раз"
       },
+      "rerecord": {
+        "title": "Перезаписать",
+        "listenOld": "Слушать старую",
+        "statMisheard": "Ученикам трудно расслышать: {notRecognized} из {heard} не узнали.",
+        "statCantHear": "Ученикам было не слышно: {notRecognized} из {heard} не узнали.",
+        "confusion": "Часто выбирают «{confusion}»",
+        "saved": "+{points, plural, one {# очко} few {# очка} many {# очков} other {# очка}}. Запись заменена",
+        "micDenied": "Разрешите доступ к микрофону",
+        "recheck": "Проверить снова",
+        "uploadFailed": "Запись не отправилась. <retry>Повторить</retry>"
+      },
+      "keep": {
+        "title": "Оставить как есть",
+        "pick": "Выберите причину",
+        "reasons": {
+          "as_is": "Так и звучит",
+          "hard": "Слово трудное",
+          "other": "Другое: …"
+        },
+        "otherPlaceholder": "Своя причина, до 200 символов",
+        "points": "+{points, plural, one {# очко} few {# очка} many {# очков} other {# очка}}",
+        "saved": "Решение сохранено"
+      },
+      "stats": {
+        "recognized": "Ваш голос узнали {n, plural, one {# раз} few {# раза} many {# раз} other {# раза}}",
+        "empty": "Ваши записи скоро появятся в квизе «На слух»",
+        "details": "Подробнее",
+        "hide": "Свернуть",
+        "top": "Чаще всего узнают",
+        "flagged": "Записи с флажком",
+        "timesRecognized": "узнали {n, plural, one {# раз} few {# раза} many {# раз} other {# раза}}",
+        "needs": "{n, plural, one {# запись} few {# записи} many {# записей} other {# записи}} стоит перезаписать",
+        "needsHint": "ученикам трудно расслышать",
+        "rerecordCta": "Перезаписать"
+      },
       "state": {
         "emptyVoiceTitle": "Всё озвучено!",
         "emptyVoiceBody": "Спасибо! Новых фраз для озвучки пока нет.",
