@@ -132,10 +132,10 @@ export interface GreetingsList {
 }
 
 export async function getGreetings(lessonId?: number): Promise<GreetingsList> {
-  const res = await apiCall<Envelope<Partial<GreetingsList>>>('GET', GREETINGS, {
+  const res = await apiCall<Envelope<{ items?: GreetingRow[]; candidates?: GreetingCandidate[] }>>('GET', GREETINGS, {
     params: lessonId ? { lesson_id: lessonId } : {},
   });
-  return { published: res.data.published ?? [], candidates: res.data.candidates ?? [] };
+  return { published: res.data.items ?? [], candidates: res.data.candidates ?? [] };
 }
 
 export async function publishGreeting(input: {
