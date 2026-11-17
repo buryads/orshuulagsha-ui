@@ -38,6 +38,7 @@ import { EmailPrompt } from './email-prompt';
 import { FlowEntry } from './flow-entry';
 import { TeachersPanel } from './teachers-panel';
 import { isForbidden } from './use-studio-access';
+import { VoiceStatsCard } from './voice-stats-card';
 
 const LEVEL_KEY = 'studio.level';
 export const LAST_LESSON_KEY = 'studio.lastLesson';
@@ -287,6 +288,7 @@ export function StudioBoard({ isAdmin }: { isAdmin: boolean }): ReactElement {
       <EmailPrompt />
 
       <FlowEntry />
+      <VoiceStatsCard />
 
       <div role="tablist" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }} data-testid="level-tabs">
         {LEVELS.map((l, i) => {

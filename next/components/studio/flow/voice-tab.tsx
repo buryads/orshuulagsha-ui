@@ -10,9 +10,10 @@ import {
 } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAudioRecorder, type RecordedClip } from '@/components/audio/use-audio-recorder';
-import { skipFlowItem, type VoiceItem } from '@/lib/api/studio-flow';
+import { skipFlowItem, type KeepReason, type VoiceItem } from '@/lib/api/studio-flow';
 import { isLetterKey, isSpaceKey } from '@/lib/studio/flow-keys';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
+import { KeepForm, RerecordNotice } from './rerecord-panel';
 import { QueueState } from './states';
 import type { QueueState as QueueData } from './use-flow-queue';
 
@@ -24,6 +25,8 @@ export interface VoiceTabProps {
   advance: (before?: () => Promise<unknown>) => Promise<void>;
   reload: () => Promise<void>;
   onAccept: (item: VoiceItem, clip: RecordedClip) => void;
+  onRerecord: (item: VoiceItem, clip: RecordedClip) => Promise<void>;
+  onKeep: (item: VoiceItem, reason: KeepReason, note?: string) => Promise<void>;
   onSkip: () => void;
   onGoReview: () => void;
 }
@@ -34,6 +37,8 @@ export function VoiceTab({
   advance,
   reload,
   onAccept,
+  onRerecord,
+  onKeep,
   onSkip,
   onGoReview,
 }: VoiceTabProps): ReactElement {
@@ -42,6 +47,9 @@ export function VoiceTab({
   const { phase, clip, error, level, start, stop, discard } = rec;
   const holdRef = useRef(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const busyRef = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [tooShort, setTooShort] = useState(false);
   const [micBlocked, setMicBlocked] = useState(false);
   const item = queue.item;
@@ -101,11 +109,35 @@ export function VoiceTab({
     stop();
   }, [stop]);
 
+  const submit = useCallback(async (job: () => Promise<void>) => {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    setFailed(false);
+    try {
+      await job();
+    } catch {
+      setFailed(true);
+    } finally {
+      busyRef.current = false;
+      setBusy(false);
+    }
+  }, []);
+
   const accept = useCallback(() => {
-    if (!item || !clip || phase !== 'recorded') return;
+    if (!item || !clip || phase !== 'recorded' || busyRef.current) return;
     stopPlayback();
+    if (item.rerecord) {
+      void submit(() => onRerecord(item, clip));
+      return;
+    }
     onAccept(item, clip);
-  }, [item, clip, phase, onAccept, stopPlayback]);
+  }, [item, clip, phase, onAccept, onRerecord, stopPlayback, submit]);
+
+  const recheckMic = useCallback(() => {
+    setMicBlocked(false);
+    discard();
+  }, [discard]);
 
   const redo = useCallback(() => {
     stopPlayback();
@@ -113,7 +145,7 @@ export function VoiceTab({
   }, [discard, stopPlayback]);
 
   const skip = useCallback(() => {
-    if (!item) return;
+    if (!item || busyRef.current) return;
     stopPlayback();
     onSkip();
     void advance(() => skipFlowItem('voice', item.item_key));
@@ -196,6 +228,11 @@ export function VoiceTab({
       {queue.fromSkipped && (
         <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('state.fromSkipped')}</span>
       )}
+      {item.rerecord && (
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--tertiary-700)' }}>
+          {t('rerecord.title')}
+        </span>
+      )}
       <div
         style={{
           fontSize: 'clamp(30px, 7vw, 52px)',
@@ -214,6 +251,7 @@ export function VoiceTab({
       <div style={{ fontSize: 13, color: 'var(--text-soft)' }}>
         {t('voice.usedIn', { n: item.uses })}
       </div>
+      {item.rerecord && <RerecordNotice rerecord={item.rerecord} onListen={play} />}
 
       {unavailable ? (
         <div
@@ -228,11 +266,21 @@ export function VoiceTab({
           data-testid="mic-unavailable"
         >
           <p style={{ margin: '0 0 10px' }}>
-            {!supported || error === 'unsupported' ? t('voice.unsupported') : t('voice.micDenied')}
+            {!supported || error === 'unsupported'
+              ? t('voice.unsupported')
+              : item.rerecord
+                ? t('rerecord.micDenied')
+                : t('voice.micDenied')}
           </p>
-          <button type="button" className="btn btn-secondary" onClick={onGoReview}>
-            {t('voice.goReview')}
-          </button>
+          {item.rerecord && supported && error !== 'unsupported' ? (
+            <button type="button" className="btn btn-secondary" onClick={recheckMic}>
+              {t('rerecord.recheck')}
+            </button>
+          ) : (
+            <button type="button" className="btn btn-secondary" onClick={onGoReview}>
+              {t('voice.goReview')}
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -323,7 +371,7 @@ export function VoiceTab({
         <button
           type="button"
           className="btn btn-primary"
-          disabled={!recorded}
+          disabled={!recorded || busy}
           onMouseDown={(e) => e.preventDefault()}
           onClick={accept}
           style={{ minHeight: 52, flex: '1 1 140px', fontSize: 16, opacity: recorded ? 1 : 0.45 }}
@@ -353,6 +401,33 @@ export function VoiceTab({
           {t('voice.skip')}
         </button>
       </div>
+      {item.rerecord && failed && (
+        <div
+          role="alert"
+          style={{ color: 'var(--tertiary-700)', fontWeight: 600 }}
+          data-testid="rerecord-failed"
+        >
+          {t.rich('rerecord.uploadFailed', {
+            retry: (chunks) => (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                style={{ marginLeft: 8 }}
+                onClick={accept}
+              >
+                {chunks}
+              </button>
+            ),
+          })}
+        </div>
+      )}
+      {item.rerecord && (
+        <KeepForm
+          key={item.item_key}
+          disabled={busy}
+          onKeep={(reason, note) => void submit(() => onKeep(item, reason, note))}
+        />
+      )}
       <div className="flow-help flow-kbd-only" style={{ fontSize: 12, color: 'var(--text-soft)' }}>
         {t('voice.help')}
       </div>

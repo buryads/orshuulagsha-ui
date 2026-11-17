@@ -43,6 +43,7 @@ import { ReviewTab } from './review-tab';
 import { StreakChip } from './streak-chip';
 import { useFlowQueue } from './use-flow-queue';
 import { useReducedMotion } from './use-reduced-motion';
+import { useRerecord } from './use-rerecord';
 import { useVoiceUploads } from './use-voice-uploads';
 import { VoiceTab } from './voice-tab';
 import { WordsTab } from './words-tab';
@@ -76,11 +77,14 @@ function VoiceSection({
   dispatch,
   enqueue,
   onGoReview,
+  onToast,
 }: SectionProps & {
   enqueue: ReturnType<typeof useVoiceUploads>['enqueue'];
   onGoReview: () => void;
+  onToast: (m: string) => void;
 }): ReactElement {
   const { state, advance, reload } = useFlowQueue('voice', blocked);
+  const { send, keep } = useRerecord(dispatch, advance, onToast);
   const onAccept = useCallback(
     (item: VoiceItem, clip: RecordedClip) => {
       enqueue({
@@ -102,6 +106,8 @@ function VoiceSection({
       advance={advance}
       reload={reload}
       onAccept={onAccept}
+      onRerecord={send}
+      onKeep={keep}
       onSkip={() => dispatch({ type: 'skip' })}
       onGoReview={onGoReview}
     />
@@ -445,6 +451,7 @@ export function StudioFlow({
             dispatch={dispatch}
             enqueue={enqueue}
             onGoReview={() => switchMode('review')}
+            onToast={showToast}
           />
         ) : mode === 'review' ? (
           <ReviewSection
