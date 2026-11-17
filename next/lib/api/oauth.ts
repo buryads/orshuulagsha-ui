@@ -35,10 +35,22 @@ export async function getOAuthProviders(): Promise<OAuthProvider[]> {
   }
 }
 
+export function buildOAuthRedirectUrl(
+  base: string,
+  provider: OAuthProvider,
+  locale: string,
+  challenge: string,
+  emailOptIn = false,
+): string {
+  const optIn = emailOptIn ? '&email_opt_in=1' : '';
+  return `${base.replace(/\/$/, '')}/api/auth/${provider}/redirect?locale=${locale}&challenge=${challenge}${optIn}`;
+}
+
 export async function startOAuth(
   provider: OAuthProvider,
   locale: string,
   next: string | null,
+  emailOptIn = false,
 ): Promise<void> {
   const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
@@ -47,9 +59,8 @@ export async function startOAuth(
     PENDING_KEY,
     JSON.stringify({ verifier, next: isSafeNext(next) ? next : null }),
   );
-  const base = apiBaseUrl.replace(/\/$/, '');
   window.location.assign(
-    `${base}/api/auth/${provider}/redirect?locale=${locale}&challenge=${challenge}`,
+    buildOAuthRedirectUrl(apiBaseUrl, provider, locale, challenge, emailOptIn),
   );
 }
 

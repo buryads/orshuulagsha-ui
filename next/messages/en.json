@@ -24,6 +24,7 @@
     "signUp": "Create your account",
     "signUpButton": "Create account",
     "signUpSubtitle": "Just a few seconds and you are in",
+    "emailOptIn": "Send me reminders and project news by email",
     "creating": "Creating...",
     "login": "Sign in",
     "logout": "Logout",
@@ -380,7 +381,17 @@
     "changePassword": "Change password",
     "changePasswordHint": "We will email you a reset link",
     "logout": "Log out",
-    "logoutHint": "Sign out of your account on this device"
+    "logoutHint": "Sign out of your account on this device",
+    "notifications": {
+      "title": "Notifications",
+      "teacherReminders": "Studio reminders",
+      "teacherRemindersHint": "An email when your streak is at risk or you have not visited the studio for a while",
+      "productNews": "Project news",
+      "productNewsHint": "Occasional emails about new features and updates",
+      "serviceNote": "Service emails (password reset, new-login alerts) always arrive and cannot be turned off.",
+      "loadFailed": "Could not load settings",
+      "saveFailed": "Could not save, please try again"
+    }
   },
   "mcp": {
     "title": "MCP access",
@@ -561,6 +572,14 @@
     "metaDescription": "What data we collect from contributors, why, and under which license your contribution is open.",
     "title": "Policy and license",
     "updated": "Updated: November 17, 2026",
+    "emailTitle": "Email notifications",
+    "emailConsent": "We send emails only with your consent: the checkbox at signup or a toggle in your profile. Teachers can turn on studio reminders. Categories:",
+    "emailCategories": [
+      "Studio reminders: an email when your streak is at risk or you have not visited in a while.",
+      "Project news: occasional emails about updates."
+    ],
+    "emailUnsubscribe": "Every such email has an unsubscribe link, and mail clients offer one-click unsubscribe. All toggles are also in your profile.",
+    "emailService": "Service emails (password reset, new-login alert) are sent regardless of these settings.",
     "collectTitle": "What we collect",
     "collect": [
       "Application: name, Telegram, how you want to help, a comment.",
@@ -578,6 +597,23 @@
     "deleteTitle": "Deletion",
     "delete": "To delete your data or recordings, send an application on the \"Help the project\" page with the note \"delete\" in the \"About you\" field, or reply to us on Telegram. We will delete everything within 30 days.",
     "deleteLink": "Open the form"
+  },
+  "unsubscribe": {
+    "confirmTitle": "Unsubscribe from “{category}”?",
+    "doneTitle": "You unsubscribed from “{category}”",
+    "resubscribedTitle": "Subscription restored",
+    "invalidTitle": "This link is invalid or has expired",
+    "invalidHint": "You can change your email settings in your profile.",
+    "unsubscribe": "Unsubscribe",
+    "resubscribe": "Undo",
+    "unsubscribeAgain": "Unsubscribe again",
+    "manageAll": "Manage all notifications",
+    "toProfile": "Go to profile",
+    "error": "The request failed, please try again",
+    "categories": {
+      "teacher_reminders": "Studio reminders",
+      "product_news": "Project news"
+    }
   },
   "changes": {
     "title": "What's new",
@@ -760,6 +796,13 @@
     }
   },
   "studio": {
+    "emailPrompt": {
+      "title": "Turn on email reminders?",
+      "hint": "We will remind you about your streak and the studio. You can turn it off any time in your profile.",
+      "enable": "Turn on",
+      "later": "Not now",
+      "done": "Done"
+    },
     "gate": {
       "loading": "Loading…",
       "guest": "Sign in to open the studio.",

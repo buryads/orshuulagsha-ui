@@ -18,6 +18,7 @@ export default async function PrivacyPage({ params }: { params: { locale: string
   setRequestLocale(params.locale);
   const t = await getTranslations('privacy');
   const collect = t.raw('collect') as string[];
+  const emailCategories = t.raw('emailCategories') as string[];
   const licenseUrl = (await getTranslations('pomoch.form'))('licenseUrl');
 
   return (
@@ -47,6 +48,18 @@ export default async function PrivacyPage({ params }: { params: { locale: string
       <section>
         <h2 style={heading}>{t('storageTitle')}</h2>
         <p style={{ margin: 0 }}>{t('storage')}</p>
+      </section>
+
+      <section>
+        <h2 style={heading}>{t('emailTitle')}</h2>
+        <p style={{ margin: 0 }}>{t('emailConsent')}</p>
+        <ul style={{ ...list, margin: '8px 0' }}>
+          {emailCategories.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ul>
+        <p style={{ margin: 0 }}>{t('emailUnsubscribe')}</p>
+        <p style={{ margin: '8px 0 0' }}>{t('emailService')}</p>
       </section>
 
       <section>

@@ -36,7 +36,7 @@ const LOGOS: Record<OAuthProvider, ReactNode> = {
   ),
 };
 
-export function OAuthButtons() {
+export function OAuthButtons({ emailOptIn = false }: { emailOptIn?: boolean }) {
   const t = useTranslations('oauth');
   const locale = useLocale();
   const searchParams = useSearchParams();
@@ -91,7 +91,7 @@ export function OAuthButtons() {
               type="button"
               className="btn"
               style={{ width: '100%', height: 44, gap: 10 }}
-              onClick={() => startOAuth(provider, locale, next)}
+              onClick={() => startOAuth(provider, locale, next, emailOptIn)}
             >
               {LOGOS[provider]}
               {t(provider)}

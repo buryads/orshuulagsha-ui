@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import axios from 'axios';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import * as auth from '@/lib/api/auth';
 import * as user from '@/lib/api/user';
@@ -27,6 +27,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function SignupForm() {
   const t = useTranslations('auth');
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next');
   const nextPath = isSafeNext(nextRaw) ? nextRaw : '/packs';
@@ -39,6 +40,7 @@ export function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -91,7 +93,7 @@ export function SignupForm() {
 
     setSubmitting(true);
     try {
-      await auth.register(name.trim(), email, password);
+      await auth.register(name.trim(), email, password, emailOptIn, locale);
       await user.getUser().catch(() => undefined);
       window.location.assign(nextPath);
     } catch (err: unknown) {
@@ -197,6 +199,26 @@ export function SignupForm() {
           }
         />
 
+        <label
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 10,
+            fontSize: 13,
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={emailOptIn}
+            onChange={(e) => setEmailOptIn(e.target.checked)}
+            disabled={submitting}
+            style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0, accentColor: 'var(--primary)' }}
+          />
+          {t('emailOptIn')}
+        </label>
+
         {submitError ? (
           <div
             role="alert"
@@ -236,7 +258,7 @@ export function SignupForm() {
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </form>
 
-      <OAuthButtons />
+      <OAuthButtons emailOptIn={emailOptIn} />
 
       <div
         style={{

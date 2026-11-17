@@ -34,6 +34,7 @@ import {
 } from '@/lib/studio/board';
 import { isPlainShortcut } from '@/lib/studio/shortcuts';
 import { Field, inputStyle } from './field';
+import { EmailPrompt } from './email-prompt';
 import { FlowEntry } from './flow-entry';
 import { TeachersPanel } from './teachers-panel';
 import { isForbidden } from './use-studio-access';
@@ -282,6 +283,8 @@ export function StudioBoard({ isAdmin }: { isAdmin: boolean }): ReactElement {
           ? {t('help.title')}
         </button>
       </div>
+
+      <EmailPrompt />
 
       <FlowEntry />
 

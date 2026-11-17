@@ -24,11 +24,13 @@ export async function register(
   name: string,
   email: string,
   password: string,
+  emailOptIn = false,
+  locale?: string,
 ): Promise<void> {
   const body = await apiCall<DataEnvelope<TokenResponse>>(
     'POST',
     RESOURCE_REGISTER,
-    { data: { name, email, password } },
+    { data: { name, email, password, email_opt_in: emailOptIn, locale } },
   );
   await persistToken(body.data);
 }

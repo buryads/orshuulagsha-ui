@@ -7,6 +7,7 @@ import { Icon } from '@/components/ui/icon';
 import { signOut } from '@/lib/api/auth';
 import * as user from '@/lib/api/user';
 import type { IUser } from '@/lib/api/types';
+import { EmailNotifications } from './email-notifications';
 
 function Field({ label, value }: { label: string; value?: string }) {
   return (
@@ -90,6 +91,8 @@ export function ProfileAccount() {
         <Field label={t('name')} value={me?.name ?? (failed ? '—' : undefined)} />
         <Field label={t('email')} value={me?.email ?? (failed ? '—' : undefined)} />
       </section>
+
+      <EmailNotifications />
 
       <section
         className="card"
