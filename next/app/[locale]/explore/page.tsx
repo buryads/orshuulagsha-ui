@@ -1,7 +1,6 @@
 import { Suspense, type ReactElement } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { AlphabetPicker } from '@/components/explore/alphabet-picker';
-import { AskExpert } from '@/components/ask/ask-expert';
 import { ExploreHead } from '@/components/explore/explore-head';
 import { FilterChips } from '@/components/explore/filter-chips';
 import { Pagination } from '@/components/explore/pagination';
@@ -34,7 +33,6 @@ export default async function ExplorePage({
     perPage,
   }).catch(() => null);
 
-  const searchQuery = searchParams.q?.trim() ?? '';
   const list: BurWord[] = data?.data ?? [];
   const total = data?.meta?.total ?? 0;
   const lastPage = data?.meta?.last_page ?? 1;
@@ -51,11 +49,7 @@ export default async function ExplorePage({
       <Suspense fallback={null}>
         <AlphabetPicker />
       </Suspense>
-      {searchQuery && list.length === 0 ? (
-        <AskExpert query={searchQuery} direction="ru2bur" />
-      ) : (
-        <WordGrid words={list} />
-      )}
+      <WordGrid words={list} />
       <Suspense fallback={null}>
         <Pagination currentPage={page} totalPages={lastPage} />
       </Suspense>

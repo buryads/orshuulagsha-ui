@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type MouseEvent, type ReactElement } from 
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { AskSheet } from '@/components/ask/ask-sheet';
+import { getEmailPreferences } from '@/lib/api/email-preferences';
 import {
   createWordRequest,
   lookupWordRequest,
@@ -14,6 +15,7 @@ import { useCurrentUser } from '@/lib/use-current-user';
 import {
   pluralPeople,
   rejectTextKey,
+  takeReopen,
   type WordRequestDirection,
 } from '@/lib/word-requests';
 
@@ -22,7 +24,7 @@ export interface AskExpertProps {
   direction: WordRequestDirection;
 }
 
-type Notice = 'joined' | 'created' | 'failed';
+type Notice = 'joined' | 'created' | 'joinFailed' | 'sendFailed';
 
 const EMPTY_LOOKUP = (query: string): WordRequestLookup => ({
   normalized: query,
@@ -38,6 +40,7 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [newsOn, setNewsOn] = useState(false);
   const lastTrigger = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -58,12 +61,11 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
 
   useEffect(() => {
     if (!ready || !signedIn) return;
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('ask') !== '1') return;
-    url.searchParams.delete('ask');
-    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
-    setSheetOpen(true);
-  }, [ready, signedIn]);
+    if (takeReopen(query)) setSheetOpen(true);
+    getEmailPreferences()
+      .then((prefs) => setNewsOn(prefs.product_news))
+      .catch(() => undefined);
+  }, [ready, signedIn, query]);
 
   function openSheet(event: MouseEvent<HTMLElement>): void {
     lastTrigger.current = event.currentTarget;
@@ -76,7 +78,7 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
     if (trigger?.isConnected) trigger.focus();
   }
 
-  function onSubmitted(created: WordRequestCreated): void {
+  function applyCreated(created: WordRequestCreated): void {
     setLookup((prev) => {
       const base = prev ?? EMPTY_LOOKUP(query);
       return {
@@ -93,10 +95,9 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
         },
       };
     });
-    setNotice(created.joined ? 'joined' : 'created');
   }
 
-  async function quickRequest(event: MouseEvent<HTMLButtonElement>): Promise<void> {
+  async function quickRequest(event: MouseEvent<HTMLButtonElement>, retry: boolean): Promise<void> {
     if (!signedIn) {
       openSheet(event);
       return;
@@ -104,10 +105,11 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
     setBusy(true);
     setNotice(null);
     try {
-      const created = await createWordRequest({ direction, query: query.trim(), notify: false });
-      onSubmitted(created);
+      const created = await createWordRequest({ direction, query: query.trim(), notify: newsOn });
+      applyCreated(created);
+      setNotice(!retry && created.joined ? 'joined' : 'created');
     } catch {
-      setNotice('failed');
+      setNotice(retry ? 'sendFailed' : 'joinFailed');
     } finally {
       setBusy(false);
     }
@@ -147,7 +149,7 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
       return (
         <>
           <p style={{ margin: 0, fontSize: 14, color: 'var(--text-muted)' }}>{rejectText()}</p>
-          <button type="button" className="btn btn-primary" disabled={busy} onClick={(e) => void quickRequest(e)}>
+          <button type="button" className="btn btn-primary" disabled={busy} onClick={(e) => void quickRequest(e, true)}>
             {t('retryButton')}
           </button>
         </>
@@ -164,12 +166,19 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
             {t('following')}
           </button>
         ) : (
-          <button type="button" className="btn btn-primary" disabled={busy} onClick={(e) => void quickRequest(e)}>
+          <button type="button" className="btn btn-primary" disabled={busy} onClick={(e) => void quickRequest(e, false)}>
             {answered ? t('followButton') : t('joinButton')}
           </button>
         )}
       </>
     );
+  }
+
+  function noticeText(value: Notice): string {
+    if (value === 'joined') return t('joined');
+    if (value === 'created') return t('sheet.doneCreated');
+    if (value === 'joinFailed') return t('joinFailed');
+    return t('sheet.failed');
   }
 
   return (
@@ -193,10 +202,11 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
           {renderAction()}
         </div>
         {notice && (
-          <p role="status" style={{ margin: 0, fontSize: 14, color: notice === 'failed' ? 'var(--tertiary-700)' : 'var(--text)' }}>
-            {notice === 'joined' && t('joined')}
-            {notice === 'created' && t('sheet.doneCreated')}
-            {notice === 'failed' && t('joinFailed')}
+          <p
+            role="status"
+            style={{ margin: 0, fontSize: 14, color: notice.endsWith('Failed') ? 'var(--tertiary-700)' : 'var(--text)' }}
+          >
+            {noticeText(notice)}
           </p>
         )}
         {notice === 'joined' || notice === 'created' ? (
@@ -211,7 +221,7 @@ export function AskExpert({ query, direction }: AskExpertProps): ReactElement {
           direction={direction}
           signedIn={signedIn}
           onClose={closeSheet}
-          onSubmitted={onSubmitted}
+          onSubmitted={applyCreated}
         />
       )}
     </div>

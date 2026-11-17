@@ -25,6 +25,7 @@ import {
   clearDraft,
   isWordLengthValid,
   loadDraft,
+  markReopen,
   saveDraft,
   type WordRequestDirection,
   type WordRequestDraft,
@@ -55,9 +56,7 @@ const SHEET_CSS = `
 const FOCUSABLE = 'button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled])';
 
 function buildReturnPath(): string {
-  const url = new URL(window.location.href);
-  url.searchParams.set('ask', '1');
-  return `${url.pathname}${url.search}`;
+  return `${window.location.pathname}${window.location.search}`;
 }
 
 function initialDraft(query: string, direction: WordRequestDirection): WordRequestDraft {
@@ -83,6 +82,7 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
   const dialogRef = useRef<HTMLDivElement>(null);
   const wordRef = useRef<HTMLInputElement>(null);
   const contextRef = useRef<HTMLInputElement>(null);
+  const successRef = useRef<HTMLParagraphElement>(null);
 
   const [initial] = useState(() => initialDraft(query, direction));
   const [word, setWord] = useState(initial.query);
@@ -101,6 +101,10 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
   useEffect(() => {
     (wordRef.current ?? dialogRef.current)?.focus();
   }, []);
+
+  useEffect(() => {
+    if (done) successRef.current?.focus();
+  }, [done]);
 
   useEffect(() => {
     if (!signedIn) return;
@@ -139,6 +143,7 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
 
   async function submit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
+    if (busy) return;
     setWordError(null);
     setContextError(null);
     setFormError(null);
@@ -198,6 +203,7 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
             </button>
             <Link
               href={`/signin?next=${encodeURIComponent(returnPath)}`}
+              onClick={() => markReopen(query)}
               className="btn btn-primary"
               style={{ textDecoration: 'none' }}
             >
@@ -211,7 +217,7 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
     if (done) {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <p role="status" style={{ margin: 0, fontSize: 15 }}>
+          <p ref={successRef} tabIndex={-1} role="status" style={{ margin: 0, fontSize: 15, outline: 'none' }}>
             {done.joined ? t('sheet.doneJoined') : t('sheet.doneCreated')}
           </p>
           <div className="ask-sheet-actions">
@@ -328,7 +334,7 @@ export function AskSheet({ query, direction, signedIn, onClose, onSubmitted }: A
           <button type="button" className="btn btn-ghost" onClick={onClose}>
             {t('sheet.cancel')}
           </button>
-          <button type="submit" className="btn btn-primary" disabled={busy} aria-busy={busy || undefined}>
+          <button type="submit" className="btn btn-primary" aria-disabled={busy || undefined} aria-busy={busy || undefined}>
             {busy && <span className="ask-spin" aria-hidden="true" />}
             {busy ? t('sheet.sending') : t('sheet.submit')}
           </button>

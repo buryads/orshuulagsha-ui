@@ -44,12 +44,35 @@ export function isWordLengthValid(word: string): boolean {
 type DraftStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
 const DRAFT_KEY = 'ask-word-request-draft';
+const REOPEN_KEY = 'ask-word-request-reopen';
 
-function defaultStorage(): DraftStorage | null {
+function browserStorage(kind: 'localStorage' | 'sessionStorage'): DraftStorage | null {
   try {
-    return typeof localStorage === 'undefined' ? null : localStorage;
+    return typeof window === 'undefined' ? null : window[kind];
   } catch {
     return null;
+  }
+}
+
+function defaultStorage(): DraftStorage | null {
+  return browserStorage('localStorage');
+}
+
+export function markReopen(query: string, storage: DraftStorage | null = browserStorage('sessionStorage')): void {
+  try {
+    storage?.setItem(REOPEN_KEY, query);
+  } catch {
+    // ignore — the sheet then simply stays closed after sign-in
+  }
+}
+
+export function takeReopen(query: string, storage: DraftStorage | null = browserStorage('sessionStorage')): boolean {
+  try {
+    if (!storage || storage.getItem(REOPEN_KEY) !== query) return false;
+    storage.removeItem(REOPEN_KEY);
+    return true;
+  } catch {
+    return false;
   }
 }
 

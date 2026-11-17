@@ -3,10 +3,12 @@ import {
   clearDraft,
   isWordLengthValid,
   loadDraft,
+  markReopen,
   pluralPeople,
   rejectTextKey,
   saveDraft,
   statusTextKey,
+  takeReopen,
 } from './word-requests';
 
 function memoryStorage() {
@@ -112,5 +114,20 @@ describe('draft storage', () => {
     expect(() => clearDraft(broken)).not.toThrow();
     expect(() => saveDraft(draft, null)).not.toThrow();
     expect(loadDraft(null)).toBeNull();
+  });
+});
+
+describe('reopen flag', () => {
+  it('is taken once and only for the same query', () => {
+    const storage = memoryStorage();
+    markReopen('сайн', storage);
+    expect(takeReopen('другое', storage)).toBe(false);
+    expect(takeReopen('сайн', storage)).toBe(true);
+    expect(takeReopen('сайн', storage)).toBe(false);
+  });
+
+  it('is false when storage is unavailable', () => {
+    expect(takeReopen('сайн', null)).toBe(false);
+    expect(() => markReopen('сайн', null)).not.toThrow();
   });
 });
