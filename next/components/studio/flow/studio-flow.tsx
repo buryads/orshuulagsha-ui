@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { RecordedClip } from '@/components/audio/use-audio-recorder';
 import {
@@ -24,6 +24,7 @@ import {
   type VoiceItem,
 } from '@/lib/api/studio-flow';
 import { acceptEffects, type ConfettiPalette } from '@/lib/studio/flow-easter';
+import { enForm, ruForm } from '@/lib/studio/word-plural';
 import { feedKonami, konamiInput, KONAMI_START, swallowsArrow } from '@/lib/studio/flow-konami';
 import { getStudioStreak, type StudioStreak } from '@/lib/api/studio-streak';
 import { isMilestone } from '@/lib/studio/flow-milestones';
@@ -170,6 +171,7 @@ export function StudioFlow({
 }): ReactElement {
   const t = useTranslations('studio.flow');
   const th = useTranslations('studio.honor');
+  const locale = useLocale();
   const reduced = useReducedMotion();
   const [mode, setMode] = useState<FlowMode>(initialMode);
   const [session, dispatch] = useReducer(sessionReducer, INITIAL_SESSION);
@@ -398,6 +400,18 @@ export function StudioFlow({
         >
           {chip(t('counter.session', { n: session.count }), 'flow-count')}
           {session.streak >= 2 && chip(t('counter.streak', { n: session.streak }), 'flow-streak')}
+          {mode === 'words' &&
+            summary !== null &&
+            summary.words_remaining > 0 &&
+            chip(
+              t(
+                `words.waiting.${locale === 'en' ? enForm(summary.words_remaining) : ruForm(summary.words_remaining)}`,
+                {
+                  n: summary.words_remaining,
+                },
+              ),
+              'flow-words-waiting',
+            )}
           {session.pending.length > 0 &&
             chip(t('uploads.uploading', { n: session.pending.length }), 'flow-uploading')}
           {session.failed.length > 0 && (

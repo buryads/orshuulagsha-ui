@@ -1091,6 +1091,10 @@
         "p5": "Thank you for your work!"
       },
       "words": {
+        "waiting": {
+          "one": "{n} word is waiting",
+          "other": "{n} words are waiting"
+        },
         "asked": {
           "one": "“{query}” — 1 person is looking for it",
           "other": "“{query}” — {n} people are looking for it"

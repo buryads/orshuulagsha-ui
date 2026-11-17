@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState, type ReactElement } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getFlowSummary, type FlowSummary } from '@/lib/api/studio-flow';
+import { enForm, ruForm } from '@/lib/studio/word-plural';
 import { KudosInbox } from './kudos-inbox';
 
 export function FlowEntry(): ReactElement {
   const t = useTranslations('studio.flow');
+  const locale = useLocale();
   const th = useTranslations('studio.honor');
   const [summary, setSummary] = useState<FlowSummary | null>(null);
   useEffect(() => {
@@ -20,7 +22,7 @@ export function FlowEntry(): ReactElement {
       summary.today.reviewed +
       summary.today.fixed +
       summary.today.flagged +
-      summary.today.words
+      (summary.today.words ?? 0)
     : 0;
   const chip = (text: string, id: string): ReactElement => (
     <span
@@ -66,6 +68,16 @@ export function FlowEntry(): ReactElement {
           {chip(t('entry.voiceLeft', { n: summary.voice_remaining }), 'flow-voice-left')}
           {chip(t('entry.reviewLeft', { n: summary.review_remaining }), 'flow-review-left')}
           {chip(t('entry.today', { n: today }), 'flow-today')}
+          {summary.words_waited > 0 &&
+            chip(
+              t(
+                `rest.wordsWaited.${locale === 'en' ? enForm(summary.words_waited) : ruForm(summary.words_waited)}`,
+                {
+                  n: summary.words_waited,
+                },
+              ),
+              'flow-words-waited',
+            )}
         </span>
       )}
     </div>

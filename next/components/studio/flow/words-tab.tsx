@@ -510,7 +510,7 @@ export function WordsTab({
                     value={hint}
                     onChange={(v) => setHint(v.slice(0, MAX_HINT))}
                     fid="flow-word-hint"
-                    bur={bur}
+                    bur={item.direction === 'bur2ru'}
                     label={t('words.correct')}
                     placeholder={t('words.correct')}
                     testId="words-hint"
