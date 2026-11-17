@@ -23,7 +23,13 @@ import {
 } from '@/lib/api/studio-flow';
 import { acceptEffects, type ConfettiPalette } from '@/lib/studio/flow-easter';
 import { feedKonami, konamiInput, KONAMI_START, swallowsArrow } from '@/lib/studio/flow-konami';
+import { getStudioStreak, type StudioStreak } from '@/lib/api/studio-streak';
 import { isMilestone } from '@/lib/studio/flow-milestones';
+import {
+  isStreakMilestone,
+  markCelebratedToday,
+  wasCelebratedToday,
+} from '@/lib/studio/flow-streak';
 import { INITIAL_SESSION, sessionReducer, type SessionAction } from '@/lib/studio/flow-session';
 import { isTypingTarget } from '@/lib/studio/shortcuts';
 import { KudosInbox } from '../kudos-inbox';
@@ -31,6 +37,7 @@ import { Banner, Celebration, type Burst } from './celebration';
 import { MilestoneDialog } from './milestone-dialog';
 import { RestScreen } from './rest-screen';
 import { ReviewTab } from './review-tab';
+import { StreakChip } from './streak-chip';
 import { useFlowQueue } from './use-flow-queue';
 import { useReducedMotion } from './use-reduced-motion';
 import { useVoiceUploads } from './use-voice-uploads';
@@ -102,7 +109,8 @@ function ReviewSection({
   blocked,
   dispatch,
   onToast,
-}: SectionProps & { onToast: (m: string) => void }): ReactElement {
+  onReviewed,
+}: SectionProps & { onToast: (m: string) => void; onReviewed: () => void }): ReactElement {
   const { state, advance, reload } = useFlowQueue('review', blocked);
   return (
     <ReviewTab
@@ -110,7 +118,10 @@ function ReviewSection({
       active={active}
       advance={advance}
       reload={reload}
-      onDone={() => dispatch({ type: 'accept' })}
+      onDone={() => {
+        dispatch({ type: 'accept' });
+        onReviewed();
+      }}
       onSkip={() => dispatch({ type: 'skip' })}
       onToast={onToast}
     />
@@ -132,11 +143,15 @@ export function StudioFlow({
   const [burst, setBurst] = useState<Burst | null>(null);
   const [banner, setBanner] = useState<'item108' | 'rare' | null>(null);
   const [milestone, setMilestone] = useState<number | null>(null);
+  const [streak, setStreak] = useState<StudioStreak | null>(null);
+  const [streakPending, setStreakPending] = useState<number | null>(null);
+  const [streakBanner, setStreakBanner] = useState<number | null>(null);
   const [resting, setResting] = useState(false);
   const [fun, setFun] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const konami = useRef(KONAMI_START);
   const lastCount = useRef(0);
+  const prevDone = useRef<boolean | null>(null);
 
   const { enqueue, retryFailed } = useVoiceUploads(dispatch, session.failed);
   const blocked = useMemo(
@@ -144,6 +159,36 @@ export function StudioFlow({
     [session.pending, session.failed],
   );
   const idle = milestone === null && !resting;
+
+  const refreshStreak = useCallback(() => {
+    getStudioStreak()
+      .then((next) => {
+        if (prevDone.current === false && next.done_today && !wasCelebratedToday()) {
+          markCelebratedToday();
+          setStreakPending(next.current);
+        }
+        prevDone.current = next.done_today;
+        setStreak(next);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(refreshStreak, [refreshStreak]);
+  useEffect(() => {
+    if (session.uploaded > 0) refreshStreak();
+  }, [session.uploaded, refreshStreak]);
+
+  useEffect(() => {
+    if (streakPending === null || milestone !== null || banner !== null || resting) return;
+    setStreakBanner(streakPending);
+    setStreakPending(null);
+  }, [streakPending, milestone, banner, resting]);
+
+  useEffect(() => {
+    if (streakBanner === null) return;
+    const id = window.setTimeout(() => setStreakBanner(null), 4000);
+    return () => window.clearTimeout(id);
+  }, [streakBanner]);
 
   const showToast = useCallback((message: string) => setToast(message), []);
   useEffect(() => {
@@ -268,6 +313,7 @@ export function StudioFlow({
             {t('title')}
           </h1>
           <span style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+            {streak && <StreakChip streak={streak} />}
             <Link
               href="/studio/board"
               className="btn btn-ghost"
@@ -329,6 +375,7 @@ export function StudioFlow({
             blocked={blocked}
             dispatch={dispatch}
             onToast={showToast}
+            onReviewed={refreshStreak}
           />
         )}
       </div>
@@ -338,6 +385,15 @@ export function StudioFlow({
           <Celebration burst={burst} reducedMotion={reduced} />
           {banner === 'item108' && <Banner big text={t('egg.item108')} />}
           {banner === 'rare' && <Banner text={t('egg.rare')} />}
+          {streakBanner !== null && (
+            <Banner
+              text={
+                isStreakMilestone(streakBanner)
+                  ? t(`streak.milestone.m${streakBanner}`, { n: streakBanner })
+                  : t('streak.done', { n: streakBanner })
+              }
+            />
+          )}
           {milestone !== null && (
             <MilestoneDialog
               count={milestone}

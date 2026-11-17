@@ -76,6 +76,19 @@ function Row({
         <span style={{ fontWeight: 700, fontSize: 16, minWidth: 0, overflowWrap: 'anywhere' }}>
           {row.user.name}
         </span>
+        <span
+          data-testid="honor-streak"
+          aria-label={t('streak.aria', { current: row.streak.current, best: row.streak.best })}
+          title={t('streak.aria', { current: row.streak.current, best: row.streak.best })}
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            color: row.streak.current > 0 ? 'var(--accent-warm)' : 'var(--text-muted)',
+            opacity: row.streak.current > 0 ? 1 : 0.6,
+          }}
+        >
+          <span aria-hidden>🔥 {row.streak.current}</span>
+        </span>
         {isMe && (
           <span
             style={{

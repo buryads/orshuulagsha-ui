@@ -19,6 +19,7 @@ export interface BoardRow {
   total: number;
   all_time_total: number;
   kudos_received: number;
+  streak: { current: number; best: number; done_today: boolean };
 }
 
 export interface BoardMeta {

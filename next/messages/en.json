@@ -1019,6 +1019,18 @@
         "fromSkipped": "Bringing back a skipped one",
         "back": "Back to studio"
       },
+      "streak": {
+        "done": "Day counted! 🔥 {n, plural, one {# day} other {# days}} in a row",
+        "milestone": {
+          "m3": "3 days in a row! 🔥 Great start",
+          "m7": "A full week in a row! 🔥 Keep it up",
+          "m30": "30 days in a row! 🔥 Incredible consistency",
+          "m100": "100 days in a row! 🔥 You are a legend"
+        },
+        "days": "{n, plural, one {# day} other {# days}}",
+        "label": "{points} of {goal} points today",
+        "hint": "Voice: 3, fix or edit: 2, review: 1. The day follows Irkutsk time"
+      },
       "milestone": {
         "title": "{n} this session!",
         "rest": "Take a break?",
@@ -1049,6 +1061,9 @@
       }
     },
     "honor": {
+      "streak": {
+        "aria": "Streak: {current}, best: {best}"
+      },
       "title": "Honor board",
       "subtitle": "Who helps the lessons most: recording, reviewing, fixing.",
       "back": "Back to lessons",
