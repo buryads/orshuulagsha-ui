@@ -1191,5 +1191,77 @@
       "invalid": "Pick a time in the future.",
       "close": "Close"
     }
+  },
+  "ask": {
+    "emptyTitle": "No word “{query}” in the dictionary yet",
+    "emptyHint": "Experts can translate it.",
+    "askButton": "Ask an expert",
+    "requestedBy": "{people} already asked",
+    "joinButton": "Join",
+    "following": "You are following",
+    "joined": "You're in. Track the status in “My requests”",
+    "answered": "An expert answered, we are checking",
+    "followButton": "Follow",
+    "inDictionary": "This word is already in the dictionary",
+    "openWord": "Open word",
+    "retryButton": "Ask again",
+    "joinFailed": "Could not join. Please try again",
+    "myRequests": "My requests",
+    "sheet": {
+      "title": "Ask an expert",
+      "wordLabel": "Word",
+      "wordError": "Enter from 1 to 60 characters",
+      "counter": "{count}/{max}",
+      "directionLabel": "Direction",
+      "ru2bur": "Russian → Buryat",
+      "bur2ru": "Buryat → Russian",
+      "contextLabel": "Where you met it (optional)",
+      "contextHint": "No names or contacts",
+      "contextError": "No names or contacts",
+      "newsLabel": "Send project news: new words and the word of the day",
+      "newsHint": "Unsubscribe link in every email",
+      "newsAlreadyOn": "You already receive project news",
+      "submit": "Send",
+      "sending": "Sending…",
+      "cancel": "Cancel",
+      "close": "Close",
+      "doneCreated": "Done. Experts will see the request. Track the status in “My requests”",
+      "doneJoined": "You're in. Track the status in “My requests”",
+      "goToRequests": "My requests",
+      "filter": "We can't send this request to experts",
+      "dailyLimit": "You sent 10 requests today. You can send more tomorrow",
+      "failed": "Could not send. Please try again",
+      "guestTitle": "Sign in so an expert can answer you",
+      "signIn": "Sign in"
+    },
+    "status": {
+      "open": "Waiting for an expert · {people}",
+      "answered": "An expert answered, we are checking",
+      "added": "Word in the dictionary"
+    },
+    "reject": {
+      "typo": "Looks like a typo",
+      "typoHint": "Looks like a typo. Did you mean “{hint}”?",
+      "notBuryat": "Experts think this is not a Buryat word",
+      "other": "Experts could not find a translation"
+    },
+    "page": {
+      "title": "My requests",
+      "empty": "You haven't asked for anything yet. If you can't find a word, tap “Ask an expert” in search",
+      "loadFailed": "Could not load requests.",
+      "retry": "Refresh",
+      "actionFailed": "Could not complete. Please try again",
+      "column": {
+        "word": "Word",
+        "direction": "Direction",
+        "status": "Status",
+        "action": "Action"
+      },
+      "noMail": "no email",
+      "stopFollowing": "Stop following",
+      "guest": "Sign in to see your requests",
+      "directionRuBur": "ru → bur",
+      "directionBurRu": "bur → ru"
+    }
   }
 }

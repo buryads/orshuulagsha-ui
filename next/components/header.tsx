@@ -14,6 +14,8 @@ import type { GamificationMe } from '@/lib/api/gamification';
 import { LEARN_ENABLED } from '@/lib/learn-enabled';
 import { isLearnVisible } from '@/lib/learn-access';
 import { useCurrentUser } from '@/lib/use-current-user';
+import { getUnseenWordRequestCount } from '@/lib/api/word-requests';
+import { WORD_REQUESTS_SEEN_EVENT } from '@/lib/word-requests';
 
 type NavItem = {
   id: 'home' | 'learn' | 'dictionary' | 'names' | 'packs' | 'quiz' | 'corpus' | 'ai' | 'explain';
@@ -39,10 +41,33 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function UnseenDot({ inline = false }: { inline?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={
+        inline
+          ? { display: 'inline-block', width: 8, height: 8, marginLeft: 6, borderRadius: '50%', background: 'var(--tertiary)' }
+          : {
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              width: 8,
+              height: 8,
+              background: 'var(--tertiary)',
+              borderRadius: '50%',
+              border: '2px solid var(--surface)',
+            }
+      }
+    />
+  );
+}
+
 export function Header() {
   const t = useTranslations('nav');
   const tAuth = useTranslations('auth');
   const tAccount = useTranslations('account');
+  const tAsk = useTranslations('ask');
   const locale = useLocale();
   const pathname = usePathname() ?? '/';
   const { resolvedTheme, setTheme } = useTheme();
@@ -51,6 +76,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [gamification, setGamification] = useState<GamificationMe | null>(null);
   const [gamificationLoading, setGamificationLoading] = useState(true);
+  const [unseenRequests, setUnseenRequests] = useState(0);
 
   // Close drawer when route changes — otherwise tapping a link leaves the
   // drawer hanging open over the new page.
@@ -71,6 +97,22 @@ export function Header() {
   })();
 
   const learnVisible = isLearnVisible(LEARN_ENABLED, isTeacher);
+
+  useEffect(() => {
+    if (!signedIn) {
+      setUnseenRequests(0);
+      return;
+    }
+    getUnseenWordRequestCount()
+      .then(setUnseenRequests)
+      .catch(() => undefined);
+  }, [signedIn]);
+
+  useEffect(() => {
+    const clear = () => setUnseenRequests(0);
+    window.addEventListener(WORD_REQUESTS_SEEN_EVENT, clear);
+    return () => window.removeEventListener(WORD_REQUESTS_SEEN_EVENT, clear);
+  }, []);
 
   useEffect(() => {
     if (!learnVisible || !signedIn) {
@@ -202,6 +244,18 @@ export function Header() {
               <Icon name="lock" size={18} />
             </Link>
           )}
+          {signedIn && (
+            <Link
+              href="/profile/requests"
+              className="btn-icon hide-md"
+              title={tAsk('myRequests')}
+              aria-label={tAsk('myRequests')}
+              style={{ width: 38, height: 38, position: 'relative' }}
+            >
+              <Icon name="bookmark" size={18} />
+              {unseenRequests > 0 && <UnseenDot />}
+            </Link>
+          )}
           {isTeacher && (
             <Link
               href="/studio"
@@ -251,6 +305,7 @@ export function Header() {
             <Link
               href="/profile"
               style={{
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
@@ -281,6 +336,21 @@ export function Header() {
               >
                 {initials}
               </div>
+              {unseenRequests > 0 && (
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: 2,
+                    right: 2,
+                    width: 8,
+                    height: 8,
+                    background: 'var(--tertiary)',
+                    borderRadius: '50%',
+                    border: '2px solid var(--surface)',
+                  }}
+                />
+              )}
             </Link>
           ) : (
             <Link
@@ -357,6 +427,16 @@ export function Header() {
                 style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
               >
                 {t('mcp')}
+              </Link>
+            )}
+            {signedIn && (
+              <Link
+                href="/profile/requests"
+                className="btn btn-secondary"
+                style={{ textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}
+              >
+                {tAsk('myRequests')}
+                {unseenRequests > 0 && <UnseenDot inline />}
               </Link>
             )}
             {isTeacher && (

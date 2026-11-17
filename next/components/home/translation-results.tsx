@@ -4,6 +4,7 @@
 import { Link } from '@/i18n/navigation';
 import { useEffect, useState, type ReactElement } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { AskExpert } from '@/components/ask/ask-expert';
 import type {
   TranslateBucketItem,
   TranslateResponse,
@@ -498,6 +499,7 @@ export function TranslationResults({
   loading,
   src,
   tgt,
+  direction,
   error,
 }: TranslationResultsProps): ReactElement | null {
   const tgtKey = tgt.trim();
@@ -567,7 +569,11 @@ export function TranslationResults({
   if (response && totalCount === 0) {
     return (
       <div className="fade-up" style={{ marginTop: 20 }}>
-        <EmptyHint text={notFoundHint} />
+        {trimmedSrc ? (
+          <AskExpert query={trimmedSrc} direction={direction} />
+        ) : (
+          <EmptyHint text={notFoundHint} />
+        )}
       </div>
     );
   }
