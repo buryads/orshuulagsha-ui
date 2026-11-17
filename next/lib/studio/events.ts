@@ -1,6 +1,6 @@
 import type { Missing, PhraseReadiness } from '@/lib/api/studio-events';
 
-export const UNDO_WINDOW_MS = 10000;
+export const UNDO_WINDOW_MS = 5000;
 
 export function undoLeftMs(approvedAt: number, now: number): number {
   return Math.max(0, UNDO_WINDOW_MS - (now - approvedAt));
