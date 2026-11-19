@@ -38,7 +38,7 @@ export function CardsBuilder(): ReactElement {
   return (
     <div className="container fade-up" style={{ paddingTop: 32, paddingBottom: 48, display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 760 }}>
       <header style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <h1 style={{ fontSize: 'clamp(24px, 7vw, 30px)', overflowWrap: 'anywhere', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>{t('title')}</h1>
+        <h1 style={{ fontSize: 30, hyphens: 'auto', overflowWrap: 'break-word', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>{t('title')}</h1>
         <p style={{ margin: 0, color: 'var(--text-muted)' }}>{t('intro')}</p>
       </header>
 
