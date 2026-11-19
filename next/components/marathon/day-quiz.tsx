@@ -96,7 +96,7 @@ export function DayQuiz({ slug, day, signedIn, onSaved }: DayQuizProps): ReactEl
             <div role="radiogroup" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {q.options.map((opt) => {
                 const chosen = picked[q.id] === opt;
-                const isRight = !!verdict && verdict.answer === opt;
+                const isRight = !!verdict && (verdict.answer !== undefined ? verdict.answer === opt : chosen && verdict.correct);
                 const isWrong = !!verdict && chosen && !verdict.correct;
                 return (
                   <label
@@ -128,7 +128,7 @@ export function DayQuiz({ slug, day, signedIn, onSaved }: DayQuizProps): ReactEl
             </div>
             {verdict && (
               <p role="status" style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>
-                {verdict.correct ? `✔ ${t('correct')}` : `✔ ${t('right', { answer: verdict.answer })}`}
+                {verdict.correct ? `✔ ${t('correct')}` : verdict.answer !== undefined ? `✔ ${t('right', { answer: verdict.answer })}` : `✖ ${t('wrong')}`}
               </p>
             )}
           </fieldset>

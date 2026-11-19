@@ -62,7 +62,7 @@ export interface AnswerResult {
   correct: number;
   total: number;
   passed: boolean;
-  results: Record<string, { correct: boolean; answer: string }>;
+  results: Record<string, { correct: boolean; answer?: string }>;
   saved: boolean;
   in_streak: boolean | null;
   streak: number | null;
